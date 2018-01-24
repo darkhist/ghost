@@ -1,6 +1,6 @@
 # Built Application Files
-.apk
-.ap_
+*.apk
+*.ap_
 
 # Java Class Files
 *.class
