@@ -1,0 +1,25 @@
+# Built Application Files
+*.apk
+*.ap_
+
+# Java Class Files
+*.class
+
+# OS X Files 
+.DS_Store
+
+# Android
+*.iml
+.gradle
+SnapClone/local.properties
+SnapClone/openCVLibrary340/build
+SnapClone/.idea/workspace.xml
+SnapClone/.idea/libraries
+SnapClone/build
+SnapClone/captures
+.externalNativeBuild
+
+# Server
+server/node_modules
+server/config.json
+
