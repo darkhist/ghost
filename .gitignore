@@ -11,6 +11,7 @@
 # Android
 *.iml
 .gradle
+.idea/
 SnapClone/local.properties
 SnapClone/openCVLibrary340/build
 SnapClone/.idea/workspace.xml
