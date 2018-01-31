@@ -11,11 +11,10 @@
 # Android
 *.iml
 .gradle
-*.idea/
+../idea/
+.idea/
 local.properties
 openCVLibrary340/build
-.idea/workspace.xml
-.idea/libraries
 build/
 captures
 .externalNativeBuild
