@@ -11,7 +11,7 @@
 # Android
 *.iml
 .gradle
-.idea/
+*.idea/
 local.properties
 openCVLibrary340/build
 .idea/workspace.xml
