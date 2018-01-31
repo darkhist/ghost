@@ -21,6 +21,6 @@ SnapClone/captures
 .externalNativeBuild
 
 # Server
-server/node_modules
-server/config.json
-server/package-lock.json
+SnapClone/server/node_modules
+SnapClone/server/config.json
+SnapClone/server/package-lock.json
