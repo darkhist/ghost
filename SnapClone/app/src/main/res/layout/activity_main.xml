@@ -4,23 +4,51 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.quinnsalas.snapclone.MainActivity">
+    tools:context="com.example.quinnsalas.snapclone.MainActivity"
+    tools:layout_editor_absoluteY="81dp">
 
-    <TextView
-        android:id="@+id/sample_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
+
+    <!--Open Camera -->
+    <Button
+        android:id="@+id/openCamera"
+        android:layout_width="411dp"
+        android:layout_height="70dp"
+        android:layout_alignParentBottom="true"
+        android:fontFamily="sans-serif-light"
+        android:text="@string/open_camera"
+        android:textSize="18sp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <!-- Log In -->
     <Button
-        android:text="OpenCV Camera"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:id="@+id/logIn"
+        android:layout_width="411dp"
+        android:layout_height="70dp"
         android:layout_alignParentBottom="true"
-        android:id="@+id/cameraInit"/>
+        android:background="@android:color/holo_red_light"
+        android:fontFamily="sans-serif-light"
+        android:text="@string/action_log_in"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/signUp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <!-- Sign Up-->
+    <Button
+        android:id="@+id/signUp"
+        android:layout_width="411dp"
+        android:layout_height="70dp"
+        android:layout_alignParentBottom="true"
+        android:background="@android:color/holo_blue_light"
+        android:fontFamily="sans-serif-light"
+        android:text="@string/action_sign_up"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

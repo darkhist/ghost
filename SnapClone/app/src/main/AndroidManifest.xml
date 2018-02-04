@@ -45,11 +45,12 @@
         </activity>
         <activity android:name=".OpenCVCamera" />
         <activity
-            android:name=".SignUpActivity"
-            android:label="@string/title_activity_sign_up" />
-        <activity
             android:name=".LoginActivity"
             android:label="@string/title_activity_login"></activity>
+
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
     </application>
 
 </manifest>
