@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.mike.mlauderb">
 
+    <!-- set up camera and permissions -->
     <uses-permission android:name="android.permission.CAMERA" />
 
     <supports-screens android:resizeable="true"
@@ -11,15 +12,20 @@
         android:anyDensity="true" />
 
     <uses-feature
-        android:name="android.hardware.camera2"
+        android:name="android.hardware.camera"
         android:required="false" />
 
     <uses-feature
-        android:name="android.hardware.camera2"/>
+        android:name="android.hardware.camera.autofocus"
+        android:required="false" />
 
-    <uses-feature />
+    <uses-feature
+        android:name="android.hardware.camera.front"
+        android:required="false" />
 
-    <uses-feature />
+    <uses-feature
+        android:name="android.hardware.camera.front.autofocus"
+        android:required="false" />
 
     <application
         android:allowBackup="true"
