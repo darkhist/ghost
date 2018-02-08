@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // Button to call OpenCV Camera Activity
-        Button cameraInit = (Button) findViewById(R.id.openCamera);
+        Button cameraInit = findViewById(R.id.openCamera);
         cameraInit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -28,5 +28,18 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
+
+        // On Log In Button Click - Open Log In Screen
+        Button login = findViewById(R.id.logIn);
+        login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(i);
+            }
+        });
+
+        // On Sign Up Button Click - Open Sign Up Screen
+        // TODO
     }
 }
