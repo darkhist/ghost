@@ -40,6 +40,13 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // On Sign Up Button Click - Open Sign Up Screen
-        // TODO
+        Button signup = findViewById(R.id.signUp);
+        signup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getApplicationContext(), SignUpActivity.class);
+                startActivity(i);
+            }
+        });
     }
 }
