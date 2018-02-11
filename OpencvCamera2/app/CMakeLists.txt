@@ -17,12 +17,11 @@ include_directories(C:/opencv-3.2.0-android-sdk/OpenCV-android-sdk/sdk/native/jn
 
 add_library( # Sets the name of the library.
              native-lib
-
              # Sets the library as a shared library.
              SHARED
 
              # Provides a relative path to your source file(s).
-             src/main/cpp/native-lib.cpp )
+             src/main/cpp/native-lib.cpp)
 
 # [EDIT] Similar to above lines, add the OpenCV library
 add_library( lib_opencv SHARED IMPORTED )
@@ -47,6 +46,7 @@ find_library( # Sets the name of the path variable.
 
 target_link_libraries( # Specifies the target library.
                        native-lib
+
 
                        # Links the target library to the log library
                        # included in the NDK.
