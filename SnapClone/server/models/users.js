@@ -3,6 +3,7 @@
 const config = require('.././config.json');
 const bcrypt = require('bcrypt');
 const mysql = require('mysql');
+
 const connection = mysql.createConnection({
   host: `${config.host}`,
   user: `${config.user}`,
@@ -10,14 +11,14 @@ const connection = mysql.createConnection({
   database: `${config.schema}`
 });
 
-let userInsertQuery = `INSERT INTO USERS (username, password, email, creationDate)
+const userInsertQuery = `INSERT INTO USERS (username, password, email, creationDate)
 VALUES('qmsalas', 'fakepassword', 'qmsalas@iastate.edu', CURRENT_DATE())`;
 
 connection.connect();
 
 connection.query(userInsertQuery, (err, results) => {
   if (err) {
-    console.log(err.code);
+    console.log(err.stack);
   }
   console.log("Record Inserted Successfully");
   console.log(results);
