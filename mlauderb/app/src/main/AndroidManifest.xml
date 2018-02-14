@@ -5,24 +5,22 @@
     <!-- set up camera and permissions -->
     <uses-permission android:name="android.permission.CAMERA" />
 
-    <supports-screens android:resizeable="true"
-        android:smallScreens="true"
-        android:normalScreens="true"
+    <supports-screens
+        android:anyDensity="true"
         android:largeScreens="true"
-        android:anyDensity="true" />
+        android:normalScreens="true"
+        android:resizeable="true"
+        android:smallScreens="true" />
 
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
-
     <uses-feature
         android:name="android.hardware.camera.autofocus"
         android:required="false" />
-
     <uses-feature
         android:name="android.hardware.camera.front"
         android:required="false" />
-
     <uses-feature
         android:name="android.hardware.camera.front.autofocus"
         android:required="false" />
@@ -41,6 +39,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".FriendsActivity"
+            android:label="@string/title_activity_friends"></activity>
     </application>
 
 </manifest>
