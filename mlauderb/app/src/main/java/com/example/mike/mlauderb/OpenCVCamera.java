@@ -39,7 +39,7 @@ public class OpenCVCamera extends AppCompatActivity implements CameraBridgeViewB
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.activity_opencv_camera);
-        cameraBridgeViewBase = (CameraBridgeViewBase) findViewById(R.id.camera_view);
+//        cameraBridgeViewBase = (CameraBridgeViewBase) findViewById(R.id.camera_view);
         cameraBridgeViewBase.setVisibility(SurfaceView.VISIBLE);
         cameraBridgeViewBase.setCvCameraViewListener(this);
     }
