@@ -12,17 +12,17 @@ let json = `{
             "creationDate": "2018-02-05"
             }`;
 
-// Handle user create on GET
+// Handle GET /users/create
 exports.create = (req, res) => {
   // TODO
 }
 
-// Handle user login on GET
+// Handle GET /users/login
 exports.login = (req, res) => {
   // TODO
 }
 
-// Display user information on GET
+// Handle GET /users
 exports.get = (req, res) => {
   res.send(json);
 }
