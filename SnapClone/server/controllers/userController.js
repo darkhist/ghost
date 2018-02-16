@@ -1,5 +1,8 @@
-// This file defines request handling behaviors for users
-const express = require('request');
+'use strict';
+
+// This file defines request handling behaviors for the /users route
+
+const request = require('request');
 
 let json = `{
             "userID": "1",
@@ -9,18 +12,14 @@ let json = `{
             "creationDate": "2018-02-05"
             }`;
 
-const create = (req, res) => {
+exports.create = (req, res) => {
   // TODO
 }
 
-const login = (req, res) => {
+exports.login = (req, res) => {
   // TODO
 }
 
-const get = (req, res) => {
+exports.get = (req, res) => {
   res.send(json);
 }
-
-module.exports.create = create;
-module.exports.login = login;
-module.exports.get = get;

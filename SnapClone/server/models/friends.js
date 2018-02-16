@@ -12,5 +12,6 @@ const connection = mysql.createConnection({
 });
 
 const createFriendsTable = `CREATE TABLE FRIENDSHIPS (
+  userID VARCHAR(255) AUTO_INCREMENT NOT NULL,
   // TODO
 )`;

@@ -1,3 +1,7 @@
+'use strict';
+
+// This file contains info about different routes
+
 const express = require('express');
 const router = express.Router();
 const userController = require("./../controllers/userController");
