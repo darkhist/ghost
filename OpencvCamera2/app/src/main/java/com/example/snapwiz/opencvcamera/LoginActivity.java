@@ -1,3 +1,4 @@
+
 package com.example.snapwiz.opencvcamera;
 
 import android.animation.Animator;
