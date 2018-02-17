@@ -55,7 +55,10 @@ public class FriendsActivity extends AppCompatActivity {
         for (int i = 0; i < 3; i++) {
             Button btn = new Button(this);
             btn.setWidth(buttonContainer.getWidth());
-            btn.setText("Sample Friend " + i);
+            String btnText = "Sample Friend" + i;
+            btn.setText(btnText);
+//            btn.setOnClickListener(friendClickListener);  // create button clicklistener
+
             buttonContainer.addView(btn);
         }
 
