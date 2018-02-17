@@ -10,6 +10,10 @@ import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
+import org.opencv.core.Core;
+import org.opencv.core.Core.*;
+
+import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 
 public class OpenCVCamera extends AppCompatActivity implements CameraBridgeViewBase.CvCameraViewListener2 {
@@ -66,4 +70,11 @@ public class OpenCVCamera extends AppCompatActivity implements CameraBridgeViewB
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
         return inputFrame.rgba();
     }
+
+    public static void main(String[] args) {
+        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+        Mat mat = Mat.eye(3, 3, CvType.CV_8UC1);
+        System.out.println("mat = " + mat.dump());
+    }
+
 }
