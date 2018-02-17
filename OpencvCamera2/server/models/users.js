@@ -2,9 +2,17 @@ const mysql      = require('mysql');
 
 //This is written to test the connection to my local server
 const connection = mysql.createConnection({
+  //Note host for team database = mysql.cs.iastate.edu
+  //host    : 'mysql.cs.iastate.edu'
   host     : 'localhost',
-  user     : 'root',
+  //Note user for team database = dbu309vc4
+  //user    : 'root'
+  user     : 'dbu309vc4',
+  //Note password for team database = A#R4aSs!
+  //password    : 'A#R4aSs!'
   password : '2591gHsS',
+  //Note password for team database = db309vc4
+  //password    : 'db309vc4'
   database : 'university'
 });
 
@@ -20,6 +28,7 @@ connection.connect((err) => {
   connection.end();
 });
 
+//sets user to
 const initQuery = async () => {
   await connection.query("USE university");
 }
