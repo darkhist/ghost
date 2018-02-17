@@ -10,7 +10,7 @@ const connection = mysql.createConnection({
   user     : 'dbu309vc4',
   //Note password for team database = A#R4aSs!
   //password    : 'A#R4aSs!'
-  password : '2591gHsS',
+  password : 'xxxxxx',
   //Note password for team database = db309vc4
   //password    : 'db309vc4'
   database : 'university'
