@@ -3,6 +3,10 @@ package floatingheads.snapclone;
 import android.Manifest;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -16,8 +20,8 @@ import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Mat;
 
-abstract class OpenCVCamera extends AppCompatActivity implements CameraBridgeViewBase.CvCameraViewListener2,GestureDetector.OnGestureListener,
-        GestureDetector.OnDoubleTapListener {
+public class OpenCVCamera extends AppCompatActivity implements CameraBridgeViewBase.CvCameraViewListener2{
+
 
     private static final String TAG = "OpenCVCamera";
     private CameraBridgeViewBase cameraBridgeViewBase;

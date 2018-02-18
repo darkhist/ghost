@@ -1,5 +1,6 @@
 package floatingheads.snapclone;
 
+import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -52,6 +53,5 @@ public class FriendsActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
-
     }
 }
