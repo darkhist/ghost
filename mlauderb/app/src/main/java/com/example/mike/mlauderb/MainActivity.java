@@ -15,7 +15,7 @@ public class MainActivity extends AppCompatActivity {
         // set to home screen
         setContentView(R.layout.activity_main);
         // set to friends screen
-//        setContentView(R.layout.activity_friends);
+//        setContentView(R.layout.activity_view_friends);
 
 //        // Camera button
 //        Button cameraInit = findViewById(R.id.cameraInit);
@@ -27,11 +27,35 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        });
         // Friends button (temp)
-        Button friendsInit = findViewById(R.id.friendsInit);
-        friendsInit.setOnClickListener(new View.OnClickListener() {
+        RelativeLayout rl = findViewById(R.id.rl_main);
+
+        LinearLayout ll = new LinearLayout(this);
+        ll.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+        ll.setOrientation(LinearLayout.VERTICAL);
+
+        Button viewFriends = new Button(this);
+        viewFriends.setText("View Friends");
+
+        Button addFriends = new Button(this);
+        addFriends.setText("Add Friends");
+
+        ll.addView(viewFriends);
+        ll.addView(addFriends);
+
+        rl.addView(ll);
+
+        viewFriends.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(),FriendsActivity.class);
+                Intent i = new Intent(getApplicationContext(), ViewFriendsActivity.class);
+                startActivity(i);
+            }
+        });
+
+        addFriends.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getApplicationContext(), AddFriendsActivity.class);
                 startActivity(i);
             }
         });

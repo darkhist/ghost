@@ -40,8 +40,9 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".FriendsActivity"
-            android:label="@string/title_activity_friends"></activity>
+            android:name=".ViewFriendsActivity"
+            android:label="@string/title_activity_friends" />
+        <activity android:name=".AddFriendsActivity"></activity>
     </application>
 
 </manifest>

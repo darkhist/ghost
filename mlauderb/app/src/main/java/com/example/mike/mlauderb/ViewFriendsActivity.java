@@ -1,15 +1,14 @@
 package com.example.mike.mlauderb;
 
-import android.app.ActionBar;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
-import android.view.ViewGroup;
+import android.view.View;
 import android.widget.*;
 
-public class FriendsActivity extends AppCompatActivity {
+public class ViewFriendsActivity extends AppCompatActivity {
 
     private TextView mTextMessage;
 
@@ -36,7 +35,7 @@ public class FriendsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_friends);
+        setContentView(R.layout.activity_view_friends);
 
         // create overall master container
         RelativeLayout parentContainer = (RelativeLayout) findViewById(R.id.rl);
@@ -52,11 +51,12 @@ public class FriendsActivity extends AppCompatActivity {
         scrollContainer.addView(buttonContainer); // add buttonContainer to scrollContainer
 
         // add "i" buttons and label them accordingly
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 10; i++) {
             Button btn = new Button(this);
             btn.setWidth(buttonContainer.getWidth());
-            String btnText = "Sample Friend" + i;
+            String btnText = "Sample Friend " + i;
             btn.setText(btnText);
+            btn.setHeight(150);
 //            btn.setOnClickListener(friendClickListener);  // create button clicklistener
 
             buttonContainer.addView(btn);

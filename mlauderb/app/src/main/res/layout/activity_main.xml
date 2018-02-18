@@ -6,12 +6,11 @@
     android:layout_height="match_parent"
     tools:context="com.example.mike.mlauderb.MainActivity">
 
-    <Button
+    <RelativeLayout
+        android:id="@+id/rl_main"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="View Friends"
-        android:layout_alignParentBottom="true"
-        android:id="@+id/friendsInit" />
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"></RelativeLayout>
 
     <!--<TextView-->
         <!--android:layout_width="wrap_content"-->
