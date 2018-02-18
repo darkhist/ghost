@@ -19,7 +19,6 @@ public class StringRequestActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         TextView mTextView = (TextView) findViewById(R.id.textView);
         // Instantiate the RequestQueue.
@@ -27,8 +26,7 @@ public class StringRequestActivity extends AppCompatActivity {
         String url = "http://www.google.com";
 
         // Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         // Display the first 500 characters of the response string.
@@ -40,5 +38,7 @@ public class StringRequestActivity extends AppCompatActivity {
                 mTextView.setText("That didn't work!");
             }
         });
+        // Add the request to the RequestQueue.
+        queue.add(stringRequest);
     }
 }
