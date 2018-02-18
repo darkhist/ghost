@@ -16,7 +16,7 @@ public class AppController extends Application {
     //RequestQueue object
     public static final String TAG = AppController.class.getSimpleName();
 
-    //
+    //Request Queue
     private RequestQueue mRequestQueue;
     private ImageLoader mImageLoader;
 
