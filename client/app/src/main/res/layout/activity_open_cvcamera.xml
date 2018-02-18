@@ -9,7 +9,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.example.quinnsalas.snapclone.OpenCVCamera">
+    tools:context="floatingheads.snapclone.OpenCVCamera">
 
     <org.opencv.android.JavaCameraView
         android:layout_width="match_parent"
@@ -18,5 +18,4 @@
         android:id="@+id/camera_view"
         opencv:show_fps="true"
         opencv:camera_id="any"/>
-
 </RelativeLayout>

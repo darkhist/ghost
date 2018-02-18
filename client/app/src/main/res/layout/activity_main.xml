@@ -4,9 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.quinnsalas.snapclone.MainActivity"
+    tools:context="floatingheads.snapclone.MainActivity"
     tools:layout_editor_absoluteY="81dp">
-
 
     <!--Open Camera -->
     <Button
@@ -50,5 +49,4 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
-
 </android.support.constraint.ConstraintLayout>

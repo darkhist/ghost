@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.quinnsalas.snapclone">
+    package="floatingheads.snapclone">
 
+    <!-- Allow Camera Permissions -->
     <uses-permission android:name="android.permission.CAMERA" />
 
     <supports-screens
@@ -58,6 +59,12 @@
         <activity
             android:name=".FriendsActivity"
             android:label="@string/title_activity_friends" />
+
+        <activity
+            android:name=".ViewFriendsActivity"
+            android:label="@string/title_activity_friends" />
+
+        <activity android:name=".AddFriendsActivity" />
 
         <meta-data
             android:name="preloaded_fonts"
