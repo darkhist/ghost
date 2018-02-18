@@ -16,6 +16,7 @@
         android:fontFamily="sans-serif-light"
         android:text="@string/open_camera"
         android:textSize="18sp"
+        app:layout_constraintHorizontal_bias="0.481"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -49,4 +50,14 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
+
+    <!-- String request-->
+    <Button
+        android:id="@+id/btnStringRequest"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="STRING REQUEST"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="179dp" />
+
 </android.support.constraint.ConstraintLayout>
