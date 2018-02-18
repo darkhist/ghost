@@ -1,0 +1,1 @@
+insert into db309vc4.USERS (username, password, email, creationDate) values ('mlauderb', '1234', 'mlauderb@iastate.edu', '2018-02-18');
