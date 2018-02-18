@@ -9,11 +9,8 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.WindowManager;
-import android.support.v4.view.MotionEventCompat;
-import android.view.GestureDetector;
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.LoaderCallbackInterface;
@@ -21,7 +18,6 @@ import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Mat;
 
 public class OpenCVCamera extends AppCompatActivity implements CameraBridgeViewBase.CvCameraViewListener2{
-
 
     private static final String TAG = "OpenCVCamera";
     private CameraBridgeViewBase cameraBridgeViewBase;
@@ -63,34 +59,6 @@ public class OpenCVCamera extends AppCompatActivity implements CameraBridgeViewB
             baseLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
         }
     }
-
-    /*
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        String DEBUG_TAG = "SnapClone";
-        int action = event.getActionMasked();
-
-        switch (action) {
-           // case (MotionEvent.ACTION_DOWN):
-               // Log.d(DEBUG_TAG, "Action was DOWN");
-               // return true;
-            //case (MotionEvent.ACTION_MOVE):
-                //Log.d(DEBUG_TAG, "Action was MOVE");
-                //return true;
-         //   case (MotionEvent.ACTION_UP):
-           //     Log.d(DEBUG_TAG, "Action was UP");
-             //   return true;
-            case (MotionEvent.EDGE_LEFT):
-                Log.d(DEBUG_TAG, "Action was CANCEL");
-                return true;
-            case (MotionEvent.EDGE_RIGHT):
-                Log.d(DEBUG_TAG, "Movement occurred outside bounds " +
-                        "of current screen element");
-                return true;
-            default:
-                return super.onTouchEvent(event);
-        }
-    }*/
 
     @Override
     public void onCameraViewStarted(int width, int height) {
