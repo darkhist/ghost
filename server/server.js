@@ -16,7 +16,7 @@ app.use('/users', users);
 app.use('/friends', friends)
 
 app.get('/', (req, res) => {
-  res.send("✨ Hello! ✨");
+  res.send("Hello!");
 });
 
 app.listen(port, () => {

@@ -1,7 +1,6 @@
 'use strict';
 
 const config = require('.././config.json');
-const bcrypt = require('bcrypt');
 const mysql = require('mysql');
 
 const connection = mysql.createConnection({
