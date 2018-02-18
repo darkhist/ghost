@@ -5,6 +5,8 @@
     <!-- Allow Camera Permissions -->
     <uses-permission android:name="android.permission.CAMERA" />
 
+    <!-- Allow Internet Permissions for Volley -->
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <supports-screens
         android:anyDensity="true"

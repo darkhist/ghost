@@ -13,9 +13,10 @@ import com.android.volley.toolbox.Volley;
 
 public class AppController extends Application {
 
-    public static final String TAG = AppController.class
-            .getSimpleName();
+    //RequestQueue object
+    public static final String TAG = AppController.class.getSimpleName();
 
+    //
     private RequestQueue mRequestQueue;
     private ImageLoader mImageLoader;
 
@@ -31,6 +32,7 @@ public class AppController extends Application {
         return mInstance;
     }
 
+    //Prepare the request
     public RequestQueue getRequestQueue() {
         if (mRequestQueue == null) {
             mRequestQueue = Volley.newRequestQueue(getApplicationContext());
