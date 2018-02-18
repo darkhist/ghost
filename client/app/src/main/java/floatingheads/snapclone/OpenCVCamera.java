@@ -1,18 +1,19 @@
 package floatingheads.snapclone;
 
+import android.Manifest;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.SurfaceView;
 import android.view.WindowManager;
-
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Mat;
 
-public class OpenCVCamera extends AppCompatActivity implements CameraBridgeViewBase.CvCameraViewListener2 {
+public class OpenCVCamera extends AppCompatActivity implements CameraBridgeViewBase.CvCameraViewListener2{
 
     private static final String TAG = "OpenCVCamera";
     private CameraBridgeViewBase cameraBridgeViewBase;
@@ -33,6 +34,8 @@ public class OpenCVCamera extends AppCompatActivity implements CameraBridgeViewB
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //Requests the permission from user.
+        ActivityCompat.requestPermissions(OpenCVCamera.this, new String[]{Manifest.permission.CAMERA}, 1);
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.activity_open_cvcamera);
@@ -52,6 +55,7 @@ public class OpenCVCamera extends AppCompatActivity implements CameraBridgeViewB
             baseLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
         }
     }
+
     @Override
     public void onCameraViewStarted(int width, int height) {
 

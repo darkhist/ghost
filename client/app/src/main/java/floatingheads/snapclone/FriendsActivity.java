@@ -44,6 +44,7 @@ public class FriendsActivity extends AppCompatActivity {
             }
         });
 
+        //Add a friend to your friend's list
         addFriends.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
