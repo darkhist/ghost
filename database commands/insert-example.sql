@@ -1,1 +1,1 @@
-insert into db309vc4.USERS (username, password, email, creationDate) values ('mlauderb', '1234', 'mlauderb@iastate.edu', '2018-02-18');
+insert into db309vc4.Friendship (user_id, friends, pending, rejected, blocked) values (4, '1,2', null, '3', null);
