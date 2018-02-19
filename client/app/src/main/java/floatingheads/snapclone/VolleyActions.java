@@ -17,12 +17,11 @@ import com.android.volley.toolbox.Volley;
 public class VolleyActions {
 
     public Context context;
-
-    public String SRout;
+    public ResponseInterpreter r;
 
     public VolleyActions(Context context) {
         this.context = context;
-        SRout = null;
+        r = new ResponseInterpreter();
     }
 
 
@@ -36,14 +35,13 @@ public class VolleyActions {
             @Override
             public void onResponse(String response) {
                 // Display the first 500 characters of the response string.
-                SRout = "Response is: " + response.substring(0, 500);
-//                mTextView.setText(tmp);
+                String tmp = "Response is " + response.substring(0,500);
+                r.setText(tmp);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-//                mTextView.setText("That didn't work!");
-                SRout = "That didn't work!";
+                r.setText("That didn't work!");
             }
         });
 
@@ -51,7 +49,23 @@ public class VolleyActions {
         queue.add(stringRequest);
     }
 
-    public String getStringRequest() {
-        return SRout;
+    public String getStringResponse() {
+        return r.getText();
+    }
+
+    class ResponseInterpreter {
+        String text;
+
+        public ResponseInterpreter() {
+            text = null;
+        }
+
+        public void setText(String str) {
+            text = str;
+        }
+
+        public String getText() {
+            return text;
+        }
     }
 }
