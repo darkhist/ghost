@@ -34,7 +34,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 
-public class FdActivity extends Activity implements CvCameraViewListener2 {
+public class FdActivity extends AppCompatActivity implements CvCameraViewListener2 {
 
     private static final String    TAG                 = "OCVSample::Activity";
     private static final Scalar FACE_RECT_COLOR     = new Scalar(0, 255, 0, 255);
@@ -172,9 +172,10 @@ public class FdActivity extends Activity implements CvCameraViewListener2 {
     }
 
     public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
-
+        //Core.flip(inputFrame,inputFrame,1);
         mRgba = inputFrame.rgba();
         mGray = inputFrame.gray();
+
 
         if (mAbsoluteFaceSize == 0) {
             int height = mGray.rows();

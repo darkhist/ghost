@@ -7,6 +7,8 @@ package org.opencv.core;
 import java.lang.String;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfDouble;
 import org.opencv.core.MatOfInt;
@@ -1355,12 +1357,12 @@ public class Core {
     //
 
     //javadoc: flip(src, dst, flipCode)
-    public static void flip(Mat src, Mat dst, int flipCode)
+    public static void flip(CameraBridgeViewBase.CvCameraViewFrame src, CameraBridgeViewBase.CvCameraViewFrame dst, int flipCode)
     {
         
-        flip_0(src.nativeObj, dst.nativeObj, flipCode);
+        //flip_0(src.nativeObj, dst.nativeObj, flipCode);
         
-        return;
+        //return;
     }
 
 
