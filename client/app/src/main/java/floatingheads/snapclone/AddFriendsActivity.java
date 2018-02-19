@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -23,6 +24,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 
 import floatingheads.snapclone.app.AppController;
@@ -51,9 +53,10 @@ public class AddFriendsActivity extends MainActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //makeStringRequest("https://jsonplaceholder.typicode.com/posts");
+                makeStringRequest("http://proj-309-vc-4.cs.iastate.edu:3000/friends");
                 //makeJSONarrayRequest("https://jsonplaceholder.typicode.com/posts");
-                makeJSONobjRequest("https://jsonplaceholder.typicode.com/posts");
+                //makeJSONobjRequest("http://ip.jsontest.com/");
+                //makeJSONobjRequest("http://jsonplaceholder.typicode.com/posts/1");
             }
         });
 
@@ -68,7 +71,7 @@ public class AddFriendsActivity extends MainActivity {
             @Override
             public void onResponse(String response) {
                 // Display the first 500 characters of the response string.
-                String tmp = "Response is " + response.substring(0, 500);
+                String tmp = "Response is " + response;
                 mTextView.setText(tmp);
             }
         }, new Response.ErrorListener() {
@@ -89,6 +92,11 @@ public class AddFriendsActivity extends MainActivity {
             @Override
             public void onResponse(JSONArray response) {
                 try {
+                    /*
+                    jsonResponse = "";
+                    for (int i = 0; i < response.length(); i++) {
+
+                    }*/
                     VolleyLog.v("Response:%n %s", response.toString(4));
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -110,12 +118,21 @@ public class AddFriendsActivity extends MainActivity {
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("token", "AbCdEfGh123456");
 
-        JsonObjectRequest req = new JsonObjectRequest(url, new JSONObject(params),
-                new Response.Listener<JSONObject>() {
+        JsonObjectRequest req = new JsonObjectRequest(url, new JSONObject(params), new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
+
                             VolleyLog.v("Response:%n %s", response.toString(4));
+                            String ip = response.getString("ip");
+                                /*
+                            String userId = (String) response.get("userId");
+                            String id = (String) response.get("id");
+                            String title = response.getString("title");
+                            String body = response.getString("body");
+                            */
+                            mTextView.setText(ip);
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -131,4 +148,6 @@ public class AddFriendsActivity extends MainActivity {
         AppController.getInstance().addToRequestQueue(req);
 
     }
+
+
 }
