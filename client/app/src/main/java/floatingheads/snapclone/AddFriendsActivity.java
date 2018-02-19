@@ -125,7 +125,7 @@ public class AddFriendsActivity extends MainActivity {
 
                             VolleyLog.v("Response:%n %s", response.toString(4));
                             String ip = response.getString("ip");
-                                /*
+                            /*
                             String userId = (String) response.get("userId");
                             String id = (String) response.get("id");
                             String title = response.getString("title");
