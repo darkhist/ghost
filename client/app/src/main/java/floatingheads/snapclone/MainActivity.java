@@ -6,7 +6,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
+
 public class MainActivity extends AppCompatActivity {
+
 
 
 
@@ -20,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
         cameraInit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(),OpenCVCamera.class);
+                Intent i = new Intent(getApplicationContext(),FdActivity.class);
                 startActivity(i);
             }
         });
