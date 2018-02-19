@@ -1,6 +1,6 @@
 'use strict';
 
-// This file defines behavior for interation with the Friendship Table
+// This file defines behavior for interation with the FRIENDSHIPS Table
 
 const config = require('.././config.json');
 
@@ -16,8 +16,15 @@ exports.main = async () => {
   });
 
   // Query Friendship Table
-  const results = await conn.execute('SELECT * FROM Friendship');
+  const results = await conn.execute('SELECT * FROM FRIENDSHIPS');
 
   // Return Rows from Friendship Table
-  return results[0];
+  const rows = results[0];
+
+  // Parsing Results
+  for (let i = 0; i < rows.length; i++) {
+    console.log(rows[i].user_id);
+  }
+
+  return rows;
 }
