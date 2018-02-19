@@ -16,7 +16,7 @@ app.use('/users', users);
 app.use('/friends', friends)
 
 app.get('/', (req, res) => {
-  res.send("Hello!");
+  res.send("Hello! Welcome to the API!");
 });
 
 app.listen(port, () => {

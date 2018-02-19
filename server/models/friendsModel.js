@@ -1,16 +1,23 @@
 'use strict';
 
+// This file defines behavior for interation with the Friendship Table
+
 const config = require('.././config.json');
-const mysql = require('mysql');
 
-const connection = mysql.createConnection({
-  host: `${config.host}`,
-  user: `${config.user}`,
-  password: `${config.password}`,
-  database: `${config.schema}`
-});
+exports.main = async () => {
+  const mysql = require('mysql2/promise');
 
-const createFriendsTable = `CREATE TABLE FRIENDSHIPS (
-  userID VARCHAR(255) AUTO_INCREMENT NOT NULL,
-  // TODO
-)`;
+  // Establish Database Connection
+  const conn = await mysql.createConnection({
+    host: `${config.host}`,
+    user: `${config.user}`,
+    password: `${config.password}`,
+    database: `${config.schema}`
+  });
+
+  // Query Friendship Table
+  const results = await conn.execute('SELECT * FROM Friendship');
+
+  // Return Rows from Friendship Table
+  return results[0];
+}
