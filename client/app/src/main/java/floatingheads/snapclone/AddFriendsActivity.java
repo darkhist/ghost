@@ -13,8 +13,17 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
 
 import floatingheads.snapclone.app.AppController;
 
@@ -42,23 +51,24 @@ public class AddFriendsActivity extends MainActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                makeStringRequest("http://proj-309-vc-4.cs.iastate.edu");
+                //makeStringRequest("https://jsonplaceholder.typicode.com/posts");
+                //makeJSONarrayRequest("https://jsonplaceholder.typicode.com/posts");
+                makeJSONobjRequest("https://jsonplaceholder.typicode.com/posts");
             }
         });
+
+
     }
 
 
     public void makeStringRequest(String url) {
         TextView mTextView = (TextView) findViewById(R.id.textView);
-        // Instantiate the RequestQueue.
-        RequestQueue queue = Volley.newRequestQueue(context);
-
         // Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+        StringRequest req = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 // Display the first 500 characters of the response string.
-                String tmp = "Response is " + response.substring(0,500);
+                String tmp = "Response is " + response.substring(0, 500);
                 mTextView.setText(tmp);
             }
         }, new Response.ErrorListener() {
@@ -69,6 +79,56 @@ public class AddFriendsActivity extends MainActivity {
         });
 
         // Add the request to the RequestQueue.
-        AppController.getInstance().addToRequestQueue(stringRequest);
+        AppController.getInstance().addToRequestQueue(req);
+    }
+
+
+    public void makeJSONarrayRequest(String url) {
+        TextView mTextView = (TextView) findViewById(R.id.textView);
+        JsonArrayRequest req = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                try {
+                    VolleyLog.v("Response:%n %s", response.toString(4));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.e("Error: ", error.getMessage());
+            }
+        });
+
+        // add the request object to the queue to be executed
+        AppController.getInstance().addToRequestQueue(req);
+    }
+
+    public void makeJSONobjRequest(String url) {
+        TextView mTextView = (TextView) findViewById(R.id.textView);
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("token", "AbCdEfGh123456");
+
+        JsonObjectRequest req = new JsonObjectRequest(url, new JSONObject(params),
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            VolleyLog.v("Response:%n %s", response.toString(4));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.e("Error: ", error.getMessage());
+            }
+        });
+
+        // add the request object to the queue to be executed
+        AppController.getInstance().addToRequestQueue(req);
+
     }
 }

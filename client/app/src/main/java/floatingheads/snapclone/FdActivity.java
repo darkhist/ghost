@@ -200,6 +200,7 @@ public class FdActivity extends AppCompatActivity implements CvCameraViewListene
             Log.e(TAG, "Detection method is not selected!");
         }
 
+        //Creates rectangle for detection
         Rect[] facesArray = faces.toArray();
         for (int i = 0; i < facesArray.length; i++)
             Imgproc.rectangle(mRgba, facesArray[i].tl(), facesArray[i].br(), FACE_RECT_COLOR, 3);
