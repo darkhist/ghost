@@ -39,7 +39,7 @@ public class AddFriendsActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                makeStringRequest("https://www.google.com");
+                makeStringRequest("https://proj-309-vc-4.cs.iastate.edu:3000/friends");
             }
         });
     }
@@ -54,8 +54,7 @@ public class AddFriendsActivity extends AppCompatActivity {
             @Override
             public void onResponse(String response) {
                 // Display the first 500 characters of the response string.
-                String tmp = "Response is " + response.substring(0,500);
-                mTextView.setText(tmp);
+                mTextView.setText(response);
             }
         }, new Response.ErrorListener() {
             @Override

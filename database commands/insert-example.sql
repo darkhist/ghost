@@ -1,1 +1,0 @@
-insert into db309vc4.Friendship (user_id, friends, pending, rejected, blocked) values (4, '1,2', null, '3', null);

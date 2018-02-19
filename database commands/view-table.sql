@@ -1,1 +1,0 @@
-select * from db309vc4.Friendship;
