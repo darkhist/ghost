@@ -62,7 +62,7 @@ import floatingheads.snapclone.app.AppController;
         setContentView(R.layout.activity_view_friends);
 
         //makeStringRequest("http://proj-309-vc-4.cs.iastate.edu:3000/friends");
-        //makeJSONarrayRequest("https://jsonplaceholder.typicode.com/posts");
+        //makeJSONarrayRequest("http://proj-309-vc-4.cs.iastate.edu:3000/friends");
         makeJSONobjRequest("http://ip.jsontest.com/");
         //makeJSONobjRequest("http://jsonplaceholder.typicode.com/posts/1");
         // create scrollable container for friends and set width/height to parents width/height
@@ -116,12 +116,12 @@ import floatingheads.snapclone.app.AppController;
             public void onResponse(String response) {
                 // Display the first 500 characters of the response string.
                 String tmp = "Response is " + response;
-                mTextView.setText(tmp);
+                //mTextView.setText(tmp);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                mTextView.setText(error.toString());
+                //mTextView.setText(error.toString());
             }
         });
         // Add the request to the RequestQueue.
@@ -134,11 +134,16 @@ import floatingheads.snapclone.app.AppController;
             @Override
             public void onResponse(JSONArray response) {
                 try {
-                    /*
-                    jsonResponse = "";
-                    for (int i = 0; i < response.length(); i++) {
 
-                    }*/
+                    String jsonResponse = "";
+                    int numFriends = response.length();
+                    LoadFriends(numFriends);
+                    for (int i = 0; i < response.length(); i++) {
+                        JSONObject user = (JSONObject) response.get(i);
+                        String friends = user.getString("friends");
+                        jsonResponse += friends;
+
+                    }
                     VolleyLog.v("Response:%n %s", response.toString(4));
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -170,7 +175,7 @@ import floatingheads.snapclone.app.AppController;
                             String title = response.getString("title");
                             String body = response.getString("body");
                             */
-                    mTextView.setText(ip);
+                  //  mTextView.setText(ip);
 
                 } catch (JSONException e) {
                     e.printStackTrace();
