@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.ViewGroup.LayoutParams;
 
 import org.opencv.BuildConfig;
+import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.Size;
@@ -165,7 +166,9 @@ public class JavaCameraView extends CameraBridgeViewBase implements PreviewCallb
                     mFrameHeight = params.getPreviewSize().height;
 
                     if ((getLayoutParams().width == LayoutParams.MATCH_PARENT) && (getLayoutParams().height == LayoutParams.MATCH_PARENT))
-                        mScale = Math.min(((float)height)/mFrameHeight, ((float)width)/mFrameWidth);
+                       //Change for full screen - note that this makes FPS slow down
+                        //mScale =1;
+                        mScale = Math.max(((float)height)/mFrameHeight, ((float)width)/mFrameWidth);
                     else
                         mScale = 0;
 
@@ -287,7 +290,7 @@ public class JavaCameraView extends CameraBridgeViewBase implements PreviewCallb
         if (BuildConfig.DEBUG)
             Log.d(TAG, "Preview Frame received. Frame size: " + frame.length);
         synchronized (this) {
-            mFrameChain[mChainIdx].put(0, 0, frame);
+            mFrameChain[1 - mChainIdx].put(0, 0, frame);
             mCameraFrameReady = true;
             this.notify();
         }
@@ -296,6 +299,7 @@ public class JavaCameraView extends CameraBridgeViewBase implements PreviewCallb
     }
 
     private class JavaCameraFrame implements CvCameraViewFrame {
+
         @Override
         public Mat gray() {
             return mYuvFrameData.submat(0, mHeight, 0, mWidth);
@@ -304,6 +308,7 @@ public class JavaCameraView extends CameraBridgeViewBase implements PreviewCallb
         @Override
         public Mat rgba() {
             Imgproc.cvtColor(mYuvFrameData, mRgba, Imgproc.COLOR_YUV2RGBA_NV21, 4);
+
             return mRgba;
         }
 
@@ -313,6 +318,7 @@ public class JavaCameraView extends CameraBridgeViewBase implements PreviewCallb
             mHeight = height;
             mYuvFrameData = Yuv420sp;
             mRgba = new Mat();
+
         }
 
         public void release() {

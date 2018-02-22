@@ -1357,10 +1357,10 @@ public class Core {
     //
 
     //javadoc: flip(src, dst, flipCode)
-    public static void flip(CameraBridgeViewBase.CvCameraViewFrame src, CameraBridgeViewBase.CvCameraViewFrame dst, int flipCode)
+    public static void flip(Mat src, Mat dst, int flipCode)
     {
-        
-        //flip_0(src.nativeObj, dst.nativeObj, flipCode);
+
+        flip_0(src.nativeObj, dst.nativeObj, flipCode);
         
         //return;
     }
@@ -1968,9 +1968,9 @@ public class Core {
     //javadoc: rotate(src, dst, rotateCode)
     public static void rotate(Mat src, Mat dst, int rotateCode)
     {
-        
+
         rotate_0(src.nativeObj, dst.nativeObj, rotateCode);
-        
+
         return;
     }
 

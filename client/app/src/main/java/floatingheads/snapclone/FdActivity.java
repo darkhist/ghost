@@ -8,12 +8,14 @@ package floatingheads.snapclone;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.hardware.Camera;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Surface;
 import android.view.WindowManager;
 
 import org.opencv.android.BaseLoaderCallback;
@@ -21,7 +23,9 @@ import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.CameraBridgeViewBase.CvCameraViewFrame;
 import org.opencv.android.CameraBridgeViewBase.CvCameraViewListener2;
 import org.opencv.android.LoaderCallbackInterface;
+import org.opencv.android.PortraitCameraView;
 import org.opencv.android.OpenCVLoader;
+import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfRect;
 import org.opencv.core.Rect;
@@ -29,7 +33,6 @@ import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.objdetect.CascadeClassifier;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -48,6 +51,8 @@ public class FdActivity extends AppCompatActivity implements CvCameraViewListene
     private MenuItem               mItemFace30;
     private MenuItem               mItemFace20;
     private MenuItem               mItemType;
+    private Camera.CameraInfo mCameraInfo;
+    private Camera mcamera;
 
     private Mat mRgba;
     private Mat mGray;
@@ -123,6 +128,8 @@ public class FdActivity extends AppCompatActivity implements CvCameraViewListene
         Log.i(TAG, "Instantiated new " + this.getClass());
     }
 
+
+
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -178,7 +185,6 @@ public class FdActivity extends AppCompatActivity implements CvCameraViewListene
         //Core.flip(inputFrame,inputFrame,1);
         mRgba = inputFrame.rgba();
         mGray = inputFrame.gray();
-
 
         if (mAbsoluteFaceSize == 0) {
             int height = mGray.rows();
