@@ -28,7 +28,7 @@ public:
         LOGD("CascadeDetectorAdapter::Detect::Detect");
         CV_Assert(detector);
     }
-
+    //Results of tracker stored in vectore cv::Rect data structure
     void detect(const cv::Mat &Image, std::vector<cv::Rect> &objects)
     {
         LOGD("CascadeDetectorAdapter::Detect: begin");

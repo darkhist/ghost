@@ -6,16 +6,16 @@ package floatingheads.snapclone;
 
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
-import android.hardware.Camera;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.Surface;
+import android.view.Window;
 import android.view.WindowManager;
 
 import org.opencv.android.BaseLoaderCallback;
@@ -23,9 +23,7 @@ import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.CameraBridgeViewBase.CvCameraViewFrame;
 import org.opencv.android.CameraBridgeViewBase.CvCameraViewListener2;
 import org.opencv.android.LoaderCallbackInterface;
-import org.opencv.android.PortraitCameraView;
 import org.opencv.android.OpenCVLoader;
-import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfRect;
 import org.opencv.core.Rect;
@@ -37,6 +35,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+
 
 
 public class FdActivity extends AppCompatActivity implements CvCameraViewListener2 {
@@ -51,14 +50,14 @@ public class FdActivity extends AppCompatActivity implements CvCameraViewListene
     private MenuItem               mItemFace30;
     private MenuItem               mItemFace20;
     private MenuItem               mItemType;
-    private Camera.CameraInfo mCameraInfo;
-    private Camera mcamera;
+    private Handler mHandler = new Handler(Looper.getMainLooper());
 
     private Mat mRgba;
     private Mat mGray;
     private File                   mCascadeFile;
     private CascadeClassifier mJavaDetector;
     private DetectionBasedTracker mNativeDetector;
+
 
     private int                    mDetectorType       = JAVA_DETECTOR;
     private String[]               mDetectorName;
@@ -72,6 +71,7 @@ public class FdActivity extends AppCompatActivity implements CvCameraViewListene
         @Override
         public void onManagerConnected(int status) {
             switch (status) {
+                //Called to make sure OpenCV is loaded successfully
                 case LoaderCallbackInterface.SUCCESS:
                 {
                     Log.i(TAG, "OpenCV loaded successfully");
@@ -81,6 +81,7 @@ public class FdActivity extends AppCompatActivity implements CvCameraViewListene
 
                     try {
                         // load cascade file from application resources
+                        //Opens cascade for face detection
                         InputStream is = getResources().openRawResource(R.raw.lbpcascade_frontalface);
                         File cascadeDir = getDir("cascade", Context.MODE_PRIVATE);
                         mCascadeFile = new File(cascadeDir, "lbpcascade_frontalface.xml");
@@ -88,12 +89,13 @@ public class FdActivity extends AppCompatActivity implements CvCameraViewListene
 
                         byte[] buffer = new byte[4096];
                         int bytesRead;
+                        //Reads bytes
                         while ((bytesRead = is.read(buffer)) != -1) {
                             os.write(buffer, 0, bytesRead);
                         }
                         is.close();
                         os.close();
-
+                        //Classifier loaded from file
                         mJavaDetector = new CascadeClassifier(mCascadeFile.getAbsolutePath());
                         if (mJavaDetector.empty()) {
                             Log.e(TAG, "Failed to load cascade classifier");
@@ -137,8 +139,10 @@ public class FdActivity extends AppCompatActivity implements CvCameraViewListene
         Log.i(TAG, "called onCreate");
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.face_detect_surface_view);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         mOpenCvCameraView = (CameraBridgeViewBase) findViewById(R.id.fd_activity_surface_view);
         mOpenCvCameraView.setVisibility(CameraBridgeViewBase.VISIBLE);
@@ -212,6 +216,7 @@ public class FdActivity extends AppCompatActivity implements CvCameraViewListene
         //Creates rectangle for detection
         Rect[] facesArray = faces.toArray();
         for (int i = 0; i < facesArray.length; i++)
+            //draws actual rectangles onto the frame
             Imgproc.rectangle(mRgba, facesArray[i].tl(), facesArray[i].br(), FACE_RECT_COLOR, 3);
 
         return mRgba;
@@ -228,6 +233,7 @@ public class FdActivity extends AppCompatActivity implements CvCameraViewListene
         return true;
     }
 
+    //Facesize Options
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Log.i(TAG, "called onOptionsItemSelected; selected item: " + item);
@@ -252,6 +258,7 @@ public class FdActivity extends AppCompatActivity implements CvCameraViewListene
         mAbsoluteFaceSize = 0;
     }
 
+    //Java detector vs. Native detector
     private void setDetectorType(int type) {
         if (mDetectorType != type) {
             mDetectorType = type;
@@ -265,4 +272,5 @@ public class FdActivity extends AppCompatActivity implements CvCameraViewListene
             }
         }
     }
+
 }
