@@ -48,7 +48,6 @@ public class AddFriendsActivity extends MainActivity {
         Button button = (Button) findViewById(R.id.button);
         TextView mTextView = (TextView) findViewById(R.id.textView);
 
-//        VolleyActions va = new VolleyActions(this);
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override

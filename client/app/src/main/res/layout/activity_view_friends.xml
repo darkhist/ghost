@@ -15,6 +15,11 @@
         android:layout_marginBottom="60dp"
         app:layout_constraintBottom_toBottomOf="parent"></RelativeLayout>
 
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/friendsListView"></ListView>
+
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/navigation"
         android:layout_width="0dp"
