@@ -33,7 +33,12 @@ class FriendsListAdapter extends ArrayAdapter<Friend> {
         String name = singleFriend.getUserFirstName() + " " + singleFriend.getUserLastName();
         friendName.setText(name);
         lastMessage.setText(singleFriend.getLastMessage());
-        avatar.setImageResource(R.mipmap.avatar); // set image later
+
+        if (singleFriend.getAvatar() != null) {
+            avatar.setImageBitmap(singleFriend.getAvatar());
+        } else {
+            avatar.setImageResource(R.mipmap.avatar);
+        }
 
         return customFriendView;
     }

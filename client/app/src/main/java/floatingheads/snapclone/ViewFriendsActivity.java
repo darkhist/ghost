@@ -1,6 +1,9 @@
 package floatingheads.snapclone;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
@@ -8,10 +11,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.File;
 
 public class ViewFriendsActivity extends AppCompatActivity {
 
@@ -58,31 +64,6 @@ public class ViewFriendsActivity extends AppCompatActivity {
                     Toast.makeText(ViewFriendsActivity.this, friend, Toast.LENGTH_SHORT).show();
                 }
         );
-
-//        // create scrollable container for friends and set width/height to parents width/height
-//        ScrollView scrollContainer = new ScrollView(this);
-//        scrollContainer.setLayoutParams(new ScrollView.LayoutParams(ScrollView.LayoutParams.MATCH_PARENT, ScrollView.LayoutParams.MATCH_PARENT));
-//
-//        // create linear vertical container for buttons and set width/height to scrollContainer's width/height
-//        LinearLayout buttonContainer = new LinearLayout(this);
-//        buttonContainer.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-//        buttonContainer.setOrientation(LinearLayout.VERTICAL);
-//        scrollContainer.addView(buttonContainer); // add buttonContainer to scrollContainer
-//
-//        // add "i" buttons and label them accordingly
-//        for (int i = 0; i < 10; i++) {
-//            Button btn = new Button(this);
-//            btn.setWidth(buttonContainer.getWidth());
-//            String btnText = "Sample Friend " + i;
-//            btn.setText(btnText);
-//            btn.setHeight(150);
-////            btn.setOnClickListener(friendClickListener);  // create button clicklistener
-//
-//            buttonContainer.addView(btn);
-//        }
-//
-//        // add scrollContainer to master container
-//        parentContainer.addView(scrollContainer);
 
         mTextMessage = (TextView) findViewById(R.id.message);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);

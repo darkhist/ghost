@@ -1,5 +1,7 @@
 package floatingheads.snapclone;
 
+import android.graphics.Bitmap;
+
 /**
  * Created by root on 2/23/18.
  */
@@ -12,12 +14,14 @@ public class Friend {
     private String userFirstName;
     private String userLastName;
     private String lastMessage;
+    private Bitmap avatar;
 
     public Friend() {
         userID = -1;
         userFirstName = "Sample";
         userLastName = "Friend";
         lastMessage = "sample message";
+        avatar = null;
     }
 
     public Friend(int userID, String userFirstName, String userLastName, String lastMessage) {
@@ -25,6 +29,12 @@ public class Friend {
         this.userFirstName = userFirstName;
         this.userLastName = userLastName;
         this.lastMessage = lastMessage;
+        avatar = null;
+    }
+
+    public Friend(int userID, String userFirstName, String userLastName, String lastMessage, Bitmap avatar) {
+        this(userID, userFirstName, userLastName, lastMessage);
+        this.avatar = avatar;
     }
 
     public void setUserID(int userID) {
@@ -43,6 +53,10 @@ public class Friend {
         this.lastMessage = lastMessage;
     }
 
+    public void setAvatar(Bitmap avatar) {
+        this.avatar = avatar;
+    }
+
     public int getUserID() {
         return userID;
     }
@@ -57,5 +71,9 @@ public class Friend {
 
     public String getLastMessage() {
         return lastMessage;
+    }
+
+    public Bitmap getAvatar() {
+        return avatar;
     }
 }

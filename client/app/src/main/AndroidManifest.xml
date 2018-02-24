@@ -76,7 +76,7 @@
 
         <activity
             android:name=".ViewFriendsActivity"
-            android:label="@string/title_activity_friends" />
+            android:label="Friends" />
 
         <activity android:name=".AddFriendsActivity" />
 
