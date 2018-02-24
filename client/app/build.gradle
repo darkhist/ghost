@@ -4,7 +4,7 @@ android {
     compileSdkVersion 26
     defaultConfig {
         applicationId "floatingheads.snapclone"
-        minSdkVersion 21
+        minSdkVersion 24
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
@@ -47,7 +47,9 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     implementation project(':openCVLibrary320')
     compile 'com.android.volley:volley:1.1.0'
+    compile 'com.miguelcatalan:materialsearchview:1.4.0'
 }
+
 
 
 

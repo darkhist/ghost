@@ -12,27 +12,35 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import floatingheads.snapclone.Friend;
+class CustomListAdapter extends ArrayAdapter<Friend> {
 
-class FriendsListAdapter extends ArrayAdapter<Friend> {
+    public static int FRIENDS_SCREEN = 0;
+    public static int MESSAGES_SCREEN = 1;
 
-    public FriendsListAdapter(Context context, Friend[] friends) {
-        super(context, R.layout.custom_friend, friends);
+    private int screen_type;
+
+    public CustomListAdapter(Context context, Friend[] friends, int screen_type) {
+        super(context, R.layout.custom_contact, friends);
+        this.screen_type = screen_type;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater friendsInflator = LayoutInflater.from(getContext());
-        View customFriendView = friendsInflator.inflate(R.layout.custom_friend, parent, false);
+        int resource = (screen_type == FRIENDS_SCREEN) ? R.layout.custom_friend : R.layout.custom_contact;
+
+        View customFriendView = friendsInflator.inflate(resource, parent, false);
 
         Friend singleFriend = getItem(position);
         TextView friendName = (TextView) customFriendView.findViewById(R.id.friend_name);
-        TextView lastMessage = (TextView) customFriendView.findViewById(R.id.last_message);
+        if (screen_type == MESSAGES_SCREEN) {
+            TextView lastMessage = (TextView) customFriendView.findViewById(R.id.last_message);
+            lastMessage.setText(singleFriend.getLastMessage());
+        }
         ImageView avatar = (ImageView) customFriendView.findViewById(R.id.avatar);
 
         String name = singleFriend.getUserFirstName() + " " + singleFriend.getUserLastName();
         friendName.setText(name);
-        lastMessage.setText(singleFriend.getLastMessage());
 
         if (singleFriend.getAvatar() != null) {
             avatar.setImageBitmap(singleFriend.getAvatar());

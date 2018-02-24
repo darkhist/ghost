@@ -21,11 +21,18 @@
         <TextView
             android:id="@+id/friend_name"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Sample Friend"
-            android:gravity="center_vertical"
             android:textAppearance="@android:style/TextAppearance.Material.Large" />
+
+        <TextView
+            android:id="@+id/last_message"
+            android:textStyle="italic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Last Message" />
     </LinearLayout>
 
 </LinearLayout>

@@ -2,20 +2,12 @@ package floatingheads.snapclone;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.icu.util.Freezable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.NavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.FrameLayout;
-import android.widget.ListAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 public class NavBarActivity extends AppCompatActivity {
 
@@ -40,7 +32,7 @@ public class NavBarActivity extends AppCompatActivity {
         notisFragment = new NotisFragment();
         messagesFragment = new MessagesFragment();
 
-        setFragment(profileFragment);
+        setFragment(messagesFragment);
 
         mMainNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -73,21 +65,4 @@ public class NavBarActivity extends AppCompatActivity {
         fragmentTransaction.replace(R.id.main_frame, f);
         fragmentTransaction.commit();
     }
-
-//        Friend[] friends = {
-//                new Friend(1, "Quinn", "Salas", "yo wassup homie?"),
-//                new Friend(2, "Akira", "Demoss", "opencv is a bitch"),
-//                new Friend(4, "Simanta", "Mitra", "Congrats your team is green.")
-//        }; // will change to custom list item
-//
-//        ListAdapter la = new FriendsListAdapter(this, friends);
-//        ListView friendsList = (ListView) findViewById(R.id.friendsListView);
-//        friendsList.setAdapter(la);
-//
-//        friendsList.setOnItemClickListener(
-//                (AdapterView<?> parent, View view, int position, long id) -> {
-//                    String friend = String.valueOf(parent.getItemAtPosition(position));
-//                    Toast.makeText(NavBarActivity.this, friend, Toast.LENGTH_SHORT).show();
-//                }
-//        );
 }
