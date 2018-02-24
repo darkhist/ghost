@@ -35,5 +35,7 @@
     <string name="nav_new_message">New Message</string>
     <string name="nav_notifications">Notifications</string>
     <string name="nav_messages">Messages</string>
+    <string name="search_friends">Search</string>
+    <string name="add_friend">Add Friend</string>
 
 </resources>

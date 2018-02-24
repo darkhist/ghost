@@ -4,7 +4,7 @@ import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 
 /**
- * Created by root on 2/23/18.
+ * Created by Mike on 2/23/18.
  */
 
 public class Friend implements Comparable {
@@ -33,14 +33,8 @@ public class Friend implements Comparable {
         avatar = null;
     }
 
-    public Friend(int userID, String userFirstName, String userLastName, String lastMessage) {
+    public Friend(int userID, String userFirstName, String userLastName, Bitmap avatar) {
         this(userID, userFirstName, userLastName);
-        this.lastMessage = lastMessage;
-        avatar = null;
-    }
-
-    public Friend(int userID, String userFirstName, String userLastName, String lastMessage, Bitmap avatar) {
-        this(userID, userFirstName, userLastName, lastMessage);
         this.avatar = avatar;
     }
 
@@ -54,10 +48,6 @@ public class Friend implements Comparable {
 
     public void setUserLastName(String userLastName) {
         this.userFirstName = userLastName;
-    }
-
-    public void setLastMessage(String lastMessage) {
-        this.lastMessage = lastMessage;
     }
 
     public void setAvatar(Bitmap avatar) {
@@ -74,10 +64,6 @@ public class Friend implements Comparable {
 
     public String getUserLastName() {
         return userLastName;
-    }
-
-    public String getLastMessage() {
-        return lastMessage;
     }
 
     public Bitmap getAvatar() {

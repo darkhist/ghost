@@ -192,11 +192,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     private boolean isEmailValid(String email) {
         //TODO: Replace this with your own logic
+        // add proper format check later (user name, @, domain)
         return email.contains("@");
     }
 
     private boolean isPasswordValid(String password) {
         //TODO: Replace this with your own logic
+        // this doesnt seem necessary for login
         return password.length() > 4;
     }
 
@@ -335,7 +337,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             if (success) {
                 finish();
                 // Open Friends Activity on Login Success
-                Intent i = new Intent(getApplicationContext(), FriendsActivity.class);
+                Intent i = new Intent(getApplicationContext(), NavBarActivity.class);
                 startActivity(i);
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));

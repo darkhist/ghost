@@ -1,7 +1,7 @@
 package floatingheads.snapclone;
 
 /**
- * Created by root on 2/23/18.
+ * Created by Mike on 2/23/18.
  */
 
 import android.content.Context;
@@ -34,8 +34,9 @@ class CustomListAdapter extends ArrayAdapter<Friend> {
         Friend singleFriend = getItem(position);
         TextView friendName = (TextView) customFriendView.findViewById(R.id.friend_name);
         if (screen_type == MESSAGES_SCREEN) {
+            Contact singleContact = (Contact) singleFriend;
             TextView lastMessage = (TextView) customFriendView.findViewById(R.id.last_message);
-            lastMessage.setText(singleFriend.getLastMessage());
+            lastMessage.setText(singleContact.getLastMessage());
         }
         ImageView avatar = (ImageView) customFriendView.findViewById(R.id.avatar);
 
