@@ -1,6 +1,5 @@
 package floatingheads.snapclone;
 
-import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -17,7 +16,7 @@ public class FriendsActivity extends AppCompatActivity {
         // set to home screen
         setContentView(R.layout.activity_friends);
         // set to friends screen
-        // setContentView(R.layout.activity_view_friends);
+        // setContentView(R.layout.activity_nav_bar);
 
         // Friends button (temp)
         RelativeLayout rl = findViewById(R.id.rl_main);
@@ -40,7 +39,7 @@ public class FriendsActivity extends AppCompatActivity {
         viewFriends.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(), ViewFriendsActivity.class);
+                Intent i = new Intent(getApplicationContext(), NavBarActivity.class);
                 startActivity(i);
             }
         });

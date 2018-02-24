@@ -75,8 +75,8 @@
             android:label="@string/title_activity_friends" />
 
         <activity
-            android:name=".ViewFriendsActivity"
-            android:label="Friends" />
+            android:name=".NavBarActivity"
+            android:label="NavBarActivity" />
 
         <activity android:name=".AddFriendsActivity" />
 

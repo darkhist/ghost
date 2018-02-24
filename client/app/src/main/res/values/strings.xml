@@ -30,4 +30,10 @@
     <item name="masked" type="id" />
     <string name="title_activity_sign_up">Sign Up</string>
     <string name="action_sign_in_short">Sign in</string>
+    <string name="nav_profile">Profile</string>
+    <string name="nav_friends">Friends</string>
+    <string name="nav_new_message">New Message</string>
+    <string name="nav_notifications">Notifications</string>
+    <string name="nav_messages">Messages</string>
+
 </resources>
