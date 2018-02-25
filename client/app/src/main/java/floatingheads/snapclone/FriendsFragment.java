@@ -58,24 +58,22 @@ public class FriendsFragment extends Fragment {
 
         searchView = (MaterialSearchView) inflatedView.findViewById(R.id.search_view);
 
-        // realistically we would use an arraylist to add friends.  I havent figured out how to
-        // get arraylists to work with my CustomListAdapter so that is a TODO
+        ArrayList<Friend> friendArrayList = new ArrayList<>();
+        // add friends to arraylist
+        // TODO get these friends from database
+        friendArrayList.add(new Friend(1, "Quinn", "Salas"));
+        friendArrayList.add(new Friend(2, "Akira", "Demoss"));
+        friendArrayList.add(new Friend(4, "Simanta", "Mitra"));
+        friendArrayList.add(new Friend(6,"Mark", "Hammill"));
+        friendArrayList.add(new Friend(12,"Esperanza", "Spalding"));
+        friendArrayList.add(new Friend(13, "Harry", "Potter"));
+        friendArrayList.add(new Friend(21, "Hermione", "Granger"));
+        friendArrayList.add(new Friend(25, "Vamsi", "Calpakkam"));
+        friendArrayList.add(new Friend(34,"Tom", "Brady"));
+        friendArrayList.add(new Friend(54, "Magic","Johnson"));
+        friendArrayList.add(new Friend(56, "Michael", "Jordan"));
 
-        Friend[] friends = {
-                new Friend(1, "Quinn", "Salas"),
-                new Friend(2, "Akira", "Demoss"),
-                new Friend(4, "Simanta", "Mitra"),
-                new Friend(6,"Mark", "Hammill"),
-                new Friend(12,"Esperanza", "Spalding"),
-                new Friend(13, "Harry", "Potter"),
-                new Friend(21, "Hermione", "Granger"),
-                new Friend(25, "Vamsi", "Calpakkam"),
-                new Friend(34,"Tom", "Brady"),
-                new Friend(54, "Magic","Johnson"),
-                new Friend(56, "Michael", "Jordan")
-        }; // will change to custom list item
-
-        ListAdapter la = new CustomListAdapter(this.getContext(), friends, CustomListAdapter.FRIENDS_SCREEN);
+        ListAdapter la = new CustomListAdapter(this.getContext(), friendArrayList, CustomListAdapter.FRIENDS_SCREEN);
         ListView friendsList = (ListView) inflatedView.findViewById(R.id.friendsListView);
         friendsList.setAdapter(la);
 
@@ -104,7 +102,7 @@ public class FriendsFragment extends Fragment {
             @Override
             public void onSearchViewClosed() {
                 // if closed, view goes to normal
-                ListAdapter la = new CustomListAdapter(friendsFragmentContext, friends, CustomListAdapter.FRIENDS_SCREEN);
+                ListAdapter la = new CustomListAdapter(friendsFragmentContext, friendArrayList, CustomListAdapter.FRIENDS_SCREEN);
                 ListView friendsList = (ListView) inflatedView.findViewById(R.id.friendsListView);
                 friendsList.setAdapter(la);
             }
@@ -120,19 +118,19 @@ public class FriendsFragment extends Fragment {
             public boolean onQueryTextChange(String newText) {
                 String name = "";
                 if (newText != null && !newText.isEmpty()) {
-                    List<Friend> listFound = new ArrayList<>();
-                    for (Friend friend : friends) {
+                    ArrayList<Friend> listFound = new ArrayList<>();
+                    for (Friend friend : friendArrayList) {
 
                         if (friend.getUserFirstName().toLowerCase().startsWith(newText.toLowerCase()) || friend.getUserLastName().toLowerCase().startsWith(newText.toLowerCase())) {
                             listFound.add(friend);
                         }
 
-                        ListAdapter adapter = new CustomListAdapter(friendsFragmentContext, listFound.toArray(new Friend[listFound.size()]), CustomListAdapter.FRIENDS_SCREEN);
+                        ListAdapter adapter = new CustomListAdapter(friendsFragmentContext, listFound, CustomListAdapter.FRIENDS_SCREEN);
                         friendsList.setAdapter(adapter);
                     }
                 } else {
                     // search text is null
-                    ListAdapter adapter = new CustomListAdapter(friendsFragmentContext, friends, CustomListAdapter.FRIENDS_SCREEN);
+                    ListAdapter adapter = new CustomListAdapter(friendsFragmentContext, friendArrayList, CustomListAdapter.FRIENDS_SCREEN);
                     friendsList.setAdapter(adapter);
                 }
                 return true;

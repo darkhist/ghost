@@ -15,6 +15,8 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -40,13 +42,12 @@ public class MessagesFragment extends Fragment {
 
         Context messagesFragmentContext = this.getContext();
 
-        Contact[] contacts = {
-                new Contact(1, "Quinn", "Salas", "yo wassup homie?"),
-                new Contact(2, "Akira", "Demoss", "New Multimedia Message"),
-                new Contact(4, "Simanta", "Mitra", "Congrats your team is green.")
-        }; // will change to custom list item
+        ArrayList<Contact> contactArrayList = new ArrayList<Contact>();
+        contactArrayList.add(new Contact(1, "Quinn", "Salas", "yo wassup homie?"));
+        contactArrayList.add(new Contact(2, "Akira", "Demoss", "New Multimedia Message"));
+        contactArrayList.add(new Contact(4, "Simanta", "Mitra", "Congrats your team is green."));
 
-        ListAdapter la = new CustomListAdapter(this.getContext(), contacts, CustomListAdapter.MESSAGES_SCREEN);
+        ListAdapter la = new CustomListAdapter(this.getContext(), contactArrayList, CustomListAdapter.MESSAGES_SCREEN);
         ListView friendsList = (ListView) inflatedView.findViewById(R.id.messagesListView);
         friendsList.setAdapter(la);
 

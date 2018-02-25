@@ -12,14 +12,16 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-class CustomListAdapter extends ArrayAdapter<Friend> {
+import java.util.ArrayList;
+
+class CustomListAdapter<T extends Friend> extends ArrayAdapter<T> {
 
     public static int FRIENDS_SCREEN = 0;
     public static int MESSAGES_SCREEN = 1;
 
     private int screen_type;
 
-    public CustomListAdapter(Context context, Friend[] friends, int screen_type) {
+    public CustomListAdapter(Context context, ArrayList<T> friends, int screen_type) {
         super(context, R.layout.custom_contact, friends);
         this.screen_type = screen_type;
     }
