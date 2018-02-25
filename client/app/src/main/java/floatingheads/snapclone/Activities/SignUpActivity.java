@@ -1,4 +1,4 @@
-package floatingheads.snapclone;
+package floatingheads.snapclone.Activities;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -29,6 +29,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import floatingheads.snapclone.R;
 
 import static android.Manifest.permission.READ_CONTACTS;
 

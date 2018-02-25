@@ -1,4 +1,4 @@
-package floatingheads.snapclone;
+package floatingheads.snapclone.Objects;
 
 /**
  * Created by Mike on 2/23/18.
@@ -14,7 +14,9 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-class CustomListAdapter<T extends Friend> extends ArrayAdapter<T> {
+import floatingheads.snapclone.R;
+
+public class CustomListAdapter<T extends Friend> extends ArrayAdapter<T> {
 
     public static int FRIENDS_SCREEN = 0;
     public static int MESSAGES_SCREEN = 1;

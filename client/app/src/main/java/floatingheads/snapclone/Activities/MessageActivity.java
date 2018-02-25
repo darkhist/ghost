@@ -1,8 +1,10 @@
-package floatingheads.snapclone;
+package floatingheads.snapclone.Activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toolbar;
+
+import floatingheads.snapclone.R;
 
 public class MessageActivity extends AppCompatActivity {
 

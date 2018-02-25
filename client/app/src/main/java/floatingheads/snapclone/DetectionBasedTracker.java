@@ -8,6 +8,8 @@ package floatingheads.snapclone;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfRect;
 
+
+
 //JNI wrapper for C++ code
 public class DetectionBasedTracker
 {

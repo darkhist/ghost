@@ -1,7 +1,8 @@
-package floatingheads.snapclone;
+package floatingheads.snapclone.Objects;
 
-import android.content.Context;
 import android.graphics.Bitmap;
+
+import floatingheads.snapclone.Objects.Friend;
 
 /**
  * Created by Mike on 2/24/18.

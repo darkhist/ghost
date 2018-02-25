@@ -1,4 +1,4 @@
-package floatingheads.snapclone;
+package floatingheads.snapclone.Fragments;
 
 
 import android.content.Context;
@@ -22,7 +22,12 @@ import android.support.v7.widget.Toolbar;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
+
+import floatingheads.snapclone.Activities.AddFriendsActivity;
+import floatingheads.snapclone.Objects.CustomListAdapter;
+import floatingheads.snapclone.Objects.Friend;
+import floatingheads.snapclone.R;
 
 
 /**
@@ -72,6 +77,8 @@ public class FriendsFragment extends Fragment {
         friendArrayList.add(new Friend(34,"Tom", "Brady"));
         friendArrayList.add(new Friend(54, "Magic","Johnson"));
         friendArrayList.add(new Friend(56, "Michael", "Jordan"));
+
+        Collections.sort(friendArrayList); // sort list in alphabetical order
 
         ListAdapter la = new CustomListAdapter(this.getContext(), friendArrayList, CustomListAdapter.FRIENDS_SCREEN);
         ListView friendsList = (ListView) inflatedView.findViewById(R.id.friendsListView);
