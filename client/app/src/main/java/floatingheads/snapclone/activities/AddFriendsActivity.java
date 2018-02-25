@@ -1,4 +1,4 @@
-package floatingheads.snapclone.Activities;
+package floatingheads.snapclone.activities;
 
 import android.content.Context;
 import android.os.Bundle;

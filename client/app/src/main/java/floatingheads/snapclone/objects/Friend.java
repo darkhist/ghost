@@ -1,4 +1,4 @@
-package floatingheads.snapclone.Objects;
+package floatingheads.snapclone.objects;
 
 import android.graphics.Bitmap;
 import android.support.annotation.NonNull;

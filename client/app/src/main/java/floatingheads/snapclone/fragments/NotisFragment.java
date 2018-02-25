@@ -1,4 +1,4 @@
-package floatingheads.snapclone.Fragments;
+package floatingheads.snapclone.fragments;
 
 
 import android.os.Bundle;
@@ -13,10 +13,10 @@ import floatingheads.snapclone.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ProfileFragment extends Fragment {
+public class NotisFragment extends Fragment {
 
 
-    public ProfileFragment() {
+    public NotisFragment() {
         // Required empty public constructor
     }
 
@@ -25,7 +25,7 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile, container, false);
+        return inflater.inflate(R.layout.fragment_notis, container, false);
     }
 
 }

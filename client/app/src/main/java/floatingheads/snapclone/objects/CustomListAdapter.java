@@ -1,4 +1,4 @@
-package floatingheads.snapclone.Objects;
+package floatingheads.snapclone.objects;
 
 /**
  * Created by Mike on 2/23/18.

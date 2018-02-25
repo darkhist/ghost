@@ -1,4 +1,4 @@
-package floatingheads.snapclone.Activities;
+package floatingheads.snapclone.activities;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -9,10 +9,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 
-import floatingheads.snapclone.Fragments.FriendsFragment;
-import floatingheads.snapclone.Fragments.MessagesFragment;
-import floatingheads.snapclone.Fragments.NotisFragment;
-import floatingheads.snapclone.Fragments.ProfileFragment;
+import floatingheads.snapclone.fragments.FriendsFragment;
+import floatingheads.snapclone.fragments.MessagesFragment;
+import floatingheads.snapclone.fragments.NotisFragment;
+import floatingheads.snapclone.fragments.ProfileFragment;
 import floatingheads.snapclone.R;
 
 public class NavBarActivity extends AppCompatActivity {

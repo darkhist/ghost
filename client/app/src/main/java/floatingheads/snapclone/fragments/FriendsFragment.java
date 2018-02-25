@@ -1,4 +1,4 @@
-package floatingheads.snapclone.Fragments;
+package floatingheads.snapclone.fragments;
 
 
 import android.content.Context;
@@ -24,9 +24,9 @@ import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import floatingheads.snapclone.Activities.AddFriendsActivity;
-import floatingheads.snapclone.Objects.CustomListAdapter;
-import floatingheads.snapclone.Objects.Friend;
+import floatingheads.snapclone.activities.AddFriendsActivity;
+import floatingheads.snapclone.objects.CustomListAdapter;
+import floatingheads.snapclone.objects.Friend;
 import floatingheads.snapclone.R;
 
 

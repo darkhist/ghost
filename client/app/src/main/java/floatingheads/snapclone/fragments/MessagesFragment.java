@@ -1,5 +1,4 @@
-package floatingheads.snapclone.Fragments;
-
+package floatingheads.snapclone.fragments;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -12,8 +11,8 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 
-import floatingheads.snapclone.Objects.Contact;
-import floatingheads.snapclone.Objects.MessagesView;
+import floatingheads.snapclone.objects.Contact;
+import floatingheads.snapclone.objects.MessagesView;
 import floatingheads.snapclone.R;
 
 
