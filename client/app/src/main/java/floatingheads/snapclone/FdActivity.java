@@ -24,6 +24,7 @@ import org.opencv.android.CameraBridgeViewBase.CvCameraViewFrame;
 import org.opencv.android.CameraBridgeViewBase.CvCameraViewListener2;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
+import org.opencv.android.RecolorRCFilter;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfRect;
 import org.opencv.core.Rect;
@@ -67,6 +68,8 @@ public class FdActivity extends AppCompatActivity implements CvCameraViewListene
 
     private CameraBridgeViewBase mOpenCvCameraView;
 
+    private RecolorRCFilter mRecolorRCFilter;
+
     private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
         @Override
         public void onManagerConnected(int status) {
@@ -77,7 +80,7 @@ public class FdActivity extends AppCompatActivity implements CvCameraViewListene
                     Log.i(TAG, "OpenCV loaded successfully");
 
                     // Load native library after(!) OpenCV initialization
-                    System.loadLibrary("detection_based_tracker");
+                    System.loadLibrary("OpenCV_cpp_lib");
 
                     try {
                         // load cascade file from application resources
@@ -189,6 +192,8 @@ public class FdActivity extends AppCompatActivity implements CvCameraViewListene
         //Core.flip(inputFrame,inputFrame,1);
         mRgba = inputFrame.rgba();
         mGray = inputFrame.gray();
+
+        //mRecolorRCFilter.apply(mRgba,mRgba);
 
         if (mAbsoluteFaceSize == 0) {
             int height = mGray.rows();

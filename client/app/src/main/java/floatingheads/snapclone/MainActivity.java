@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
         cameraInit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(),FdActivity.class);
+                Intent i = new Intent(getApplicationContext(),Camera2MainStuff.class);
                 startActivity(i);
             }
         });
