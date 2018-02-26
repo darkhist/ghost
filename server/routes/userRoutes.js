@@ -9,4 +9,7 @@ const userController = require("../controllers/userController");
 // GET /user
 router.get('/', userController.get);
 
+// POST /user/login
+// router.post('/login', userController.authenticate);
+
 module.exports = router;

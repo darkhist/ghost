@@ -7,10 +7,14 @@ const friends = require("./routes/friendRoutes.js");
 const port = 3000;
 const app = express();
 
+// support parsing of application/json post data
 app.use(bodyParser.json());
+
+// support parsing of application/x-www-from-urlencoded post data
 app.use(bodyParser.urlencoded({
   extended: true
 }));
+
 app.use('/user', users);
 app.use('/friend', friends);
 

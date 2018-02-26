@@ -11,18 +11,14 @@ exports.get = async (req, res) => {
   res.send(results);
 }
 
-// Handle GET /users/create
-exports.create = (req, res) => {
-  // Insert a user into the database
-  // TODO
-}
+// Handle POST /user/login
+exports.authenticate = (req, res) => {
+  let user = {
+    email: req.email,
+    passowrd: req.passowrd
+  };
+  console.log(user.username);
+  console.log(user.email);
 
-// Handle GET /users/search
-exports.search = (req, res) => {
-  // Search for a specific user in the database
-}
-
-// Handle GET /users/login
-exports.login = (req, res) => {
-  // TODO
+  // TODO: Call function to check if email and password match existing info in USERS table
 }
