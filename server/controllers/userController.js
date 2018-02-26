@@ -1,13 +1,13 @@
 'use strict';
 
-// This file defines request handling behaviors for the /users route
+// This file defines request handling behaviors for the /user route
 
 const request = require('request');
-const usersModel = require('../models/usersModel');
+const userModel = require('../models/userModel');
 
-// Handle GET /users
+// Handle GET /user
 exports.get = async (req, res) => {
-  const results = await usersModel.main();
+  const results = await userModel.main();
   res.send(results);
 }
 

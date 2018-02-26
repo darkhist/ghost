@@ -23,7 +23,7 @@ exports.main = async () => {
 
   // Parsing Results
   for (let i = 0; i < rows.length; i++) {
-    console.log(rows[i].user_id);
+    console.log(rows[i].friends);
   }
 
   return rows;
