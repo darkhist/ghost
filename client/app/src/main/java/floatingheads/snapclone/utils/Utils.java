@@ -5,6 +5,7 @@ package floatingheads.snapclone.utils;
  */
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Point;
 import android.graphics.PointF;
@@ -64,5 +65,15 @@ public class Utils {
             size[i] = new Size(sizes[i].getWidth(), sizes[i].getHeight());
         }
         return size;
+    }
+
+    public static boolean isPortrait(Context c){
+        int orientation = c.getResources().getConfiguration().orientation;
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            return false;
+        }
+        else {
+            return true;
+        }
     }
 }

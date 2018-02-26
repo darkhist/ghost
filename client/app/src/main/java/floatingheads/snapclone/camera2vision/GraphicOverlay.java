@@ -69,8 +69,7 @@ public class GraphicOverlay extends View {
         public abstract void draw(Canvas canvas);
 
         /**
-         * Adjusts a horizontal value of the supplied value from the preview scale to the view
-         * scale.
+         * Adjusts a horizontal value of the supplied value from the preview scale to the view scale
          */
         public float scaleX(float horizontal) {
             return horizontal * mOverlay.mWidthScaleFactor;
@@ -90,7 +89,8 @@ public class GraphicOverlay extends View {
         public float translateX(float x) {
             if (mOverlay.mFacing == CameraSource.CAMERA_FACING_FRONT) {
                 return mOverlay.getWidth() - scaleX(x);
-            } else {
+            }
+            else {
                 return scaleX(x);
             }
         }
@@ -152,6 +152,7 @@ public class GraphicOverlay extends View {
      */
     public void setCameraInfo(int previewWidth, int previewHeight, int facing) {
         synchronized (mLock) {
+            //used for transformations later
             mPreviewWidth = previewWidth;
             mPreviewHeight = previewHeight;
             mFacing = facing;
@@ -171,7 +172,6 @@ public class GraphicOverlay extends View {
                 mWidthScaleFactor = (float) canvas.getWidth() / (float) mPreviewWidth;
                 mHeightScaleFactor = (float) canvas.getHeight() / (float) mPreviewHeight;
             }
-
             for (Graphic graphic : mGraphics) {
                 graphic.draw(canvas);
             }

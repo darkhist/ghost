@@ -56,6 +56,7 @@ public class GraphicOverlay extends View {
     private int mPreviewHeight;
     private float mHeightScaleFactor = 1.0f;
     private int mFacing = CameraSource.CAMERA_FACING_BACK;
+    //hashset of graphics
     private Set<Graphic> mGraphics = new HashSet<>();
 
     /**

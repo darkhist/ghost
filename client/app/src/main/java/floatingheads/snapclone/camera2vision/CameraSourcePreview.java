@@ -11,6 +11,7 @@ package floatingheads.snapclone.camera2vision;
         import android.view.TextureView;
         import android.view.ViewGroup;
         import android.view.WindowManager;
+        import floatingheads.snapclone.utils.Utils;
 
         import floatingheads.snapclone.utils.Utils;
         import com.google.android.gms.common.images.Size;
@@ -60,6 +61,7 @@ public class CameraSourcePreview extends ViewGroup {
 
     public CameraSourcePreview(Context context, AttributeSet attrs) {
         super(context, attrs);
+        mContext = context;
         screenHeight = Utils.getScreenHeight(context);
         screenWidth = Utils.getScreenWidth(context);
         screenRotation = Utils.getScreenRotation(context);
@@ -219,35 +221,8 @@ public class CameraSourcePreview extends ViewGroup {
             }
         }
 
-        //RESIZE PREVIEW IGNORING ASPECT RATIO. THIS IS ESSENTIAL.
-        int newWidth = (height * screenWidth) / screenHeight;
-
-        final int layoutWidth = right - left;
-        final int layoutHeight = bottom - top;
-        // Computes height and width for potentially doing fit width.
-        int childWidth = layoutWidth;
-        int childHeight = (int)(((float) layoutWidth / (float) newWidth) * height);
-        // If height is too tall using fit width, does fit height instead.
-        if (childHeight > layoutHeight) {
-            childHeight = layoutHeight;
-            childWidth = (int)(((float) layoutHeight / (float) height) * newWidth);
-        }
-        for (int i = 0; i < getChildCount(); ++i) {getChildAt(i).layout(0, 0, screenWidth, screenHeight);}
-        try {startIfReady();} catch (IOException e) {Log.e(TAG, "Could not start camera source.", e);}
-    }
-        /*
-        int width = 480;
-        int height = 720;
-        if (mCamera2Source != null) {
-            Size size = mCamera2Source.getPreviewSize();
-            if (size != null) {
-                width = size.getWidth();
-                height = size.getHeight();
-            }
-        }
-
         // Swap width and height sizes when in portrait, since it will be rotated 90 degrees
-        if (isPortraitMode()) {
+        if (!Utils.isPortrait(mContext)) {
             int tmp = width;
             width = height;
             height = tmp;
@@ -257,38 +232,12 @@ public class CameraSourcePreview extends ViewGroup {
         final int layoutHeight = bottom - top;
 
         // Computes height and width for potentially doing fit width.
-
         int childWidth = layoutWidth;
-        int childHeight = (int) (((float) layoutWidth / (float) width) * height);
+        int childHeight = (int)(((float) layoutWidth / (float) width) * height);
 
-
-        // If height is too tall using fit width, does fit height instead.
-
-        if (childHeight > layoutHeight) {
-            childHeight = layoutHeight;
-            childWidth = (int)(((float) layoutHeight / (float) height) * width);
+        for (int i = 0; i < getChildCount(); ++i) {getChildAt(i).layout(0, 0, childWidth, childHeight);
         }
 
-        for (int i = 0; i < getChildCount(); ++i) {
-            getChildAt(i).layout(0, 0, childWidth, childHeight);
-        }
-
-        try {
-            startIfReady();
-        } catch (IOException e) {
-            Log.e(TAG, "Could not start camera source.", e);
-        }
+        try {startIfReady();} catch (IOException e) {Log.e(TAG, "Could not start camera source.", e);}
     }
-    private boolean isPortraitMode() {
-        int orientation = mContext.getResources().getConfiguration().orientation;
-        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            return false;
-        }
-        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-            return true;
-        }
-
-        Log.d(TAG, "isPortraitMode returning false by default");
-        return false;
-    }*/
 }
