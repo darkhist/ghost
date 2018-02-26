@@ -2,7 +2,6 @@
 
 const bodyParser = require('body-parser');
 const express = require('express');
-const passport = require('passport');
 const users = require("./routes/userRoutes.js");
 const friends = require("./routes/friendRoutes.js");
 const port = 3000;
