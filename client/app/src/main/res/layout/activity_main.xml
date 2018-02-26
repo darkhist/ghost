@@ -4,15 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="floatingheads.snapclone.MainActivity"
+    tools:context="floatingheads.snapclone.activities.MainActivity"
     tools:layout_editor_absoluteY="81dp">
 
     <!--Open Camera -->
     <Button
         android:id="@+id/openCamera"
-        android:layout_width="411dp"
+        android:layout_width="match_parent"
         android:layout_height="70dp"
         android:layout_alignParentBottom="true"
+        android:background="@android:color/darker_gray"
         android:fontFamily="sans-serif-light"
         android:text="@string/open_camera"
         android:textSize="18sp"
@@ -24,7 +25,7 @@
     <!-- Log In -->
     <Button
         android:id="@+id/logIn"
-        android:layout_width="411dp"
+        android:layout_width="match_parent"
         android:layout_height="70dp"
         android:layout_alignParentBottom="true"
         android:background="@android:color/holo_red_light"
@@ -39,7 +40,7 @@
     <!-- Sign Up-->
     <Button
         android:id="@+id/signUp"
-        android:layout_width="411dp"
+        android:layout_width="match_parent"
         android:layout_height="70dp"
         android:layout_alignParentBottom="true"
         android:background="@android:color/holo_blue_light"
