@@ -28,10 +28,23 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import floatingheads.snapclone.R;
+import floatingheads.snapclone.app.AppController;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -46,13 +59,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private static final int REQUEST_READ_CONTACTS = 0;
 
     /**
-     * A dummy authentication store containing known user names and passwords.
-     * TODO: remove after connecting to a real authentication system.
-     */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "foo@example.com:hello", "bar@example.com:world"
-    };
-    /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
     private UserLoginTask mAuthTask = null;
@@ -62,6 +68,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
+
+    // Volley
+    private final String URL = "http:localhost:3000/users/login";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,7 +109,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         if (!mayRequestContacts()) {
             return;
         }
-
         getLoaderManager().initLoader(0, null, this);
     }
 
@@ -138,7 +146,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         }
     }
-
 
     /**
      * Attempts to sign in or register the account specified by the login form.
@@ -310,8 +317,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
-
             try {
                 // Simulate network access
                 Thread.sleep(2000);
@@ -319,15 +324,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 return false;
             }
 
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
-            }
+            loginAuth(mEmail, mPassword);
 
-            // TODO: register the new account here.
             return true;
         }
 
@@ -351,6 +349,37 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         protected void onCancelled() {
             mAuthTask = null;
             showProgress(false);
+        }
+
+        /**
+         * The following method is used for user authentication
+         * and posts login credentials to the /users/login endpoint
+         * @param email
+         * @param password
+         */
+        private void loginAuth(String email, String password) {
+            JSONObject json = new JSONObject();
+
+            try {
+                json.put("email", email);
+                json.put("password", password);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, URL, json, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    VolleyLog.v("Response is: ", response.toString());
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    VolleyLog.e("Something Went Wrong!", error.getMessage());
+                }
+            });
+            AppController.getInstance().addToRequestQueue(postRequest);
         }
     }
 }
