@@ -87,7 +87,7 @@ public class FriendsFragment extends Fragment {
         friendsList.setOnItemClickListener(
                 (AdapterView<?> parent, View view, int position, long id) -> {
                     Friend friend = (Friend) parent.getItemAtPosition(position);
-                    String name = friend.getUserFirstName() + " " + friend.getUserLastName();
+                    String name = friend.getFirstName() + " " + friend.getLastName();
                     Toast.makeText(this.getContext(), name, Toast.LENGTH_SHORT).show();
                 }
         );
@@ -128,7 +128,7 @@ public class FriendsFragment extends Fragment {
                     ArrayList<Friend> listFound = new ArrayList<>();
                     for (Friend friend : friendArrayList) {
 
-                        if (friend.getUserFirstName().toLowerCase().startsWith(newText.toLowerCase()) || friend.getUserLastName().toLowerCase().startsWith(newText.toLowerCase())) {
+                        if (friend.getFirstName().toLowerCase().startsWith(newText.toLowerCase()) || friend.getLastName().toLowerCase().startsWith(newText.toLowerCase())) {
                             listFound.add(friend);
                         }
 

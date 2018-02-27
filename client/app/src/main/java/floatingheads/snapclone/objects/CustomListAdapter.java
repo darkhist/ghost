@@ -11,15 +11,17 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import floatingheads.snapclone.R;
 
-public class CustomListAdapter<T extends Friend> extends ArrayAdapter<T> {
+public class CustomListAdapter<T extends User> extends ArrayAdapter<T> {
 
     public static int FRIENDS_SCREEN = 0;
     public static int MESSAGES_SCREEN = 1;
+    public static int USERS_SCREEN = 2;
 
     private int screen_type;
 
@@ -31,24 +33,42 @@ public class CustomListAdapter<T extends Friend> extends ArrayAdapter<T> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater friendsInflator = LayoutInflater.from(getContext());
-        int resource = (screen_type == FRIENDS_SCREEN) ? R.layout.custom_friend : R.layout.custom_contact;
+        int resource;
+
+        if (screen_type == FRIENDS_SCREEN) {
+            resource = R.layout.custom_friend;
+        } else if (screen_type == MESSAGES_SCREEN) {
+            resource = R.layout.custom_contact;
+        } else if (screen_type == USERS_SCREEN) {
+            resource = R.layout.custom_user;
+        } else {
+            Toast.makeText(getContext(), "An error occurred", Toast.LENGTH_LONG);
+            throw new IllegalStateException();
+        }
 
         View customFriendView = friendsInflator.inflate(resource, parent, false);
 
-        Friend singleFriend = getItem(position);
+        User singleUser = (User) getItem(position);
+//        singleUser.setId();
+
         TextView friendName = (TextView) customFriendView.findViewById(R.id.friend_name);
         if (screen_type == MESSAGES_SCREEN) {
-            Contact singleContact = (Contact) singleFriend;
+            Contact singleContact = (Contact) singleUser;
             TextView lastMessage = (TextView) customFriendView.findViewById(R.id.last_message);
             lastMessage.setText(singleContact.getLastMessage());
         }
+        if (screen_type == USERS_SCREEN) {
+            TextView username = (TextView) customFriendView.findViewById(R.id.user_name);
+            username.setText(singleUser.getUsername());
+        }
+        
         ImageView avatar = (ImageView) customFriendView.findViewById(R.id.avatar);
 
-        String name = singleFriend.getUserFirstName() + " " + singleFriend.getUserLastName();
+        String name = singleUser.getFirstName() + " " + singleUser.getLastName();
         friendName.setText(name);
 
-        if (singleFriend.getAvatar() != null) {
-            avatar.setImageBitmap(singleFriend.getAvatar());
+        if (singleUser.getAvatar() != null) {
+            avatar.setImageBitmap(singleUser.getAvatar());
         } else {
             avatar.setImageResource(R.mipmap.avatar);
         }

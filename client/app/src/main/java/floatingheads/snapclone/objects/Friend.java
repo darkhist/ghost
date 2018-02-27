@@ -7,29 +7,24 @@ import android.support.annotation.NonNull;
  * Created by Mike on 2/23/18.
  */
 
-public class Friend implements Comparable<Friend> {
+public class Friend extends User implements Comparable<Friend> {
 
     // will incorporate avatar image soon hopefully
 
     private int userID;
     private String userFirstName;
     private String userLastName;
-    private String lastMessage;
     private Bitmap avatar;
 
     public Friend() {
-        userID = -1;
-        userFirstName = "Sample";
-        userLastName = "Friend";
-        lastMessage = "";
-        avatar = null;
+        super();
     }
 
     public Friend(int userID, String userFirstName, String userLastName) {
+        this();
         this.userID = userID;
         this.userFirstName = userFirstName;
         this.userLastName = userLastName;
-        this.lastMessage = "";
         avatar = null;
     }
 
@@ -38,48 +33,16 @@ public class Friend implements Comparable<Friend> {
         this.avatar = avatar;
     }
 
-    public void setUserID(int userID) {
-        this.userID = userID;
-    }
-
-    public void setUserFirstName(String userFirstName) {
-        this.userFirstName = userFirstName;
-    }
-
-    public void setUserLastName(String userLastName) {
-        this.userFirstName = userLastName;
-    }
-
-    public void setAvatar(Bitmap avatar) {
-        this.avatar = avatar;
-    }
-
-    public int getUserID() {
-        return userID;
-    }
-
-    public String getUserFirstName() {
-        return userFirstName;
-    }
-
-    public String getUserLastName() {
-        return userLastName;
-    }
-
-    public Bitmap getAvatar() {
-        return avatar;
-    }
-
 //    @Override
     public int compareTo(@NonNull Friend o) {
 
-        String name1 = getUserFirstName() + getUserLastName();
+        String name1 = getFirstName() + getLastName();
         Friend f;
 
         if (o instanceof Friend) {
             f = (Friend) o;
 
-            String name2 = f.getUserFirstName() + f.getUserLastName();
+            String name2 = f.getFirstName() + f.getLastName();
 
             if (name1.compareTo(name2) < 0)
                 return -1;
