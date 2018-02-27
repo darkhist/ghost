@@ -2,22 +2,24 @@
 
 const bodyParser = require('body-parser');
 const express = require('express');
-const users = require("./routes/userRoutes.js");
-const friends = require("./routes/friendRoutes.js");
+const users = require("./routes/usersRoutes.js");
+const friends = require("./routes/friendsRoutes.js");
 const port = 3000;
 const app = express();
 
-// support parsing of application/json post data
+// Support parsing of application/json post data
 app.use(bodyParser.json());
 
-// support parsing of application/x-www-from-urlencoded post data
+// Support parsing of application/x-www-from-urlencoded post data
 app.use(bodyParser.urlencoded({
   extended: true
 }));
 
-app.use('/user', users);
-app.use('/friend', friends);
+// Define routes
+app.use('/users', users);
+app.use('/friends', friends);
 
+// Define behavior for base path 
 app.get('/', (req, res) => {
   res.send("Hello! Welcome to the API!");
 });

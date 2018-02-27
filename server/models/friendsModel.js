@@ -21,10 +21,7 @@ exports.main = async () => {
   // Return Rows from Friendship Table
   const rows = results[0];
 
-  // Parsing Results
-  for (let i = 0; i < rows.length; i++) {
-    console.log(rows[i].friends);
-  }
+  // TODO: Parse Results
 
   return rows;
 }
