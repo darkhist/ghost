@@ -18,6 +18,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -28,6 +29,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -41,7 +43,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import floatingheads.snapclone.R;
 import floatingheads.snapclone.app.AppController;
@@ -63,14 +67,20 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      */
     private UserLoginTask mAuthTask = null;
 
-    // UI references
+    // UI References
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
 
-    // Volley
-    private final String URL = "http:localhost:3000/users/login";
+    // Volley Stuff
+
+    // Local Testing
+    private final String URL = "http://192.168.10.103:3000/users/login";
+
+    // TODO: Uncomment
+    // Production URL
+    // private final String URL = "http://proj-309-vc-4.cs.iastate.edu:3000/users/login";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -191,6 +201,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // form field with an error.
             focusView.requestFocus();
         } else {
+            // Send login credentials to /users/login for authentication
+            loginAuth(email, password);
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
@@ -272,7 +284,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             emails.add(cursor.getString(ProfileQuery.ADDRESS));
             cursor.moveToNext();
         }
-
         addEmailsToAutoComplete(emails);
     }
 
@@ -302,6 +313,35 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     /**
+     * The following method is used for user authentication
+     * and posts login credentials to the /users/login endpoint
+     * @param email
+     * @param password
+     */
+    private void loginAuth(String email, String password) {
+        StringRequest postRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                VolleyLog.v("Response is: ", response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                HashMap<String, String> params = new HashMap<>();
+                params.put("email", email);
+                params.put("password", password);
+                return params;
+            }
+        };
+        AppController.getInstance().addToRequestQueue(postRequest);
+    }
+
+    /**
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
@@ -323,9 +363,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             } catch (InterruptedException e) {
                 return false;
             }
-
-            loginAuth(mEmail, mPassword);
-
             return true;
         }
 
@@ -349,37 +386,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         protected void onCancelled() {
             mAuthTask = null;
             showProgress(false);
-        }
-
-        /**
-         * The following method is used for user authentication
-         * and posts login credentials to the /users/login endpoint
-         * @param email
-         * @param password
-         */
-        private void loginAuth(String email, String password) {
-            JSONObject json = new JSONObject();
-
-            try {
-                json.put("email", email);
-                json.put("password", password);
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, URL, json, new Response.Listener<JSONObject>() {
-                @Override
-                public void onResponse(JSONObject response) {
-                    VolleyLog.v("Response is: ", response.toString());
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    VolleyLog.e("Something Went Wrong!", error.getMessage());
-                }
-            });
-            AppController.getInstance().addToRequestQueue(postRequest);
         }
     }
 }

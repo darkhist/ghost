@@ -21,7 +21,7 @@ exports.authenticate = (req, res) => {
   console.log(user.email);
   console.log(user.password);
 
-  // res.send("Success");
+  res.send("Success");
   // TODO: Hash Password
   // TODO: Call function to check if email and password match existing info in USERS table
 

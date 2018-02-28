@@ -6,8 +6,9 @@ package floatingheads.snapclone.net_utils;
 
 //Edit with API info
 public class Const {
-//public static final String URL_JSON_OBJECT = "https://...";
-//public static final String URL_JSON_ARRAY = "https://...";
-//public static final String URL_STRING_REQ = "https://...";
-//public static final String URL_IMAGE = "https://...";
+    // /users
+    private final String usersURL = "http://proj-309-vc-4.cs.iastate.edu:3000/users";
+
+    // /friends
+    private final String friendsURL = "http://proj-309-vc-4.cs.iastate.edu:3000/friends";
 }
