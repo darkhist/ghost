@@ -1,4 +1,4 @@
-package floatingheads.snapclone;
+package floatingheads.snapclone.activities;
 
 import android.graphics.Bitmap;
 import android.graphics.ImageFormat;
@@ -13,9 +13,9 @@ import android.hardware.Camera.Parameters;
 import java.io.IOException;
 
 /*
-*  CameraPreview.java
+*  CVImgProcCameraActivity.java
 */
-public class CameraPreview implements SurfaceHolder.Callback, Camera.PreviewCallback
+public class CVImgProcCameraActivity implements SurfaceHolder.Callback, Camera.PreviewCallback
 {
     private Camera mCamera = null;
     private ImageView MyCameraPreview = null;
@@ -29,8 +29,8 @@ public class CameraPreview implements SurfaceHolder.Callback, Camera.PreviewCall
 
     Handler mHandler = new Handler(Looper.getMainLooper());
 
-    public CameraPreview(int PreviewlayoutWidth, int PreviewlayoutHeight,
-                         ImageView CameraPreview)
+    public CVImgProcCameraActivity(int PreviewlayoutWidth, int PreviewlayoutHeight,
+                                   ImageView CameraPreview)
     {
         PreviewSizeWidth = PreviewlayoutWidth;
         PreviewSizeHeight = PreviewlayoutHeight;

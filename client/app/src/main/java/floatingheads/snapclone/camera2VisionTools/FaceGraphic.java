@@ -1,8 +1,4 @@
-package floatingheads.snapclone.camera2vision;
-
-/**
- * Created by Ezequiel Adrian on 26/02/2017.
- */
+package floatingheads.snapclone.camera2VisionTools;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -16,7 +12,6 @@ import android.graphics.PorterDuff;
 
 
 import floatingheads.snapclone.R;
-import floatingheads.snapclone.camera2vision.GraphicOverlay;
 import com.google.android.gms.vision.face.Face;
 import com.google.android.gms.vision.face.Landmark;
 
@@ -26,7 +21,7 @@ import com.google.android.gms.vision.face.Landmark;
  */
 public class FaceGraphic extends GraphicOverlay.Graphic {
     private Bitmap marker;
-
+    private Bitmap kakashi;
     private BitmapFactory.Options opt;
     private Resources resources;
 
@@ -52,6 +47,7 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
     PointF rightEarTip = null;
     PointF leftCheek = null;
     PointF rightCheek = null;
+    public Context mContext;
 
     private volatile Face mFace;
 
@@ -60,8 +56,8 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
         opt = new BitmapFactory.Options();
         opt.inScaled = false;
         resources = context.getResources();
-        //Marker from drawable
         marker = BitmapFactory.decodeResource(resources, R.drawable.marker, opt);
+        kakashi = BitmapFactory.decodeResource(resources, R.drawable.kakashi, opt);
     }
 
     public void setId(int id) {
@@ -220,8 +216,8 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
         if(rightCheek != null)
             canvas.drawBitmap(marker, rightCheek.x, rightCheek.y, null);
     }
-/*
-    public getrotated(Canvas canvas){
+
+    public void getRotated(Canvas canvas){
         Face face = mFace;
         if(face == null) {
             canvas.drawColor(0, PorterDuff.Mode.CLEAR);
@@ -230,7 +226,6 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
             eyeLeftOpenProbability = -1;
             return;
         }
-
         //face.getPosition() returns the top left position of the face within the image
         //create point called faceposition here
         facePosition = new PointF(translateX(face.getPosition().x), translateY(face.getPosition().y));
@@ -240,7 +235,7 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
         faceHeight = face.getHeight() * 4;
 
         //Center of the face coordinate calculated
-        faceCenter = new PointF(translateX(face.getPosition().x + faceWidth/8), translateY(face.getPosition().y + faceHeight/8));
+        faceCenter = new PointF(translateX(face.getPosition().x + faceHeight/8), translateY(face.getPosition().y + faceWidth/8));
         isSmilingProbability = face.getIsSmilingProbability();
         eyeRightOpenProbability = face.getIsRightEyeOpenProbability();
         eyeLeftOpenProbability = face.getIsLeftEyeOpenProbability();
@@ -314,9 +309,11 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
             }
         }
 
+
         Paint mPaint = new Paint();
         mPaint.setColor(Color.WHITE);
         mPaint.setStrokeWidth(4);
+       // canvas.drawBitmap(marker, facePosition.x, facePosition.y, null);
         if(faceCenter != null)
             canvas.drawBitmap(marker, faceCenter.x, faceCenter.y, null);
         if(noseBasePos != null)
@@ -345,5 +342,5 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
             canvas.drawBitmap(marker, rightCheek.x, rightCheek.y, null);
     }
 
-    }*/
+
 }

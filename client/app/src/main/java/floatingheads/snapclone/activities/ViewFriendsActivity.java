@@ -1,4 +1,4 @@
-package floatingheads.snapclone;
+package floatingheads.snapclone.activities;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -11,23 +11,9 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
+import floatingheads.snapclone.R;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.HashMap;
-
-import floatingheads.snapclone.app.AppController;
-
-    public class ViewFriendsActivity extends AppCompatActivity {
+public class ViewFriendsActivity extends AppCompatActivity {
 
     private TextView mTextMessage;
         // create overall master container

@@ -1,20 +1,17 @@
-package floatingheads.snapclone;
+package floatingheads.snapclone.opencv;
 
-import android.Manifest;
 import android.app.Activity;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import com.google.android.gms.vision.CameraSource;
-import floatingheads.snapclone.ui.CameraSourcePreviewOpenCV;
+
+import floatingheads.snapclone.activities.CVImgProcCameraActivity;
+import floatingheads.snapclone.R;
+
 
 
 
@@ -25,7 +22,7 @@ import floatingheads.snapclone.ui.CameraSourcePreviewOpenCV;
 
 public class MyRealTimeImageProcessing extends Activity
 {
-    private CameraPreview camPreview;
+    private CVImgProcCameraActivity camPreview;
     private ImageView MyCameraPreview = null;
     private FrameLayout mainLayout;
     private int PreviewSizeWidth = 1280;
@@ -41,14 +38,12 @@ public class MyRealTimeImageProcessing extends Activity
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.main);
 
-        //
         // Create my camera preview
-        //
         MyCameraPreview = new ImageView(this);
 
         SurfaceView camView = new SurfaceView(this);
         SurfaceHolder camHolder = camView.getHolder();
-        camPreview = new CameraPreview(PreviewSizeWidth, PreviewSizeHeight, MyCameraPreview);
+        camPreview = new CVImgProcCameraActivity(PreviewSizeWidth, PreviewSizeHeight, MyCameraPreview);
 
         camHolder.addCallback(camPreview);
         camHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);

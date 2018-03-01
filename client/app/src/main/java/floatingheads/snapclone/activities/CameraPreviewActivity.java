@@ -1,4 +1,4 @@
-package floatingheads.snapclone;
+package floatingheads.snapclone.activities;
 
 /**
  * Created by Akira on 2/26/2018.
@@ -26,11 +26,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import floatingheads.snapclone.R;
 
-import floatingheads.snapclone.camera2vision.Camera2Source;
-import floatingheads.snapclone.camera2vision.FaceGraphic;
-import floatingheads.snapclone.utils.Utils;
+import floatingheads.snapclone.R;
+import floatingheads.snapclone.camera2VisionTools.Camera2Source;
+import floatingheads.snapclone.camera2VisionTools.FaceGraphic;
+import floatingheads.snapclone.androidScreenUtils.Utils;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.vision.MultiProcessor;
@@ -43,12 +43,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
-import floatingheads.snapclone.camera2vision.CameraSource;
-import floatingheads.snapclone.camera2vision.CameraSourcePreview;
-import floatingheads.snapclone.camera2vision.GraphicOverlay;
+import floatingheads.snapclone.camera2VisionTools.CameraSource;
+import floatingheads.snapclone.camera2VisionTools.CameraSourcePreview;
+import floatingheads.snapclone.camera2VisionTools.GraphicOverlay;
 
-public class Camera2MainStuff extends AppCompatActivity  {
-    private static final String TAG = "Ezequiel Adrian Camera";
+public class CameraPreviewActivity extends AppCompatActivity  {
+    private static final String TAG = "Akira Camera";
     private Context context;
     private static final int REQUEST_CAMERA_PERMISSION = 200;
     private static final int REQUEST_STORAGE_PERMISSION = 201;
@@ -65,7 +65,6 @@ public class Camera2MainStuff extends AppCompatActivity  {
     private CameraSourcePreview mPreview;
     private FaceDetector previewFaceDetector = null;
     private GraphicOverlay mGraphicOverlay;
-    private FaceGraphic mFaceGraphic;
     private boolean wasActivityResumed = false;
     private boolean isRecordingVideo = false;
     private Button takePictureButton;
@@ -83,7 +82,7 @@ public class Camera2MainStuff extends AppCompatActivity  {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_main2);
+        setContentView(R.layout.activity_camera_preview);
         context = getApplicationContext();
 
         takePictureButton = (Button) findViewById(R.id.btn_takepicture);
@@ -323,7 +322,7 @@ public class Camera2MainStuff extends AppCompatActivity  {
             return true;
         } else {
             if(googleApiAvailability.isUserResolvableError(resultCode)) {
-                googleApiAvailability.getErrorDialog(Camera2MainStuff.this, resultCode, 2404).show();
+                googleApiAvailability.getErrorDialog(CameraPreviewActivity.this, resultCode, 2404).show();
             }
         }
         return false;
@@ -450,6 +449,10 @@ public class Camera2MainStuff extends AppCompatActivity  {
         mPreview.stop();
     }
 
+    //==============================================================================================
+    // Graphic Face Tracker -- IMPORTANT
+    //==============================================================================================
+
     private class GraphicFaceTrackerFactory implements MultiProcessor.Factory<Face> {
         @Override
         public Tracker<Face> create(Face face) {
@@ -459,7 +462,7 @@ public class Camera2MainStuff extends AppCompatActivity  {
 
     private class GraphicFaceTracker extends Tracker<Face> {
         private GraphicOverlay mOverlay;
-
+        private FaceGraphic mFaceGraphic;
         GraphicFaceTracker(GraphicOverlay overlay) {
             mOverlay = overlay;
             mFaceGraphic = new FaceGraphic(overlay, context);
@@ -553,7 +556,7 @@ public class Camera2MainStuff extends AppCompatActivity  {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 requestPermissionThenOpenCamera();
             } else {
-                Toast.makeText(Camera2MainStuff.this, "CAMERA PERMISSION REQUIRED", Toast.LENGTH_LONG).show();
+                Toast.makeText(CameraPreviewActivity.this, "CAMERA PERMISSION REQUIRED", Toast.LENGTH_LONG).show();
                 finish();
             }
         }
@@ -561,7 +564,7 @@ public class Camera2MainStuff extends AppCompatActivity  {
             if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 requestPermissionThenOpenCamera();
             } else {
-                Toast.makeText(Camera2MainStuff.this, "STORAGE PERMISSION REQUIRED", Toast.LENGTH_LONG).show();
+                Toast.makeText(CameraPreviewActivity.this, "STORAGE PERMISSION REQUIRED", Toast.LENGTH_LONG).show();
             }
         }
     }

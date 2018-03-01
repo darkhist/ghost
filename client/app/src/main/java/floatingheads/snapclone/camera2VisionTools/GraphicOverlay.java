@@ -1,4 +1,4 @@
-package floatingheads.snapclone.camera2vision;
+package floatingheads.snapclone.camera2VisionTools;
 
 
 /**
@@ -14,6 +14,7 @@ package floatingheads.snapclone.camera2vision;
 
         import java.util.HashSet;
         import java.util.Set;
+
 
 /**
  * A view which renders a series of custom graphics to be overlayed on top of an associated preview
@@ -67,6 +68,8 @@ public class GraphicOverlay extends View {
          * @param canvas drawing canvas
          */
         public abstract void draw(Canvas canvas);
+
+        public abstract void getRotated(Canvas canvas);
 
         /**
          * Adjusts a horizontal value of the supplied value from the preview scale to the view scale

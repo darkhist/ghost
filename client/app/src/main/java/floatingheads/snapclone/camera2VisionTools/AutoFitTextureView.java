@@ -1,10 +1,4 @@
-package floatingheads.snapclone.camera2vision;
-
-import android.content.Context;
-import android.util.AttributeSet;
-import android.view.TextureView;
-
-
+package floatingheads.snapclone.camera2VisionTools;
 
 import android.content.Context;
 import android.util.AttributeSet;

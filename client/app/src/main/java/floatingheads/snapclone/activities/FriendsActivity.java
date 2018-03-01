@@ -1,4 +1,4 @@
-package floatingheads.snapclone;
+package floatingheads.snapclone.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+
+import floatingheads.snapclone.R;
 
 public class FriendsActivity extends AppCompatActivity {
 

@@ -15,7 +15,7 @@ using namespace cv;
 
 Mat * mCanny = NULL;
 
-JNIEXPORT jboolean JNICALL Java_floatingheads_snapclone_CameraPreview_ImageProcessing(
+JNIEXPORT jboolean JNICALL Java_floatingheads_snapclone_activities_CVImgProcCameraActivity_ImageProcessing(
         JNIEnv* env, jobject thiz,
         jint width, jint height,
         jbyteArray NV21FrameData, jintArray outPixels)

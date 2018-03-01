@@ -1,4 +1,4 @@
-package floatingheads.snapclone.utils;
+package floatingheads.snapclone.androidScreenUtils;
 
 /**
  * Created by Akira on 2/26/2018.
@@ -14,8 +14,6 @@ import android.view.Display;
 import android.view.WindowManager;
 
 import com.google.android.gms.common.images.Size;
-
-import java.util.ArrayList;
 
 public class Utils {
 

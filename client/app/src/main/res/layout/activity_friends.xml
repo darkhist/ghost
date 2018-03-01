@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="floatingheads.snapclone.FriendsActivity">
+    tools:context="floatingheads.snapclone.activities.FriendsActivity">
 
     <RelativeLayout
         android:id="@+id/rl_main"

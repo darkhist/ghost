@@ -1,24 +1,20 @@
-package floatingheads.snapclone.camera2vision;
+package floatingheads.snapclone.camera2VisionTools;
 
         import android.content.Context;
-        import android.content.res.Configuration;
         import android.graphics.SurfaceTexture;
         import android.util.AttributeSet;
         import android.util.Log;
-        import android.view.Display;
         import android.view.SurfaceHolder;
         import android.view.SurfaceView;
         import android.view.TextureView;
         import android.view.ViewGroup;
-        import android.view.WindowManager;
-        import floatingheads.snapclone.utils.Utils;
 
-        import floatingheads.snapclone.utils.Utils;
+        import floatingheads.snapclone.androidScreenUtils.Utils;
+
         import com.google.android.gms.common.images.Size;
 
         import java.io.IOException;
 
-        import static android.content.Context.WINDOW_SERVICE;
 
 public class CameraSourcePreview extends ViewGroup {
     private static final String TAG = "CameraSourcePreview";
@@ -41,23 +37,6 @@ public class CameraSourcePreview extends ViewGroup {
     private int screenHeight;
     private int screenRotation;
     private Context mContext;
-
-    /*
-    public CameraSourcePreview(Context context) {
-        super(context);
-        mContext = context;
-        //actual screenHeight
-        screenHeight = Utils.getScreenHeight(context);
-        //actual screenWidth
-        screenWidth = Utils.getScreenWidth(context);
-        screenRotation = Utils.getScreenRotation(context);
-        mStartRequested = false;
-        mSurfaceAvailable = false;
-        mSurfaceView = new SurfaceView(context);
-        mSurfaceView.getHolder().addCallback(mSurfaceViewListener);
-        mAutoFitTextureView = new AutoFitTextureView(context);
-        mAutoFitTextureView.setSurfaceTextureListener(mSurfaceTextureListener);
-    }*/
 
     public CameraSourcePreview(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -134,6 +113,12 @@ public class CameraSourcePreview extends ViewGroup {
                         if(size != null) {
                             int min = Math.min(size.getWidth(), size.getHeight());
                             int max = Math.max(size.getWidth(), size.getHeight());
+                            if (!Utils.isPortrait(mContext)) {
+                                mOverlay.setCameraInfo(min, max, mCameraSource.getCameraFacing());
+                            }
+                            else{
+                                mOverlay.setCameraInfo(max, min, mCameraSource.getCameraFacing());
+                            }
                             // FOR GRAPHIC OVERLAY, THE PREVIEW SIZE WAS REDUCED TO QUARTER
                             // IN ORDER TO PREVENT CPU OVERLOAD
                             mOverlay.setCameraInfo(min/4, max/4, mCameraSource.getCameraFacing());
@@ -150,6 +135,12 @@ public class CameraSourcePreview extends ViewGroup {
                         if(size != null) {
                             int min = Math.min(size.getWidth(), size.getHeight());
                             int max = Math.max(size.getWidth(), size.getHeight());
+                            if (Utils.isPortrait(mContext)) {
+                                mOverlay.setCameraInfo(min, max, mCameraSource.getCameraFacing());
+                            }
+                            else{
+                                mOverlay.setCameraInfo(max, min, mCameraSource.getCameraFacing());
+                            }
                             // FOR GRAPHIC OVERLAY, THE PREVIEW SIZE WAS REDUCED TO QUARTER
                             // IN ORDER TO PREVENT CPU OVERLOAD
                             mOverlay.setCameraInfo(min/4, max/4, mCamera2Source.getCameraFacing());

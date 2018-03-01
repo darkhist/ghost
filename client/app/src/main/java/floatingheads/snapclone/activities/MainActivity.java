@@ -1,4 +1,4 @@
-package floatingheads.snapclone;
+package floatingheads.snapclone.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,8 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.Volley;
+import floatingheads.snapclone.R;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -24,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
         cameraInit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(),Camera2MainStuff.class);
+                Intent i = new Intent(getApplicationContext(),CameraPreviewActivity.class);
                 startActivity(i);
             }
         });

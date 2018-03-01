@@ -5,7 +5,7 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="floatingheads.snapclone.ViewFriendsActivity">
+    tools:context="floatingheads.snapclone.activities.ViewFriendsActivity">
 
     <!--parent container (RelativeLayout)-->
     <RelativeLayout

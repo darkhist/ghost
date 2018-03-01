@@ -1,4 +1,4 @@
-package floatingheads.snapclone.camera2vision;
+package floatingheads.snapclone.camera2VisionTools;
 
 
 
@@ -34,8 +34,8 @@ package floatingheads.snapclone.camera2vision;
         import android.os.Handler;
         import android.os.HandlerThread;
         import android.os.SystemClock;
-        import android.support.annotation.IntDef;
-        import floatingheads.snapclone.utils.Utils;
+
+        import floatingheads.snapclone.androidScreenUtils.Utils;
         import android.support.annotation.NonNull;
         import android.support.annotation.Nullable;
         import android.support.annotation.RequiresPermission;
@@ -44,7 +44,6 @@ package floatingheads.snapclone.camera2vision;
         import android.util.SparseIntArray;
         import android.view.MotionEvent;
         import android.view.Surface;
-        import android.widget.Toast;
 
 
         import com.google.android.gms.common.images.Size;
@@ -53,8 +52,6 @@ package floatingheads.snapclone.camera2vision;
 
         import java.io.IOException;
         import java.lang.Thread.State;
-        import java.lang.annotation.Retention;
-        import java.lang.annotation.RetentionPolicy;
         import java.nio.ByteBuffer;
         import java.text.SimpleDateFormat;
         import java.util.ArrayList;

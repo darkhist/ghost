@@ -46,7 +46,7 @@
         android:value="face" />
 
     <application
-        android:name ="floatingheads.snapclone.app.AppController"
+        android:name ="floatingheads.snapclone.volleyController.AppController"
 
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -55,15 +55,16 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <activity android:name=".Camera2MainStuff"
-            android:screenOrientation="fullSensor">
+        <activity android:name=".activities.CameraPreviewActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen">
         </activity>
 
         <activity
@@ -73,7 +74,7 @@
             android:screenOrientation="fullSensor">
         </activity>
 
-        <activity android:name=".MyRealTimeImageProcessing"
+        <activity android:name=".opencv.MyRealTimeImageProcessing"
             android:screenOrientation="sensorLandscape">
         </activity>
 
@@ -82,22 +83,22 @@
             android:configChanges="keyboardHidden|orientation"/>
 
         <activity
-            android:name=".LoginActivity"
+            android:name=".activities.LoginActivity"
             android:label="@string/title_activity_login" />
 
         <activity
-            android:name=".SignUpActivity"
+            android:name=".activities.SignUpActivity"
             android:label="@string/title_activity_sign_up" />
 
         <activity
-            android:name=".FriendsActivity"
+            android:name=".activities.FriendsActivity"
             android:label="@string/title_activity_friends" />
 
         <activity
-            android:name=".ViewFriendsActivity"
+            android:name=".activities.ViewFriendsActivity"
             android:label="@string/title_activity_friends" />
 
-        <activity android:name=".AddFriendsActivity" />
+        <activity android:name=".activities.AddFriendsActivity" />
 
         <meta-data
             android:name="preloaded_fonts"

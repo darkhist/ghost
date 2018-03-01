@@ -1,4 +1,4 @@
-package floatingheads.snapclone.camera2vision;
+package floatingheads.snapclone.camera2VisionTools;
 
 /*
  * Copyright (C) The Android Open Source Project
@@ -28,10 +28,7 @@ import android.hardware.Camera.CameraInfo;
 import android.media.CamcorderProfile;
 import android.media.MediaRecorder;
 import android.os.Build;
-import android.os.CountDownTimer;
 import android.os.Environment;
-import android.os.Handler;
-import android.os.Message;
 import android.os.SystemClock;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
@@ -44,7 +41,7 @@ import android.view.SurfaceHolder;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-import floatingheads.snapclone.utils.Utils;
+import floatingheads.snapclone.androidScreenUtils.Utils;
 import com.google.android.gms.common.images.Size;
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.Frame;
