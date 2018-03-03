@@ -1,27 +1,23 @@
 'use strict';
 
+// This file defines behavior for interation with the USERS Table
+
 const config = require('.././config.json');
-const bcrypt = require('bcrypt');
-const mysql = require('mysql');
 
-const connection = mysql.createConnection({
-  host: `${config.host}`,
-  user: `${config.user}`,
-  password: `${config.password}`,
-  database: `${config.schema}`
-});
+exports.main = async () => {
+  const mysql = require('mysql2/promise');
 
-const userInsertQuery = `INSERT INTO USERS (username, password, email, creationDate)
-VALUES('qmsalas', 'fakepassword', 'qmsalas@iastate.edu', CURRENT_DATE())`;
+  // Establish Database Connection
+  const conn = await mysql.createConnection({
+    host: `${config.host}`,
+    user: `${config.user}`,
+    password: `${config.password}`,
+    database: `${config.schema}`
+  });
 
-connection.connect();
+  // Query USERS Table
+  const results = await conn.execute('SELECT * FROM USERS');
 
-connection.query(userInsertQuery, (err, results) => {
-  if (err) {
-    console.log(err.stack);
-  }
-  console.log("Record Inserted Successfully");
-  console.log(results);
-});
-
-connection.end();
+  // Return Rows from USERS Table
+  return results[0];
+}

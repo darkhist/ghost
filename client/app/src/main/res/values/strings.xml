@@ -37,9 +37,21 @@
     <string name="title_activity_sign_up">Sign Up</string>
     <string name="action_sign_in_short">Sign in</string>
 
+
+    <!-- Rationale in FaceTrackerActivity -->
     <!-- Rationale in FaceTrackerActivity -->
     <string name="ok">OK</string>
     <string name="permission_camera_rationale">Access to the camera is needed for detection</string>
     <string name="no_camera_permission">This application cannot run because it does not have the camera permission.  The application will now exit.</string>
     <string name="low_storage_error">Face detector dependencies cannot be downloaded due to low device storage</string>
+
+    <string name="nav_profile">Profile</string>
+    <string name="nav_friends">Friends</string>
+    <string name="nav_new_message">New Message</string>
+    <string name="nav_notifications">Notifications</string>
+    <string name="nav_messages">Messages</string>
+    <string name="search_friends">Search</string>
+    <string name="add_friend">Add Friend</string>
+
+>>>>>>> 8b06e7becea89ec954ee8ecf036948d35d7cb19e
 </resources>

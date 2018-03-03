@@ -7,6 +7,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
@@ -22,8 +23,6 @@ import java.util.HashMap;
 
 import floatingheads.snapclone.R;
 import floatingheads.snapclone.volleyController.AppController;
-
-import static com.android.volley.Request.Method.GET;
 
 
 public class AddFriendsActivity extends MainActivity {
@@ -44,15 +43,14 @@ public class AddFriendsActivity extends MainActivity {
         Button button = (Button) findViewById(R.id.button);
         TextView mTextView = (TextView) findViewById(R.id.textView);
 
-//        VolleyActions va = new VolleyActions(this);
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //makeStringRequest("https://api.androidhive.info/volley/person_array.json");
+                makeStringRequest("http://proj-309-vc-4.cs.iastate.edu:3000/friends");
                 //makeJSONarrayRequest("https://jsonplaceholder.typicode.com/posts");
                 //makeJSONobjRequest("http://ip.jsontest.com/");
-                makeJSONobjRequest("https://api.androidhive.info/volley/person_object.json");
+                //makeJSONobjRequest("http://jsonplaceholder.typicode.com/posts/1");
             }
         });
 
@@ -63,7 +61,7 @@ public class AddFriendsActivity extends MainActivity {
     public void makeStringRequest(String url) {
         TextView mTextView = (TextView) findViewById(R.id.textView);
         // Request a string response from the provided URL.
-        StringRequest req = new StringRequest(GET, url, new Response.Listener<String>() {
+        StringRequest req = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 // Display the first 500 characters of the response string.
@@ -88,7 +86,11 @@ public class AddFriendsActivity extends MainActivity {
             @Override
             public void onResponse(JSONArray response) {
                 try {
+                    /*
+                    jsonResponse = "";
+                    for (int i = 0; i < response.length(); i++) {
 
+                    }*/
                     VolleyLog.v("Response:%n %s", response.toString(4));
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -100,32 +102,45 @@ public class AddFriendsActivity extends MainActivity {
                 VolleyLog.e("Error: ", error.getMessage());
             }
         });
+
         // add the request object to the queue to be executed
         AppController.getInstance().addToRequestQueue(req);
     }
 
-    //Creates the new request
     public void makeJSONobjRequest(String url) {
         TextView mTextView = (TextView) findViewById(R.id.textView);
         HashMap<String, String> params = new HashMap<String, String>();
-        JsonObjectRequest req = new JsonObjectRequest(GET, url, new JSONObject(params), new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            VolleyLog.v("Response:%n %s", response.toString(4));
-                            mTextView.setText(response.toString());
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, new Response.ErrorListener() {
+        params.put("token", "AbCdEfGh123456");
+
+        JsonObjectRequest req = new JsonObjectRequest(url, new JSONObject(params), new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+
+                    VolleyLog.v("Response:%n %s", response.toString(4));
+                    String ip = response.getString("ip");
+                                /*
+                            String userId = (String) response.get("userId");
+                            String id = (String) response.get("id");
+                            String title = response.getString("title");
+                            String body = response.getString("body");
+                            */
+                    mTextView.setText(ip);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 VolleyLog.e("Error: ", error.getMessage());
             }
         });
+
         // add the request object to the queue to be executed
         AppController.getInstance().addToRequestQueue(req);
+
     }
 
 
