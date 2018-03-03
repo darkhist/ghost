@@ -67,20 +67,9 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen">
         </activity>
 
-        <activity
-            android:name=".FaceTrackerActivity"
-            android:label="Face Tracker"
-            android:theme="@style/Theme.AppCompat.NoActionBar"
-            android:screenOrientation="fullSensor">
-        </activity>
-
         <activity android:name=".opencv.MyRealTimeImageProcessing"
             android:screenOrientation="sensorLandscape">
         </activity>
-
-        <activity android:name="FdActivity"
-            android:screenOrientation="reverseLandscape"
-            android:configChanges="keyboardHidden|orientation"/>
 
         <activity
             android:name=".activities.LoginActivity"
