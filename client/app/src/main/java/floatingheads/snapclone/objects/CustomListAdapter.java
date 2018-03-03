@@ -61,7 +61,7 @@ public class CustomListAdapter<T extends User> extends ArrayAdapter<T> {
             TextView username = (TextView) customFriendView.findViewById(R.id.user_name);
             username.setText(singleUser.getUsername());
         }
-        
+
         ImageView avatar = (ImageView) customFriendView.findViewById(R.id.avatar);
 
         String name = singleUser.getFirstName() + " " + singleUser.getLastName();
