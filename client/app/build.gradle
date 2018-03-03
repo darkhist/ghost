@@ -47,6 +47,8 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     implementation project(':openCVLibrary320')
     compile 'com.android.volley:volley:1.1.0'
+    compile 'com.google.android.gms:play-services:8.1.0'
+    compile 'com.google.android.gms:play-services-ads:8.1.0'
     compile 'com.miguelcatalan:materialsearchview:1.4.0'
 }
 
