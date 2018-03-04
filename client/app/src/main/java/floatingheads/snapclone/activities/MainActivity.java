@@ -1,35 +1,20 @@
 package floatingheads.snapclone.activities;
 
-import android.content.Context;
+
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
+
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
-import java.io.File;
-import java.io.FileOutputStream;
 
 import floatingheads.snapclone.R;
 
 public class MainActivity extends AppCompatActivity {
 
-
-
-    // FILE STORAGE DECLARATIONS
-    private File directory;
-    private FileOutputStream fileOut;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        String snapCloneDir = Environment.getExternalStorageDirectory()+File.separator+"Pictures"+File.separator+"SnapClone";
-
-        if(!fileExists(this, snapCloneDir)){
-        directory = new File(Environment.getExternalStorageDirectory()+File.separator+"Pictures"+File.separator+"SnapClone");
-        directory.mkdir();
-        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -65,11 +50,4 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public boolean fileExists(Context context, String filename) {
-        File file = context.getFileStreamPath(filename);
-        if(file == null || !file.exists()) {
-            return false;
-        }
-        return true;
-    }
 }

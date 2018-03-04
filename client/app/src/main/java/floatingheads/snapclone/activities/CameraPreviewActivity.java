@@ -33,6 +33,7 @@ import com.google.android.gms.vision.face.FaceDetector;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Random;
 
 import floatingheads.snapclone.camera2VisionTools.CameraSource;
 import floatingheads.snapclone.camera2VisionTools.CameraSourcePreview;
@@ -60,6 +61,8 @@ public class CameraPreviewActivity extends AppCompatActivity  {
     private Button switchButton;
     private Button videoButton;
     private int counter;
+    private Random rand;
+    //private Context mContext;
 
     // FILE STORAGE DECLARATIONS
     private File directory;
@@ -79,6 +82,7 @@ public class CameraPreviewActivity extends AppCompatActivity  {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_camera_preview);
         context = getApplicationContext();
+        rand = new Random();
 
         takePictureButton = (Button) findViewById(R.id.btn_takepicture);
         switchButton = (Button) findViewById(R.id.btn_switch);
@@ -88,7 +92,9 @@ public class CameraPreviewActivity extends AppCompatActivity  {
         cameraVersion = (TextView) findViewById(R.id.cameraVersion);
         ivAutoFocus = (ImageView) findViewById(R.id.ivAutoFocus);
         counter = 0;
-        //Local directory for external file storeage
+
+        String snapCloneDir = Environment.getExternalStorageDirectory()+File.separator+"Pictures"+File.separator+"SnapClone";
+
         directory = new File(Environment.getExternalStorageDirectory()+File.separator+"Pictures"+File.separator+"SnapClone");
         directory.mkdir();
 
@@ -116,7 +122,7 @@ public class CameraPreviewActivity extends AppCompatActivity  {
                 @Override
                 public void onClick(View v) {
                     //update counter;
-                    counter++;
+                    counter = rand.nextInt(1000)+1;
                     switchButton.setEnabled(false);
                     videoButton.setEnabled(false);
                     takePictureButton.setEnabled(false);
@@ -127,6 +133,7 @@ public class CameraPreviewActivity extends AppCompatActivity  {
             mPreview.setOnTouchListener(CameraPreviewTouchListener);
         }
     }
+
 
 
 
