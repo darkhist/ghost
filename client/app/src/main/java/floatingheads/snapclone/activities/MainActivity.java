@@ -11,6 +11,7 @@ import android.widget.Button;
 
 import floatingheads.snapclone.R;
 
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -24,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
         cameraInit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(),CameraPreviewActivity.class);
+                Intent i = new Intent(getApplicationContext(),CVImgProcCameraActivity.class);
                 startActivity(i);
             }
         });

@@ -63,7 +63,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-
         <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -77,8 +76,12 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen">
         </activity>
-
+        <!--
         <activity android:name=".opencv.MyRealTimeImageProcessing"
+            android:screenOrientation="sensorLandscape">
+        </activity>-->
+
+        <activity android:name=".activities.CVImgProcCameraActivity"
             android:screenOrientation="sensorLandscape">
         </activity>
 
