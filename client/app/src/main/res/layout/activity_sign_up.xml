@@ -37,6 +37,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
+                <EditText
+                    android:id="@+id/name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/name"
+                    android:inputType="textEmailAddress"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:textColor="@android:color/white" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
                 <AutoCompleteTextView
                     android:id="@+id/email"
                     android:layout_width="match_parent"
@@ -75,7 +91,7 @@
                 android:layout_marginTop="16dp"
                 android:text="@string/action_sign_up"
                 android:textColor="@android:color/white"
-                android:background="@drawable/signup_btn"
+                android:background="@drawable/rounded_btn"
                 android:textStyle="bold" />
 
             <TextView
@@ -86,7 +102,8 @@
                 android:text="@string/suggest_login"
                 android:textAlignment="center"
                 android:textColor="@android:color/white"
-                android:textSize="18dp" />
+                android:textSize="16sp"
+                android:maxLines="1" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

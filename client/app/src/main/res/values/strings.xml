@@ -16,6 +16,7 @@
     <string name="permission_rationale">Contacts permission needed for email autocompletion</string>
     <string name="suggest_signup">Don\'t have an account? Sign Up!</string>
     <string name="suggest_login">Already have an account? Sign in!</string>
+    <string name="name">Name</string>
 
     <!-- Friends Stuff -->
     <string name="title_activity_friends">FriendsActivity</string>
