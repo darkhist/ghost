@@ -48,7 +48,7 @@ import java.util.List;
 import java.util.Map;
 
 import floatingheads.snapclone.R;
-import floatingheads.snapclone.app.AppController;
+import floatingheads.snapclone.volleyController.AppController;
 
 import static android.Manifest.permission.READ_CONTACTS;
 

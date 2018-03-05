@@ -8,10 +8,10 @@ OPENCV_LIB_TYPE:=SHARED
 
 include /Users/QuinnSalas/Downloads/OpenCV-android-sdk/sdk/native/jni/OpenCV.mk
 
-LOCAL_SRC_FILES  := DetectionBasedTracker_jni.cpp
+LOCAL_SRC_FILES  := ImageProcessing.cpp
 LOCAL_C_INCLUDES += $(LOCAL_PATH)
 LOCAL_LDLIBS     += -llog -ldl
 
-LOCAL_MODULE     := detection_based_tracker
+LOCAL_MODULE     := OpenCV_cpp_lib
 
 include $(BUILD_SHARED_LIBRARY)

@@ -22,7 +22,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 
 import floatingheads.snapclone.R;
-import floatingheads.snapclone.app.AppController;
+import floatingheads.snapclone.volleyController.AppController;
 
 
 public class AddFriendsActivity extends MainActivity {
@@ -113,25 +113,25 @@ public class AddFriendsActivity extends MainActivity {
         params.put("token", "AbCdEfGh123456");
 
         JsonObjectRequest req = new JsonObjectRequest(url, new JSONObject(params), new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
 
-                            VolleyLog.v("Response:%n %s", response.toString(4));
-                            String ip = response.getString("ip");
+                    VolleyLog.v("Response:%n %s", response.toString(4));
+                    String ip = response.getString("ip");
                                 /*
                             String userId = (String) response.get("userId");
                             String id = (String) response.get("id");
                             String title = response.getString("title");
                             String body = response.getString("body");
                             */
-                            mTextView.setText(ip);
+                    mTextView.setText(ip);
 
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, new Response.ErrorListener() {
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 VolleyLog.e("Error: ", error.getMessage());

@@ -28,11 +28,26 @@
     <!-- Camera Stuff -->
     <string name="open_camera"> Open Camera </string>
 
+    <!-- Camera2 Stuff -->
+    <string name="take_picture">PICTURE</string>
+    <string name="switch_camera">SWITCH</string>
+    <string name="record_video">VIDEO</string>
+    <string name="stop_video">STOP</string>
+
     <!-- Fix for Strange Rendering Error -->
     <item name="visible" type="id" />
     <item name="masked" type="id" />
     <string name="title_activity_sign_up">Sign Up</string>
     <string name="action_sign_in_short">Sign in</string>
+
+
+    <!-- Rationale in FaceTrackerActivity -->
+    <!-- Rationale in FaceTrackerActivity -->
+    <string name="ok">OK</string>
+    <string name="permission_camera_rationale">Access to the camera is needed for detection</string>
+    <string name="no_camera_permission">This application cannot run because it does not have the camera permission.  The application will now exit.</string>
+    <string name="low_storage_error">Face detector dependencies cannot be downloaded due to low device storage</string>
+
     <string name="nav_profile">Profile</string>
     <string name="nav_friends">Friends</string>
     <string name="nav_new_message">New Message</string>
@@ -41,4 +56,5 @@
     <string name="search_friends">Search</string>
     <string name="add_friend">Add Friend</string>
 
+>>>>>>> 8b06e7becea89ec954ee8ecf036948d35d7cb19e
 </resources>
