@@ -7,11 +7,11 @@ package floatingheads.snapclone.net_utils;
 //Edit with API info
 public class Const {
     // /users
-    private final String usersURL = "http://proj-309-vc-4.cs.iastate.edu:3000/users";
+    public static final String usersURL = "http://proj-309-vc-4.cs.iastate.edu:3000/users";
 
     // /users/signup
-    private final String signupURL = "http://proj-309-vc-4.cs.iastate.edu:3000/users/signup";
+    public static final String signupURL = "http://proj-309-vc-4.cs.iastate.edu:3000/users/signup";
 
     // /friends
-    private final String friendsURL = "http://proj-309-vc-4.cs.iastate.edu:3000/friends";
+    public static final String friendsURL = "http://proj-309-vc-4.cs.iastate.edu:3000/friends";
 }

@@ -48,6 +48,7 @@ import java.util.List;
 import java.util.Map;
 
 import floatingheads.snapclone.R;
+import floatingheads.snapclone.net_utils.Const;
 import floatingheads.snapclone.volleyController.AppController;
 
 import static android.Manifest.permission.READ_CONTACTS;
@@ -80,7 +81,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     // TODO: Uncomment
     // Production URL
-    // private final String URL = "http://proj-309-vc-4.cs.iastate.edu:3000/users/login";
+    // private final String URL = Const.usersURL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
