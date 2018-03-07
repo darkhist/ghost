@@ -76,7 +76,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     // Volley Stuff
 
     // Local Testing
-    private final String URL = "http://192.168.10.103:3000/users/login";
+    private final String URL = "http://10.26.52.200:3000/users/login";
 
     // TODO: Uncomment
     // Production URL
@@ -299,6 +299,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
 
         mEmailView.setAdapter(adapter);
+    }
+
+    // Click Handler for Suggest Sign Up Text
+    public void onClick(View v) {
+        Intent i = new Intent(getApplicationContext(), SignUpActivity.class);
+        startActivity(i);
     }
 
 

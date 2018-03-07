@@ -85,7 +85,9 @@
                 android:text="@string/suggest_signup"
                 android:textAlignment="center"
                 android:textColor="@android:color/white"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:onClick="onClick"
+                android:clickable="true"/>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

@@ -9,10 +9,6 @@ import android.widget.Button;
 import floatingheads.snapclone.R;
 
 public class MainActivity extends AppCompatActivity {
-
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
