@@ -77,7 +77,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     // Volley Stuff
 
     // Local Testing
-    private final String URL = "http://10.26.52.200:3000/users/login";
+    private final String URL = "http://192.168.10.103:3000/users/login";
 
     // TODO: Uncomment
     // Production URL
@@ -111,7 +111,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 attemptLogin();
             }
         });
-
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
     }
@@ -289,9 +288,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     @Override
-    public void onLoaderReset(Loader<Cursor> cursorLoader) {
-
-    }
+    public void onLoaderReset(Loader<Cursor> cursorLoader) {}
 
     private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
         //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
@@ -380,7 +377,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             if (success) {
                 finish();
-                // Open Friends Activity on Login Success
+                // Open Navbar Activity on Login Success
                 Intent i = new Intent(getApplicationContext(), NavBarActivity.class);
                 startActivity(i);
             } else {

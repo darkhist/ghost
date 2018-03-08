@@ -12,7 +12,7 @@ router.get("/", usersController.get);
 // POST /users/login
 router.post("/login", usersController.authenticate);
 
-// GET /users/signup
-router.get("/signup", usersController.signup);
+// POST /users/signup
+router.post("/signup", usersController.signup);
 
 module.exports = router;

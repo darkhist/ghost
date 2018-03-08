@@ -12,10 +12,15 @@ exports.get = async (req, res) => {
   res.send(results);
 };
 
-// Handle GET /users/signup
+// Handle POST /users/signup
 exports.signup = (req, res) => {
-  // TODO - Add functionality
-  res.send("This is the /signup route!");
+  let user = {
+    name: req.body.name,
+    username: req.body.username,
+    password: req.body.password,
+    email: req.body.email
+  };
+  console.log(user);
 };
 
 // Handle POST /users/login
