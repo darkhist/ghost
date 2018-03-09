@@ -28,6 +28,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -69,11 +70,7 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
     private View mLoginFormView;
 
     // Volley Stuff
-    private final String URL = "http://192.168.1.137:3000/users/signup";
-
-    // TODO: Uncomment
-    // Production URL
-    //private final String URL2 = Const.signupURL;
+    private final String URL = Const.signupURL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -339,9 +336,15 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
                 return params;
             }
         };
+
+        // Handling Volley Timeout Error
+        postRequest.setRetryPolicy(new DefaultRetryPolicy(
+                0,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
         AppController.getInstance().addToRequestQueue(postRequest);
     }
-
 
     /**
      * Represents an asynchronous login/registration task used to authenticate

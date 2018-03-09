@@ -30,6 +30,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -75,13 +76,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private View mLoginFormView;
 
     // Volley Stuff
-
-    // Local Testing
-    private final String URL = "http://192.168.10.103:3000/users/login";
-
-    // TODO: Uncomment
-    // Production URL
-    // private final String URL = Const.usersURL;
+    private final String URL = Const.usersURL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

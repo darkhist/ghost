@@ -29,13 +29,5 @@ exports.authenticate = (req, res) => {
     email: req.body.email,
     password: req.body.password
   };
-
-  console.log(user.email);
-  console.log(user.password);
-
-  bcrypt.hash(user.password, (err, hash) => {
-    // Store hash in DB
-  });
-
-  res.send("Success");
+  console.log(user);
 };
