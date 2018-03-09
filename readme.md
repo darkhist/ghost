@@ -1,6 +1,6 @@
 # SnapClone
 
-A social media messaging app that allows users to easily send pictures and messages.  In-app functionality allows users to edit pictures before sending giving users the ability to add stickers around their face and captions anywhere on the image.
+A social media messaging app that allows users to easily send pictures and messages. In-app functionality allows users to edit pictures before sending giving users the ability to add stickers around their face and captions anywhere on the image.
 
 ## Getting Started
 
@@ -68,13 +68,13 @@ Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c6
 
 ## Versioning
 
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
+We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags).
 
 ## Authors
 
-* **Akira Demoss** - *OpenCV, Volley* - [github name](https://github.com/github_name)
-* **Quinn Salas** - *Server Side, MySQL* - [github name](https://github.com/github_name)
-* **Michael Lauderback** - *Volley, User Interface, MySQL* - [theMike97](https://github.com/theMike97)
+* **Akira Demoss** - _OpenCV, Volley_ - [github name](https://github.com/github_name)
+* **Quinn Salas** - _Backend, UI_ - [qsalas](https://github.com/qsalas)
+* **Michael Lauderback** - _Volley, User Interface, MySQL_ - [theMike97](https://github.com/theMike97)
 
 ## License
 
@@ -85,4 +85,3 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 * Hat tip to anyone who's code was used
 * Inspiration
 * etc
-
