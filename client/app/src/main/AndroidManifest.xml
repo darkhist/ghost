@@ -8,7 +8,7 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
-    <!-- Allow Internet Permissions for Volley -->
+    <!-- Allow Internet Access for Volley -->
     <uses-permission android:name="android.permission.INTERNET" />
 
     <supports-screens
@@ -36,10 +36,10 @@
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
 
-
     <!-- Google Sample stuff -->
-    <meta-data android:name="com.google.android.gms.version"
-        android:value="@integer/google_play_services_version"/>
+    <meta-data
+        android:name="com.google.android.gms.version"
+        android:value="@integer/google_play_services_version" />
 
     <!-- Google Sample Facetracker dependencies -->
     <meta-data
@@ -53,9 +53,8 @@
         android:resizeable="true"
         android:smallScreens="true" />
 
-
     <application
-        android:name="floatingheads.snapclone.volleyController.AppController"
+        android:name=".volleyController.AppController"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -63,48 +62,48 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-
         <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-
-        <activity android:name=".activities.CameraPreviewActivity"
+        <activity
+            android:name=".activities.CameraPreviewActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen">
-        </activity>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" />
 
-        <activity android:name=".opencv.MyRealTimeImageProcessing"
-            android:screenOrientation="sensorLandscape">
-        </activity>
-
+        <activity
+            android:name=".opencv.MyRealTimeImageProcessing"
+            android:screenOrientation="sensorLandscape" />
 
         <activity
             android:name=".activities.LoginActivity"
-            android:windowSoftInputMode="stateHidden"
-            android:label="@string/title_activity_login" />
+            android:label="@string/title_activity_login"
+            android:windowSoftInputMode="stateHidden" />
+
         <activity
             android:name=".activities.SignUpActivity"
-            android:windowSoftInputMode="stateHidden"
-            android:label="@string/title_activity_sign_up" />
+            android:label="@string/title_activity_sign_up"
+            android:windowSoftInputMode="stateHidden" />
+
         <activity
             android:name=".activities.FriendsActivity"
             android:label="@string/title_activity_friends" />
+
         <activity
             android:name=".activities.NavBarActivity"
             android:label="NavBarActivity" />
 
         <activity android:name=".activities.AddFriendsActivity" />
 
+        <activity android:name=".activities.MessageActivity" />
+
+        <activity android:name=".activities.MessagesListActivity" />
+
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
-
-        <activity android:name=".activities.MessageActivity"></activity>
     </application>
-
 </manifest>

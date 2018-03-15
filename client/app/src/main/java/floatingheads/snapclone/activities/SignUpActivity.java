@@ -70,7 +70,8 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
     private View mLoginFormView;
 
     // Volley Stuff
-    private final String URL = Const.signupURL;
+    // private final String URL = Const.signupURL;
+    private final String URL = "http://172.20.0.26:3000/users/signup";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
