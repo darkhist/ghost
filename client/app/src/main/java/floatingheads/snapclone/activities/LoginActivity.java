@@ -47,6 +47,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import floatingheads.snapclone.R;
 import floatingheads.snapclone.net_utils.Const;
@@ -209,12 +211,17 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private boolean isEmailValid(String email) {
         //TODO: Replace this with your own logic
         // add proper format check later (user name, @, domain)
-        return email.contains("@");
+
+        final String emailPattern = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+        Pattern pattern = Pattern.compile(emailPattern);
+        Matcher matcher = pattern.matcher(email);
+
+        return matcher.matches();
     }
 
     private boolean isPasswordValid(String password) {
         //TODO: Replace this with your own logic
-        // this doesnt seem necessary for login
+        // this doesn't seem necessary for login
         return password.length() > 4;
     }
 

@@ -77,55 +77,47 @@ public class VolleyActions {
 
 
     public void makeJSONarrayRequest(String url, Object o) {
-        JsonArrayRequest req = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
-            @Override
-            public void onResponse(JSONArray response) {
+        JsonArrayRequest req = new JsonArrayRequest(url, response -> {
 
-                if (!(o instanceof ListView) || !(o instanceof View) || o == null) {
-                    return;
-                }
+            if (!(o instanceof ListView) || !(o instanceof View) || o == null) {
+                return;
+            }
 
-                if (o instanceof ListView) {
+            if (o instanceof ListView) {
 
-                    try {
+                try {
 
-                        ArrayList<User> userArrayList = new ArrayList<>();
+                    ArrayList<User> userArrayList = new ArrayList<>();
 
-                        for (int i = 0; i < response.length(); i++) {
-                            JSONObject jsonObject = response.getJSONObject(i);
-                            int id = jsonObject.getInt("user_id");
-                            String first = jsonObject.getString("first_name");
-                            String last = jsonObject.getString("last_name");
-                            String username = jsonObject.getString("username");
-                            String email = jsonObject.getString("email");
+                    for (int i = 0; i < response.length(); i++) {
+                        JSONObject jsonObject = response.getJSONObject(i);
+                        int id = jsonObject.getInt("user_id");
+                        String first = jsonObject.getString("first_name");
+                        String last = jsonObject.getString("last_name");
+                        String username = jsonObject.getString("username");
+                        String email = jsonObject.getString("email");
 
-                            User user = new User(id, first, last, username, email);
-                            userArrayList.add(user);
-                        }
-
-                        if (o instanceof MessagesView) {
-                            MessagesView messagesView = (MessagesView) o;
-                            messagesView.setContents(userArrayList);
-                        }
-                        if (o instanceof UsersView) {
-                            UsersView usersView = (UsersView) o;
-                            usersView.setContents(userArrayList);
-                        }
-
-                        VolleyLog.v("Response:%n %s", response.toString(4));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                        User user = new User(id, first, last, username, email);
+                        userArrayList.add(user);
                     }
 
+                    if (o instanceof MessagesView) {
+                        MessagesView messagesView = (MessagesView) o;
+                        messagesView.setContents(userArrayList);
+                    }
+                    if (o instanceof UsersView) {
+                        UsersView usersView = (UsersView) o;
+                        usersView.setContents(userArrayList);
+                    }
+
+                    VolleyLog.v("Response:%n %s", response.toString(4));
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
 
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                VolleyLog.e("Error: ", error.getMessage());
-            }
-        });
+
+        }, error -> VolleyLog.e("Error: ", error.getMessage()));
 
         // add the request object to the queue to be executed
         AppController.getInstance().addToRequestQueue(req);
