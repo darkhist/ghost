@@ -85,9 +85,11 @@
 
         <activity
             android:name=".activities.LoginActivity"
+            android:windowSoftInputMode="stateHidden"
             android:label="@string/title_activity_login" />
         <activity
             android:name=".activities.SignUpActivity"
+            android:windowSoftInputMode="stateHidden"
             android:label="@string/title_activity_sign_up" />
         <activity
             android:name=".activities.FriendsActivity"

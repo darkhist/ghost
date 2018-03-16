@@ -1,19 +1,19 @@
 package floatingheads.snapclone.camera2VisionTools;
 
-        import android.content.Context;
-        import android.graphics.SurfaceTexture;
-        import android.util.AttributeSet;
-        import android.util.Log;
-        import android.view.SurfaceHolder;
-        import android.view.SurfaceView;
-        import android.view.TextureView;
-        import android.view.ViewGroup;
+import android.content.Context;
+import android.graphics.SurfaceTexture;
+import android.util.AttributeSet;
+import android.util.Log;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
+import android.view.TextureView;
+import android.view.ViewGroup;
 
-        import floatingheads.snapclone.androidScreenUtils.Utils;
+import floatingheads.snapclone.androidScreenUtils.Utils;
 
-        import com.google.android.gms.common.images.Size;
+import com.google.android.gms.common.images.Size;
 
-        import java.io.IOException;
+import java.io.IOException;
 
 
 public class CameraSourcePreview extends ViewGroup {
@@ -23,14 +23,12 @@ public class CameraSourcePreview extends ViewGroup {
     private SurfaceView mSurfaceView;
     private AutoFitTextureView mAutoFitTextureView;
 
-    private boolean usingCameraOne;
     private boolean mStartRequested;
     private boolean mSurfaceAvailable;
     private boolean viewAdded = false;
 
     //CAMERA SOURCES FOR BOTH CAMERA1 AND CAMERA2 API.
     private CameraSource mCameraSource;
-    private Camera2Source mCamera2Source;
 
     private GraphicOverlay mOverlay;
     private int screenWidth;
@@ -53,15 +51,8 @@ public class CameraSourcePreview extends ViewGroup {
     }
 
     public void start(CameraSource cameraSource, GraphicOverlay overlay) throws IOException {
-        usingCameraOne = true;
         mOverlay = overlay;
         start(cameraSource);
-    }
-
-    public void start(Camera2Source camera2Source, GraphicOverlay overlay) throws IOException {
-        usingCameraOne = false;
-        mOverlay = overlay;
-        start(camera2Source);
     }
 
     private void start(CameraSource cameraSource) throws IOException {
@@ -77,80 +68,35 @@ public class CameraSourcePreview extends ViewGroup {
         }
     }
 
-    private void start(Camera2Source camera2Source) throws IOException {
-        if (camera2Source == null) {stop();}
-        mCamera2Source = camera2Source;
-        if(mCamera2Source != null) {
-            mStartRequested = true;
-            if(!viewAdded) {
-                addView(mAutoFitTextureView);
-                viewAdded = true;
-            }
-            try {startIfReady();} catch (IOException e) {Log.e(TAG, "Could not start camera source.", e);}
-        }
-    }
-
     public void stop() {
         mStartRequested = false;
-        if(usingCameraOne) {
-            if (mCameraSource != null) {
-                mCameraSource.stop();
-            }
-        } else {
-            if(mCamera2Source != null) {
-                mCamera2Source.stop();
-            }
+        if (mCameraSource != null) {
+            mCameraSource.stop();
         }
     }
 
     private void startIfReady() throws IOException {
         if (mStartRequested && mSurfaceAvailable) {
             try {
-                if(usingCameraOne) {
-                    mCameraSource.start(mSurfaceView.getHolder());
-                    if (mOverlay != null) {
-                        Size size = mCameraSource.getPreviewSize();
-                        if(size != null) {
-                            int min = Math.min(size.getWidth(), size.getHeight());
-                            int max = Math.max(size.getWidth(), size.getHeight());
-                            if (!Utils.isPortrait(mContext)) {
-                                mOverlay.setCameraInfo(min, max, mCameraSource.getCameraFacing());
-                            }
-                            else{
-                                mOverlay.setCameraInfo(max, min, mCameraSource.getCameraFacing());
-                            }
-                            // FOR GRAPHIC OVERLAY, THE PREVIEW SIZE WAS REDUCED TO QUARTER
-                            // IN ORDER TO PREVENT CPU OVERLOAD
-                            mOverlay.setCameraInfo(min/4, max/4, mCameraSource.getCameraFacing());
-                            mOverlay.clear();
-                        } else {
-                            stop();
+                mCameraSource.start(mSurfaceView.getHolder());
+                if (mOverlay != null) {
+                    Size size = mCameraSource.getPreviewSize();
+                    if(size != null) {
+                        int min = Math.min(size.getWidth(), size.getHeight());
+                        int max = Math.max(size.getWidth(), size.getHeight());
+                        if (!Utils.isPortrait(mContext)) {
+                            mOverlay.setCameraInfo(min, max, mCameraSource.getCameraFacing());
                         }
+                        // FOR GRAPHIC OVERLAY, THE PREVIEW SIZE WAS REDUCED TO QUARTER
+                        // IN ORDER TO PREVENT CPU OVERLOAD
+                        mOverlay.setCameraInfo(min/4, max/4, mCameraSource.getCameraFacing());
+                        mOverlay.clear();
+                    } else {
+                        stop();
                     }
-                    mStartRequested = false;
-                } else {
-                    mCamera2Source.start(mAutoFitTextureView, screenRotation);
-                    if (mOverlay != null) {
-                        Size size = mCamera2Source.getPreviewSize();
-                        if(size != null) {
-                            int min = Math.min(size.getWidth(), size.getHeight());
-                            int max = Math.max(size.getWidth(), size.getHeight());
-                            if (Utils.isPortrait(mContext)) {
-                                mOverlay.setCameraInfo(min, max, mCameraSource.getCameraFacing());
-                            }
-                            else{
-                                mOverlay.setCameraInfo(max, min, mCameraSource.getCameraFacing());
-                            }
-                            // FOR GRAPHIC OVERLAY, THE PREVIEW SIZE WAS REDUCED TO QUARTER
-                            // IN ORDER TO PREVENT CPU OVERLOAD
-                            mOverlay.setCameraInfo(min/4, max/4, mCamera2Source.getCameraFacing());
-                            mOverlay.clear();
-                        } else {
-                            stop();
-                        }
-                    }
-                    mStartRequested = false;
                 }
+                mStartRequested = false;
+
             } catch (SecurityException e) {Log.d(TAG, "SECURITY EXCEPTION: "+e);}
         }
     }
@@ -192,23 +138,13 @@ public class CameraSourcePreview extends ViewGroup {
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         int width = 480;
         int height = 720;
-        if(usingCameraOne) {
-            if (mCameraSource != null) {
-                Size size = mCameraSource.getPreviewSize();
-                if (size != null) {
-                    // Swap width and height sizes when in portrait, since it will be rotated 90 degrees
-                    height = size.getWidth();
-                    width = size.getHeight();
-                }
-            }
-        } else {
-            if (mCamera2Source != null) {
-                Size size = mCamera2Source.getPreviewSize();
-                if (size != null) {
-                    // Swap width and height sizes when in portrait, since it will be rotated 90 degrees
-                    height = size.getWidth();
-                    width = size.getHeight();
-                }
+
+        if (mCameraSource != null) {
+            Size size = mCameraSource.getPreviewSize();
+            if (size != null) {
+                // Swap width and height sizes when in portrait, since it will be rotated 90 degrees
+                height = size.getWidth();
+                width = size.getHeight();
             }
         }
 
@@ -232,3 +168,4 @@ public class CameraSourcePreview extends ViewGroup {
         try {startIfReady();} catch (IOException e) {Log.e(TAG, "Could not start camera source.", e);}
     }
 }
+

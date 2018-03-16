@@ -7,13 +7,8 @@ import android.view.View;
 import android.widget.Button;
 
 import floatingheads.snapclone.R;
-import floatingheads.snapclone.FdActivity;
 
 public class MainActivity extends AppCompatActivity {
-
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
         cameraInit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(),FdActivity.class);
+                Intent i = new Intent(getApplicationContext(),CameraPreviewActivity.class);
                 startActivity(i);
             }
         });

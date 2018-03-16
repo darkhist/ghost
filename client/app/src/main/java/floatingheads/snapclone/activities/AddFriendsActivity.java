@@ -22,9 +22,9 @@ import org.json.JSONObject;
 import java.util.HashMap;
 
 import floatingheads.snapclone.R;
-import floatingheads.snapclone.app.AppController;
 import floatingheads.snapclone.objects.UsersView;
 import floatingheads.snapclone.objects.VolleyActions;
+
 
 
 public class AddFriendsActivity extends MainActivity {
@@ -43,5 +43,4 @@ public class AddFriendsActivity extends MainActivity {
         VolleyActions va = new VolleyActions();
         va.makeJSONarrayRequest(usersURL, usersView); //pulls users table from database and populates listview
     }
-
 }

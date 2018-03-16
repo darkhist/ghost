@@ -26,7 +26,7 @@ import java.util.HashMap;
 
 import floatingheads.snapclone.R;
 import floatingheads.snapclone.activities.NavBarActivity;
-import floatingheads.snapclone.app.AppController;
+import floatingheads.snapclone.volleyController.AppController;
 
 /**
  * Created by Mike on 2/26/18.
