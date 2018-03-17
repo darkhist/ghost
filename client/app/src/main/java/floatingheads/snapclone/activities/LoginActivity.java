@@ -77,7 +77,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     // Volley Stuff
     // private final String URL = Const.loginURL;
-    private final String URL = "http://172.20.0.26:3000/users/login";
+    private final String URL = "http://192.168.1.237:3000/users/login";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -338,6 +338,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 return params;
             }
         };
+
+        // Handling Volley Timeout Error
+        postRequest.setRetryPolicy(new DefaultRetryPolicy(
+                0,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
         AppController.getInstance().addToRequestQueue(postRequest);
     }
 

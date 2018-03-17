@@ -1,4 +1,4 @@
-"use strict";
+("use strict");
 
 // This file defines request handling behaviors for the /users route
 
@@ -15,12 +15,19 @@ exports.get = async (req, res) => {
 // Handle POST /users/signup
 exports.signup = (req, res) => {
   let user = {
-    name: req.body.name,
+    name: req.body.name.split(" "),
     username: req.body.username,
-    password: req.body.password,
-    email: req.body.email
+    email: req.body.email,
+    password: req.body.password
   };
-  console.log(user);
+
+  let firstName = user.name[0];
+  let lastName = user.name[1];
+
+  // Hash user.password and add the user to the USERS table
+  bcrypt.hash(user.password, 10, (err, hash) => {
+    usersModel.add(firstName, lastName, user.username, hash, user.email);
+  });
 };
 
 // Handle POST /users/login
