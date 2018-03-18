@@ -11,10 +11,6 @@ public class Friend extends User implements Comparable<Friend> {
 
     // will incorporate avatar image soon hopefully
 
-    private int userID;
-    private String userFirstName;
-    private String userLastName;
-    private Bitmap avatar;
 
     public Friend() {
         super();
@@ -22,15 +18,15 @@ public class Friend extends User implements Comparable<Friend> {
 
     public Friend(int userID, String userFirstName, String userLastName) {
         this();
-        this.userID = userID;
-        this.userFirstName = userFirstName;
-        this.userLastName = userLastName;
-        avatar = null;
+        setId(userID);
+        setFirstName(userFirstName);
+        setLastName(userLastName);
+        setAvatar();
     }
 
     public Friend(int userID, String userFirstName, String userLastName, Bitmap avatar) {
         this(userID, userFirstName, userLastName);
-        this.avatar = avatar;
+        setAvatar();
     }
 
 //    @Override

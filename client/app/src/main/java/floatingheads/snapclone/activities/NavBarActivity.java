@@ -35,10 +35,11 @@ public class NavBarActivity extends AppCompatActivity {
 
         profileFragment = new ProfileFragment();
         friendsFragment = new FriendsFragment();
-        notisFragment = new NotisFragment();
+//        notisFragment = new NotisFragment();
         messagesFragment = new MessagesFragment();
 
-        setFragment(messagesFragment);
+        setFragment(messagesFragment); // sets default fragment to messages
+        mMainNav.getMenu().getItem(0).setChecked(true); // selects message nav item as default
 
         mMainNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -52,9 +53,9 @@ public class NavBarActivity extends AppCompatActivity {
                         setFragment(friendsFragment);
                         return true;
 
-                    case R.id.nav_notifications:
-                         setFragment(notisFragment);
-                        return true;
+//                    case R.id.nav_notifications:
+//                         setFragment(notisFragment);
+//                        return true;
 
                     case R.id.nav_messages:
                          setFragment(messagesFragment);

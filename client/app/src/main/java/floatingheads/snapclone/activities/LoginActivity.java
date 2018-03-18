@@ -209,8 +209,18 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
-        // add proper format check later (user name, @, domain)
+        /*
+        requirements:
+        - must have @
+        - top level domain (TLD) can't start with '.'
+        - TLD must contain > 2 chars
+        - email first char cannot be '.'
+        - email can only contain characters, digits, underscore, dash, dot
+        - TLD can only contain characters and digits
+        - double '.' ('..') not allowed
+        - email last char cannot be '.'
+        - cannot have > 1 @
+         */
 
         final String emailPattern = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
         Pattern pattern = Pattern.compile(emailPattern);
