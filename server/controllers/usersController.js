@@ -1,4 +1,4 @@
-("use strict");
+"use strict";
 
 // This file defines request handling behaviors for the /users route
 
@@ -26,7 +26,13 @@ exports.signup = (req, res) => {
 
   // Hash user.password and add the user to the USERS table
   bcrypt.hash(user.password, 10, (err, hash) => {
-    usersModel.add(firstName, lastName, user.username, hash, user.email);
+    try {
+      usersModel.add(firstName, lastName, user.username, hash, user.email);
+      console.log("User Added Successfully");
+      res.status(201).send("User Added Successfully");
+    } catch (err) {
+      res.status(401).send("Unable to Add User");
+    }
   });
 };
 
@@ -36,5 +42,13 @@ exports.authenticate = (req, res) => {
     email: req.body.email,
     password: req.body.password
   };
-  console.log(user);
+
+  // Check to see if provided user info matches
+  // existing user info in the USERS table
+  if (usersModel.auth(user.email, user.password)) {
+    console.log("Login Successful");
+    res.status(200).send("Login Successful");
+  } else {
+    res.status(401).send("Login Failed");
+  }
 };

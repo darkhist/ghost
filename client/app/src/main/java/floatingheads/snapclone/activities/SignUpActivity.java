@@ -71,7 +71,7 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
 
     // Volley Stuff
     // private final String URL = Const.signupURL;
-    private final String URL = "http://192.168.1.237:3000/users/signup";
+    private final String URL = "http://192.168.10.103:3000/users/signup";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

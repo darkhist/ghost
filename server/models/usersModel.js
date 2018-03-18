@@ -23,5 +23,21 @@ exports.add = async (firstName, lastName, username, password, email) => {
   } catch (err) {
     console.error("Something went wrong!" + err.stack);
   }
-  console.log("Record Inserted");
+};
+
+exports.auth = async (email, password) => {
+  try {
+    await connection.query(`SELECT * FROM USERS WHERE email = ?`, [email], (err, results) => {
+      if (err) {
+        console.error("Error Authenticating User" + err.stack);
+        return false;
+      } else {
+        if (results.length != 0 && results[0].password == password) {
+          return true;
+        }
+      }
+    });
+  } catch (err) {
+    console.error("Something went wrong!" + err.stack);
+  }
 };
