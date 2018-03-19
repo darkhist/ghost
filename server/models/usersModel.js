@@ -25,19 +25,12 @@ exports.add = async (firstName, lastName, username, password, email) => {
   }
 };
 
-exports.auth = async (email, password) => {
+exports.getPassword = async (email, password = undefined) => {
   try {
-    await connection.query(`SELECT * FROM USERS WHERE email = ?`, [email], (err, results) => {
-      if (err) {
-        console.error("Error Authenticating User" + err.stack);
-        return false;
-      } else {
-        if (results.length != 0 && results[0].password == password) {
-          return true;
-        }
-      }
-    });
+    password = await connection.query(`SELECT password FROM USERS WHERE email = ?`, [email]);
   } catch (err) {
     console.error("Something went wrong!" + err.stack);
   }
+  // Grab the password from the returned row
+  return password[0].password;
 };
