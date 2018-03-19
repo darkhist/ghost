@@ -28,8 +28,8 @@ exports.signup = (req, res) => {
   bcrypt.hash(user.password, 10, (err, hash) => {
     try {
       usersModel.add(firstName, lastName, user.username, hash, user.email);
-      console.log("User Added Successfully");
       res.status(201).send("User Added Successfully");
+      console.log("User Added Successfully");
     } catch (err) {
       res.status(401).send("Unable to Add User");
     }
@@ -44,11 +44,18 @@ exports.authenticate = (req, res) => {
   };
 
   // Get user's hashed password from database
-  usersModel.getPassword(user.email).then(data => {
-    console.log(data);
-  });
-
   // Compare given password to hash
-  // If OK -- Send 200
+  // If passwords match -- Send 200 OK
   // Else -- Send 401 Unauthorized
+  usersModel.getPassword(user.email).then(data => {
+    bcrypt.compare(user.password, data).then(status => {
+      if (status) {
+        res.status(200).send("Login Successful");
+        console.log("Login Successful");
+      } else {
+        res.status(401).send("Unauthorized");
+        console.log("Unathorized");
+      }
+    });
+  });
 };

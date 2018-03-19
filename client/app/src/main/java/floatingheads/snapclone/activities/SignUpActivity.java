@@ -70,8 +70,8 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
     private View mLoginFormView;
 
     // Volley Stuff
-    // private final String URL = Const.signupURL;
-    private final String URL = "http://10.26.45.33:3000/users/signup";
+    private final String URL = Const.signupURL;
+    // private final String URL = "http://192.168.10.103:3000/users/signup";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -338,10 +338,10 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
             }
         };
 
-        // Handling Volley Timeout Error
+        // Handling Volley Double POST
         postRequest.setRetryPolicy(new DefaultRetryPolicy(
                 0,
-                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                0,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
         AppController.getInstance().addToRequestQueue(postRequest);
