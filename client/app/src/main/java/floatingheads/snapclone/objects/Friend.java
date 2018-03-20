@@ -11,22 +11,58 @@ public class Friend extends User implements Comparable<Friend> {
 
     // will incorporate avatar image soon hopefully
 
+    public static final int STATUS_PENDING = 0, STATUS_ACCEPTED = 1, STATUS_REJECTED = 2, STATUS_BLOCKED = 3;
+    private int status;
+
 
     public Friend() {
         super();
     }
 
-    public Friend(int userID, String userFirstName, String userLastName) {
+    public Friend(int userID, String userFirstName, String userLastName, int status) {
         this();
         setId(userID);
         setFirstName(userFirstName);
         setLastName(userLastName);
+        this.status = status;
         setAvatar();
     }
 
-    public Friend(int userID, String userFirstName, String userLastName, Bitmap avatar) {
-        this(userID, userFirstName, userLastName);
+    public Friend(int userID, String userFirstName, String userLastName, int status, Bitmap avatar) {
+        this(userID, userFirstName, userLastName, status);
         setAvatar();
+    }
+
+    public void toggleStatusPending() {
+
+    }
+
+    public void toggleStatusAccepted() {
+
+    }
+
+    public void toggleStatusRejected() {
+
+    }
+
+    public void toggleStatusBlocked() {
+
+    }
+
+    public boolean isStatusPending() {
+        return status == STATUS_PENDING;
+    }
+
+    public boolean isStatusAccepted() {
+        return status == STATUS_ACCEPTED;
+    }
+
+    public boolean isStatusRejected() {
+        return status == STATUS_REJECTED;
+    }
+
+    public boolean isStatusBlocked() {
+        return status == STATUS_BLOCKED;
     }
 
 //    @Override
