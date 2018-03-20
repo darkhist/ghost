@@ -3,6 +3,7 @@ package floatingheads.snapclone.activities;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.CursorLoader;
 import android.content.Intent;
@@ -23,11 +24,13 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -77,7 +80,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     // Volley Stuff
     private final String URL = Const.loginURL;
-    // private final String URL = "http://192.168.10.103:3000/users/login";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -197,7 +199,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // form field with an error.
             focusView.requestFocus();
         } else {
-            // Send login credentials to /users/login for authentication
             loginAuth(email, password);
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
@@ -301,7 +302,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         startActivity(i);
     }
 
-
     private interface ProfileQuery {
         String[] PROJECTION = {
                 ContactsContract.CommonDataKinds.Email.ADDRESS,
@@ -328,6 +328,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
+                // Cancel Login Task
+                mAuthTask.cancel(true);
+                // Hide Keyboard
+                InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+                imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+                // Display Error Message
+                Toast.makeText(getApplicationContext(), "Incorrect Username or Password", Toast.LENGTH_LONG).show();
             }
         }) {
             @Override

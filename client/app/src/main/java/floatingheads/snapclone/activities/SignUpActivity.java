@@ -3,6 +3,7 @@ package floatingheads.snapclone.activities;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.CursorLoader;
 import android.content.Intent;
@@ -22,11 +23,13 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -71,7 +74,6 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
 
     // Volley Stuff
     private final String URL = Const.signupURL;
-    // private final String URL = "http://192.168.10.103:3000/users/signup";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -325,6 +327,13 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
+                // Cancel Sign Up Task
+                mAuthTask.cancel(true);
+                // Hide Keyboard
+                InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+                imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+                // Display Error Message
+                Toast.makeText(getApplicationContext(), "Sign Up Failed", Toast.LENGTH_LONG).show();
             }
         }) {
             @Override
