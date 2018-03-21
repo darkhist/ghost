@@ -66,17 +66,17 @@ public class FriendsFragment extends Fragment {
         ArrayList<Friend> friendArrayList = new ArrayList<>();
         // add friends to arraylist
         // TODO get these friends from database
-        friendArrayList.add(new Friend(1, "Quinn", "Salas"));
-        friendArrayList.add(new Friend(2, "Akira", "Demoss"));
-        friendArrayList.add(new Friend(4, "Simanta", "Mitra"));
-        friendArrayList.add(new Friend(6,"Mark", "Hammill"));
-        friendArrayList.add(new Friend(12,"Esperanza", "Spalding"));
-        friendArrayList.add(new Friend(13, "Harry", "Potter"));
-        friendArrayList.add(new Friend(21, "Hermione", "Granger"));
-        friendArrayList.add(new Friend(25, "Vamsi", "Calpakkam"));
-        friendArrayList.add(new Friend(34,"Tom", "Brady"));
-        friendArrayList.add(new Friend(54, "Magic","Johnson"));
-        friendArrayList.add(new Friend(56, "Michael", "Jordan"));
+        friendArrayList.add(new Friend(1, "Quinn", "Salas", Friend.STATUS_ACCEPTED));
+        friendArrayList.add(new Friend(2, "Akira", "Demoss", Friend.STATUS_ACCEPTED));
+        friendArrayList.add(new Friend(4, "Simanta", "Mitra", Friend.STATUS_ACCEPTED));
+        friendArrayList.add(new Friend(6,"Mark", "Hammill", Friend.STATUS_ACCEPTED));
+        friendArrayList.add(new Friend(12,"Esperanza", "Spalding", Friend.STATUS_ACCEPTED));
+        friendArrayList.add(new Friend(13, "Harry", "Potter", Friend.STATUS_ACCEPTED));
+        friendArrayList.add(new Friend(21, "Hermione", "Granger", Friend.STATUS_ACCEPTED));
+        friendArrayList.add(new Friend(25, "Vamsi", "Calpakkam", Friend.STATUS_ACCEPTED));
+        friendArrayList.add(new Friend(34,"Tom", "Brady", Friend.STATUS_ACCEPTED));
+        friendArrayList.add(new Friend(54, "Magic","Johnson", Friend.STATUS_ACCEPTED));
+        friendArrayList.add(new Friend(56, "Michael", "Jordan", Friend.STATUS_ACCEPTED));
 
         Collections.sort(friendArrayList); // sort list in alphabetical order
 

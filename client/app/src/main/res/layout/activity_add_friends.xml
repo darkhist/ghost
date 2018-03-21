@@ -12,7 +12,21 @@
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme" />
+        android:theme="?attr/actionBarTheme"
+        app:navigationIcon="@mipmap/ic_arrow_back_white_24dp"
+        app:title="Add Friends"
+        app:titleTextColor="#ffff" />
+
+    <com.miguelcatalan.materialsearchview.MaterialSearchView
+        android:id="@+id/add_search_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:searchBackground="@color/colorPrimary"
+        app:searchSuggestionBackground="@color/colorPrimary"
+        app:searchCloseIcon="@mipmap/ic_close_white_24dp"
+        app:searchBackIcon="@mipmap/ic_arrow_back_white_24dp"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#FFFFFF"></com.miguelcatalan.materialsearchview.MaterialSearchView>
 
     <floatingheads.snapclone.objects.UsersView
         android:id="@+id/users_view"

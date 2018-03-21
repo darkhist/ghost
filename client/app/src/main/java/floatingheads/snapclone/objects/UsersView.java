@@ -8,6 +8,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -39,6 +40,10 @@ public class UsersView extends ListView {
         usersArrayList = contents;
         ListAdapter la = new CustomListAdapter(context, usersArrayList, CustomListAdapter.USERS_SCREEN);
         setAdapter(la);
+    }
+
+    public ArrayList<User> getUsers() {
+        return usersArrayList;
     }
 
     public void init() {
