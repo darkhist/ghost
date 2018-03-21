@@ -1,6 +1,7 @@
 package floatingheads.snapclone.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,6 +12,8 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 
+import floatingheads.snapclone.activities.MessagesListActivity;
+import floatingheads.snapclone.activities.SignUpActivity;
 import floatingheads.snapclone.objects.Contact;
 import floatingheads.snapclone.objects.MessagesView;
 import floatingheads.snapclone.R;
@@ -21,11 +24,9 @@ import floatingheads.snapclone.R;
  */
 public class MessagesFragment extends Fragment {
 
-
     public MessagesFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -51,7 +52,9 @@ public class MessagesFragment extends Fragment {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO
+                // Open the Create New Message Screen
+                Intent i = new Intent(getActivity().getApplicationContext(), MessagesListActivity.class);
+                startActivity(i);
             }
         });
 
