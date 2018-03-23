@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="floatingheads.snapclone">
-    android:versionCode="301"
-    android:versionName="3.01">
 
     <!-- Allow Camera Permissions -->
     <uses-permission android:name="android.permission.CAMERA" />
@@ -101,6 +99,13 @@
         <activity android:name=".activities.MessageActivity" />
 
         <activity android:name=".activities.MessagesListActivity" />
+
+        <service
+            android:name=".firebase.FirebaseInstance">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+            </intent-filter>
+        </service>
 
         <meta-data
             android:name="preloaded_fonts"
