@@ -27,7 +27,8 @@
     <string name="friend_card_text"> Sample Friend</string>
 
     <!-- Messages Stuff -->
-    <string name="msg_greeting"> Send and Receive Messages Here!</string>
+    <string name="msg_greeting">Send and Receive Messages Here!</string>
+    <string name="default_notification_channel_id">Channel ID</string>
 
     <!-- Camera Stuff -->
     <string name="open_camera"> Open Camera </string>

@@ -59,51 +59,61 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".activities.CameraPreviewActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" />
-
         <activity
             android:name=".opencv.MyRealTimeImageProcessing"
             android:screenOrientation="sensorLandscape" />
-
         <activity
             android:name=".activities.LoginActivity"
             android:label="@string/title_activity_login"
             android:windowSoftInputMode="stateHidden" />
-
         <activity
             android:name=".activities.SignUpActivity"
             android:label="@string/title_activity_sign_up"
             android:windowSoftInputMode="stateHidden" />
-
         <activity
             android:name=".activities.FriendsActivity"
             android:label="@string/title_activity_friends" />
-
         <activity
             android:name=".activities.NavBarActivity"
             android:label="NavBarActivity" />
-
         <activity android:name=".activities.AddFriendsActivity" />
-
         <activity android:name=".activities.MessageActivity" />
-
         <activity android:name=".activities.MessagesListActivity" />
 
-        <service
-            android:name=".firebase.FirebaseInstance">
+        <!-- Firebase Services -->
+        <service android:name=".firebase.MyFirebaseInstanceIDService">
             <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+
+        <service
+            android:name=".firebase.MyFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="@string/default_notification_channel_id"/>
+
+        <service
+            android:exported="false"
+            android:name=".firebase.MyJobService">
+            <intent-filter>
+                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE" />
             </intent-filter>
         </service>
 
@@ -111,4 +121,5 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
     </application>
+
 </manifest>
