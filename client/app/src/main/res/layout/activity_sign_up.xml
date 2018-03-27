@@ -45,7 +45,8 @@
                     android:inputType="text"
                     android:maxLines="1"
                     android:singleLine="true"
-                    android:textColor="@android:color/white" />
+                    android:textColor="@android:color/white"
+                    android:importantForAutofill="no" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -95,7 +96,8 @@
                     android:imeOptions="actionUnspecified"
                     android:inputType="textPassword"
                     android:maxLines="1"
-                    android:singleLine="true" />
+                    android:singleLine="true"
+                    android:importantForAutofill="no"/>
 
             </android.support.design.widget.TextInputLayout>
 

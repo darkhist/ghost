@@ -3,6 +3,7 @@ package floatingheads.snapclone.activities;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.CursorLoader;
 import android.content.Intent;
@@ -22,11 +23,13 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -41,6 +44,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import floatingheads.snapclone.R;
 import floatingheads.snapclone.net_utils.Const;
@@ -206,8 +211,24 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
     }
 
     private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
-        return email.contains("@");
+        /*
+        requirements:
+        - must have @
+        - top level domain (TLD) can't start with '.'
+        - TLD must contain > 2 chars
+        - email first char cannot be '.'
+        - email can only contain characters, digits, underscore, dash, dot
+        - TLD can only contain characters and digits
+        - double '.' ('..') not allowed
+        - email last char cannot be '.'
+        - cannot have > 1 @
+         */
+
+        final String emailPattern = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+        Pattern pattern = Pattern.compile(emailPattern);
+        Matcher matcher = pattern.matcher(email);
+
+        return matcher.matches();
     }
 
     private boolean isPasswordValid(String password) {
@@ -324,6 +345,13 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
+                // Cancel Sign Up Task
+                mAuthTask.cancel(true);
+                // Hide Keyboard
+                InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+                imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+                // Display Error Message
+                Toast.makeText(getApplicationContext(), "Sign Up Failed", Toast.LENGTH_LONG).show();
             }
         }) {
             @Override
@@ -337,10 +365,10 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
             }
         };
 
-        // Handling Volley Timeout Error
+        // Handling Volley Double POST
         postRequest.setRetryPolicy(new DefaultRetryPolicy(
                 0,
-                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                0,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
         AppController.getInstance().addToRequestQueue(postRequest);

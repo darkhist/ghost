@@ -92,6 +92,7 @@ public class VolleyActions {
                     for (int i = 0; i < response.length(); i++) {
                         JSONObject jsonObject = response.getJSONObject(i);
                         int id = jsonObject.getInt("user_id");
+                        String phone = jsonObject.getString("phone_number");
                         String first = jsonObject.getString("first_name");
                         String last = jsonObject.getString("last_name");
                         String username = jsonObject.getString("username");

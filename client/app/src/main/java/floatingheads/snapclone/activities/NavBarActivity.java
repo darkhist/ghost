@@ -14,21 +14,30 @@ import floatingheads.snapclone.fragments.MessagesFragment;
 import floatingheads.snapclone.fragments.NotisFragment;
 import floatingheads.snapclone.fragments.ProfileFragment;
 import floatingheads.snapclone.R;
+import floatingheads.snapclone.objects.User;
 
 public class NavBarActivity extends AppCompatActivity {
 
+    // User Information
+    public User masterUser;
+
+    //
     private BottomNavigationView mMainNav;
     private FrameLayout mMainFrame;
 
     private ProfileFragment profileFragment;
     private FriendsFragment friendsFragment;
-    private NotisFragment notisFragment;
     private MessagesFragment messagesFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nav_bar);
+
+//        String strUid = getIntent().getStringExtra("SESSION_UID");
+//        int uid = Integer.parseInt(strUid);
+
+//        masterUser = new User(uid);
 
         mMainNav = (BottomNavigationView) findViewById(R.id.navigation);
         mMainFrame = (FrameLayout) findViewById(R.id.main_frame);
