@@ -1,11 +1,11 @@
-"use strict";
+'use strict';
 
 // This file acts as database middleware
 // and is used in conjunction with models
 
-const config = require("./config.json");
-const mysql = require("mysql");
-const util = require("util");
+const config = require('./config.json');
+const mysql = require('mysql');
+const util = require('util');
 
 const pool = mysql.createPool({
   host: `${config.host}`,
@@ -16,7 +16,7 @@ const pool = mysql.createPool({
 
 pool.getConnection((err, connection) => {
   if (err) {
-    console.error("Error Connecting" + err.stack);
+    console.error('Error Connecting' + err.stack);
     if (connection) connection.release();
     return;
   }
