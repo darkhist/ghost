@@ -29,6 +29,7 @@
     <!-- Messages Stuff -->
     <string name="msg_greeting">Send and Receive Messages Here!</string>
     <string name="default_notification_channel_id">Channel ID</string>
+    <string name="chat_input">Say something nice…</string>
 
     <!-- Camera Stuff -->
     <string name="open_camera"> Open Camera </string>

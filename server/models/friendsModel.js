@@ -1,12 +1,12 @@
 'use strict';
 
-// This file defines behavior for interation with the FRIENDSHIPS Table
+// This file defines behavior for interation with the FRIENDS Table
 
 const connection = require('../database');
 
 exports.search = async data => {
   try {
-    data = await connection.query('SELECT * FROM FRIENDSHIPS');
+    data = await connection.query('SELECT * FROM FRIENDS');
   } catch (err) {
     console.error('Something went wrong!' + err.stack);
   }

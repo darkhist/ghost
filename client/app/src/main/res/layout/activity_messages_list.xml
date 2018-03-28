@@ -1,9 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="floatingheads.snapclone.activities.MessagesListActivity">
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
 
-</android.support.constraint.ConstraintLayout>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/chat_message"
+        android:layout_width="match_parent"
+        android:layout_above="@+id/chat_input"
+        android:paddingBottom="20dp"
+        android:background="@android:color/darker_gray"
+        android:layout_height="match_parent"/>
+
+    <EditText
+        android:id="@+id/chat_input"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:inputType="text"
+        android:imeOptions="actionSend"
+        android:hint="@string/chat_input"/>
+
+</RelativeLayout>
+
+
