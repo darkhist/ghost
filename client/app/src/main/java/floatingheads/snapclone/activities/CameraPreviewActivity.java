@@ -33,6 +33,8 @@ import com.google.android.gms.vision.face.FaceDetector;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Random;
 
 import floatingheads.snapclone.camera2VisionTools.CameraSource;
@@ -82,7 +84,6 @@ public class CameraPreviewActivity extends AppCompatActivity  {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_camera_preview);
         context = getApplicationContext();
-        rand = new Random();
 
         takePictureButton = (Button) findViewById(R.id.btn_takepicture);
         switchButton = (Button) findViewById(R.id.btn_switch);
@@ -121,8 +122,6 @@ public class CameraPreviewActivity extends AppCompatActivity  {
             takePictureButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //update counter;
-                    counter = rand.nextInt(1000)+1;
                     switchButton.setEnabled(false);
                     videoButton.setEnabled(false);
                     takePictureButton.setEnabled(false);
@@ -157,10 +156,11 @@ public class CameraPreviewActivity extends AppCompatActivity  {
             FileOutputStream out = null;
             try {
                 //Functionality for saving image
+                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
                 String path = Environment.getExternalStorageDirectory().toString()+File.separator+"Pictures"+File.separator+"SnapClone";
-                File file = new File(path, "SnapClone"+counter+".png");
+                File file = new File(path, "SnapClone"+timeStamp+".jpeg");
                 fileOut = new FileOutputStream(file);
-                picture.compress(Bitmap.CompressFormat.JPEG, 95, fileOut);
+                picture.compress(Bitmap.CompressFormat.JPEG, 85, fileOut);
                 fileOut.flush(); // Not really required
                 fileOut.close(); // do not forget to close the stream
             } catch (Exception e) {

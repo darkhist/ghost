@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
         cameraInit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(),CVImgProcCameraActivity.class);
+                Intent i = new Intent(getApplicationContext(),CameraPreviewActivity.class);
                 startActivity(i);
             }
         });
