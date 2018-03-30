@@ -45,13 +45,6 @@ public class MessagesFragment extends Fragment {
         MessagesView friendsList = (MessagesView) inflatedView.findViewById(R.id.messagesListView);
         friendsList.setContents(contactArrayList);
 
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // TODO: Launch Chat Fragment
-            }
-        });
-
         return inflatedView;
     }
 
