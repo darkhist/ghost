@@ -39,7 +39,7 @@ import java.util.Random;
 
 import floatingheads.snapclone.camera2VisionTools.CameraSource;
 import floatingheads.snapclone.camera2VisionTools.CameraSourcePreview;
-import floatingheads.snapclone.camera2VisionTools.GraphicFaceTrackerFactory;
+import floatingheads.snapclone.camera2VisionTools.Face.GraphicFaceTrackerFactory;
 import floatingheads.snapclone.camera2VisionTools.GraphicOverlay;
 
 public class CameraPreviewActivity extends AppCompatActivity  {
@@ -84,6 +84,7 @@ public class CameraPreviewActivity extends AppCompatActivity  {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_camera_preview);
         context = getApplicationContext();
+
 
         takePictureButton = (Button) findViewById(R.id.btn_takepicture);
         switchButton = (Button) findViewById(R.id.btn_switch);
@@ -138,44 +139,6 @@ public class CameraPreviewActivity extends AppCompatActivity  {
 
     final CameraSource.ShutterCallback cameraSourceShutterCallback = new CameraSource.ShutterCallback() {@Override public void onShutter() {Log.d(TAG, "Shutter Callback!");}};
 
-    /**
-     * Callback for camera image capture (deprecated), can set location to save files in this initialization
-     */
-    final CameraSource.PictureCallback cameraSourcePictureCallback = new CameraSource.PictureCallback() {
-        @Override
-        public void onPictureTaken(Bitmap picture) {
-            Log.d(TAG, "Taken picture is here!");
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    switchButton.setEnabled(true);
-                    videoButton.setEnabled(true);
-                    takePictureButton.setEnabled(true);
-                }
-            });
-            FileOutputStream out = null;
-            try {
-                //Functionality for saving image
-                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-                String path = Environment.getExternalStorageDirectory().toString()+File.separator+"Pictures"+File.separator+"SnapClone";
-                File file = new File(path, "SnapClone"+timeStamp+".jpeg");
-                fileOut = new FileOutputStream(file);
-                picture.compress(Bitmap.CompressFormat.JPEG, 85, fileOut);
-                fileOut.flush(); // Not really required
-                fileOut.close(); // do not forget to close the stream
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                try {
-                    if (out != null) {
-                        out.close();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    };
 
     /**
      * Check the device to make sure it has the Google Play Services APK. If
@@ -195,6 +158,29 @@ public class CameraPreviewActivity extends AppCompatActivity  {
         return false;
     }
 
+
+    /**
+     * Setup Camera permissions
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == REQUEST_CAMERA_PERMISSION) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                requestPermissionThenOpenCamera();
+            } else {
+                Toast.makeText(CameraPreviewActivity.this, "CAMERA PERMISSION REQUIRED", Toast.LENGTH_LONG).show();
+                finish();
+            }
+        }
+        if(requestCode == REQUEST_STORAGE_PERMISSION) {
+            if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                requestPermissionThenOpenCamera();
+            } else {
+                Toast.makeText(CameraPreviewActivity.this, "STORAGE PERMISSION REQUIRED", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
     /**
      * Permissions for Camera features
      */
@@ -210,6 +196,29 @@ public class CameraPreviewActivity extends AppCompatActivity  {
         }
     }
 
+
+    /**
+     * Starts the Camerasource
+     */
+    private void startCameraSource() {
+        if (mCameraSource != null) {
+            cameraVersion.setText("Camera 1");
+            try {
+                //Graphic Overlay declared
+                // When camera source is started
+                mPreview.start(mCameraSource, mGraphicOverlay);
+            } catch (IOException e) {
+                Log.e(TAG, "Unable to start camera source.", e);
+                mCameraSource.release();
+                mCameraSource = null;
+            }
+        }
+
+    }
+
+    /**
+     *Declare the front camera
+     */
     private void createCameraSourceFront() {
         previewFaceDetector = new FaceDetector.Builder(context)
                 .setClassificationType(FaceDetector.ALL_CLASSIFICATIONS)
@@ -257,23 +266,45 @@ public class CameraPreviewActivity extends AppCompatActivity  {
 
     }
 
+
     /**
-     * Starts the Camerasource
+     * Callback for camera image capture (deprecated), Takes the image and stores photos in album with the appropriate date
      */
-    private void startCameraSource() {
-        if (mCameraSource != null) {
-            cameraVersion.setText("Camera 1");
+    final CameraSource.PictureCallback cameraSourcePictureCallback = new CameraSource.PictureCallback() {
+        @Override
+        public void onPictureTaken(Bitmap picture) {
+            Log.d(TAG, "Taken picture is here!");
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    switchButton.setEnabled(true);
+                    videoButton.setEnabled(true);
+                    takePictureButton.setEnabled(true);
+                }
+            });
+            FileOutputStream out = null;
             try {
-                mPreview.start(mCameraSource, mGraphicOverlay);
-            } catch (IOException e) {
-                Log.e(TAG, "Unable to start camera source.", e);
-                mCameraSource.release();
-                mCameraSource = null;
+                //Functionality for saving image
+                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+                String path = Environment.getExternalStorageDirectory().toString()+File.separator+"Pictures"+File.separator+"SnapClone";
+                File file = new File(path, "SnapClone"+timeStamp+".jpeg");
+                fileOut = new FileOutputStream(file);
+                picture.compress(Bitmap.CompressFormat.JPEG, 85, fileOut);
+                fileOut.flush(); // Not really required
+                fileOut.close(); // do not forget to close the stream
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    if (out != null) {
+                        out.close();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
-
-    }
-
+        }
+    };
     private void stopCameraSource() {
         mPreview.stop();
     }
@@ -309,27 +340,6 @@ public class CameraPreviewActivity extends AppCompatActivity  {
         }
     };
 
-    /**
-     * Setup Camera permissions
-     */
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == REQUEST_CAMERA_PERMISSION) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                requestPermissionThenOpenCamera();
-            } else {
-                Toast.makeText(CameraPreviewActivity.this, "CAMERA PERMISSION REQUIRED", Toast.LENGTH_LONG).show();
-                finish();
-            }
-        }
-        if(requestCode == REQUEST_STORAGE_PERMISSION) {
-            if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                requestPermissionThenOpenCamera();
-            } else {
-                Toast.makeText(CameraPreviewActivity.this, "STORAGE PERMISSION REQUIRED", Toast.LENGTH_LONG).show();
-            }
-        }
-    }
 
     @Override
     protected void onResume() {

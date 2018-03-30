@@ -1,4 +1,4 @@
-package floatingheads.snapclone.camera2VisionTools;
+package floatingheads.snapclone.camera2VisionTools.Face;
 
 import android.content.Context;
 
@@ -6,7 +6,6 @@ import com.google.android.gms.vision.MultiProcessor;
 import com.google.android.gms.vision.Tracker;
 import com.google.android.gms.vision.face.Face;
 
-import floatingheads.snapclone.camera2VisionTools.GraphicFaceTracker;
 import floatingheads.snapclone.camera2VisionTools.GraphicOverlay;
 
 /**

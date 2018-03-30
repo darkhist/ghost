@@ -6,6 +6,7 @@
     android:orientation="vertical"
     android:fitsSystemWindows="false">
 
+    <!-- This is the camera preview source settings, with the faceOverlay nested inside of it-->
     <floatingheads.snapclone.camera2VisionTools.CameraSourcePreview
         android:id="@+id/preview2"
         android:orientation="vertical"
