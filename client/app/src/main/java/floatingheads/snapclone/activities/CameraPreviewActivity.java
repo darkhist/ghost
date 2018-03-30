@@ -27,7 +27,6 @@ import floatingheads.snapclone.R;
 import floatingheads.snapclone.androidScreenUtils.Utils;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.vision.MultiProcessor;
 import com.google.android.gms.vision.face.FaceDetector;
 
 import java.io.File;
@@ -39,7 +38,6 @@ import java.util.Random;
 
 import floatingheads.snapclone.camera2VisionTools.CameraSource;
 import floatingheads.snapclone.camera2VisionTools.CameraSourcePreview;
-import floatingheads.snapclone.camera2VisionTools.Face.GraphicFaceTrackerFactory;
 import floatingheads.snapclone.camera2VisionTools.GraphicOverlay;
 
 public class CameraPreviewActivity extends AppCompatActivity  {
@@ -64,7 +62,6 @@ public class CameraPreviewActivity extends AppCompatActivity  {
     private Button videoButton;
     private int counter;
     private Random rand;
-    //private Context mContext;
 
     // FILE STORAGE DECLARATIONS
     private File directory;
@@ -73,6 +70,16 @@ public class CameraPreviewActivity extends AppCompatActivity  {
 
     // DEFAULT CAMERA BEING OPENED
     private boolean usingFrontCamera = true;
+
+    private static final int RC_HANDLE_GMS = 9001;
+
+    // permission request codes need to be < 256
+    private static final int RC_HANDLE_CAMERA_PERM = 2;
+
+
+
+
+
 
     // MUST BE CAREFUL USING THIS VARIABLE.
     // ANY ATTEMPT TO START CAMERA2 ON API < 21 WILL CRASH.
@@ -95,7 +102,14 @@ public class CameraPreviewActivity extends AppCompatActivity  {
         ivAutoFocus = (ImageView) findViewById(R.id.ivAutoFocus);
         counter = 0;
 
+        //New Directory path
         String snapCloneDir = Environment.getExternalStorageDirectory()+File.separator+"Pictures"+File.separator+"SnapClone";
+
+        //listener toggle - get rid of need for 2 camerasource view methods
+        switchButton.setOnClickListener(mFlipButtonListener);
+        if (savedInstanceState != null) {
+            usingFrontCamera = savedInstanceState.getBoolean("IsFrontFacing");
+        }
 
         directory = new File(Environment.getExternalStorageDirectory()+File.separator+"Pictures"+File.separator+"SnapClone");
         directory.mkdir();
@@ -104,7 +118,7 @@ public class CameraPreviewActivity extends AppCompatActivity  {
             requestPermissionThenOpenCamera();
 
             //Change screens listener
-            switchButton.setOnClickListener(new View.OnClickListener() {
+           /* switchButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if(usingFrontCamera) {
@@ -117,7 +131,7 @@ public class CameraPreviewActivity extends AppCompatActivity  {
                         usingFrontCamera = true;
                     }
                 }
-            });
+            });*/
 
             //Image caputre listener
             takePictureButton.setOnClickListener(new View.OnClickListener() {
@@ -138,6 +152,24 @@ public class CameraPreviewActivity extends AppCompatActivity  {
 
 
     final CameraSource.ShutterCallback cameraSourceShutterCallback = new CameraSource.ShutterCallback() {@Override public void onShutter() {Log.d(TAG, "Shutter Callback!");}};
+
+
+    /**
+     * Toggles between front-facing and rear-facing modes.
+     */
+    private View.OnClickListener mFlipButtonListener = new View.OnClickListener() {
+        public void onClick(View v) {
+            usingFrontCamera = !usingFrontCamera;
+
+            if (mCameraSource != null) {
+                mCameraSource.release();
+                mCameraSource = null;
+            }
+
+            createCameraSource();
+            startCameraSource();
+        }
+    };
 
 
     /**
@@ -218,8 +250,9 @@ public class CameraPreviewActivity extends AppCompatActivity  {
 
     /**
      *Declare the front camera
+     * This is where we add GraphicFaceTrackerShizz
      */
-    private void createCameraSourceFront() {
+   /* private void createCameraSourceFront() {
         previewFaceDetector = new FaceDetector.Builder(context)
                 .setClassificationType(FaceDetector.ALL_CLASSIFICATIONS)
                 .setLandmarkType(FaceDetector.ALL_LANDMARKS)
@@ -240,12 +273,12 @@ public class CameraPreviewActivity extends AppCompatActivity  {
 
             startCameraSource();
 
-    }
+    }*/
 
     /**
      *toggle camera source
      */
-    private void createCameraSourceBack() {
+   /* private void createCameraSourceBack() {
         previewFaceDetector = new FaceDetector.Builder(context)
                 .setClassificationType(FaceDetector.ALL_CLASSIFICATIONS)
                 .setLandmarkType(FaceDetector.ALL_LANDMARKS)
@@ -264,8 +297,36 @@ public class CameraPreviewActivity extends AppCompatActivity  {
                     .build();
             startCameraSource();
 
-    }
+    }*/
 
+    /**
+     * Creates the face detector and the camera.
+     */
+    private void createCameraSource() {
+        Context context = getApplicationContext();
+        FaceDetector detector = createFaceDetector(context);
+
+        int facing = CameraSource.CAMERA_FACING_FRONT;
+        if (!usingFrontCamera) {
+            facing = CameraSource.CAMERA_FACING_BACK;
+        }
+
+        // The camera source is initialized to use either the front or rear facing camera.  We use a
+        // relatively low resolution for the camera preview, since this is sufficient for this app
+        // and the face detector will run faster at lower camera resolutions.
+        //
+        // However, note that there is a speed/accuracy trade-off with respect to choosing the
+        // camera resolution.  The face detector will run faster with lower camera resolutions,
+        // but may miss smaller faces, landmarks, or may not correctly detect eyes open/closed in
+        // comparison to using higher camera resolutions.  If you have any of these issues, you may
+        // want to increase the resolution.
+        mCameraSource = new CameraSource.Builder(context, detector)
+                .setFacing(facing)
+                .setRequestedPreviewSize(320, 240)
+                .setRequestedFps(60.0f)
+                .setAutoFocusEnabled(true)
+                .build();
+    }
 
     /**
      * Callback for camera image capture (deprecated), Takes the image and stores photos in album with the appropriate date

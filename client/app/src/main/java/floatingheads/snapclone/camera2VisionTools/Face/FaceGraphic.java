@@ -93,6 +93,7 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
         mFace = null;
     }
 
+    //Overriding GraphicOverlay's draw method
     @Override
     public void draw(Canvas canvas) {
         Face face = mFace;
