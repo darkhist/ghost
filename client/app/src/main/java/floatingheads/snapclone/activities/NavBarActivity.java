@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 
+import floatingheads.snapclone.fragments.ChatFragment;
 import floatingheads.snapclone.fragments.FriendsFragment;
 import floatingheads.snapclone.fragments.MessagesFragment;
 import floatingheads.snapclone.fragments.NotisFragment;
@@ -24,6 +25,7 @@ public class NavBarActivity extends AppCompatActivity {
     private FriendsFragment friendsFragment;
     private NotisFragment notisFragment;
     private MessagesFragment messagesFragment;
+    private ChatFragment chatFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +39,7 @@ public class NavBarActivity extends AppCompatActivity {
         friendsFragment = new FriendsFragment();
         notisFragment = new NotisFragment();
         messagesFragment = new MessagesFragment();
+        chatFragment = new ChatFragment();
 
         setFragment(messagesFragment);
 
@@ -58,6 +61,10 @@ public class NavBarActivity extends AppCompatActivity {
 
                     case R.id.nav_messages:
                          setFragment(messagesFragment);
+                        return true;
+
+                    case R.id.nav_chat:
+                        setFragment(chatFragment);
                         return true;
                 }
                 return false;

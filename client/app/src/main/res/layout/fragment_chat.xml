@@ -19,8 +19,8 @@
         android:id="@+id/chat_input"
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:inputType="text"
+        android:layout_height="150dp"
+        android:hint="@string/chat_input"
         android:imeOptions="actionSend"
-        android:hint="@string/chat_input"/>
+        android:inputType="text|textAutoCorrect" />
 </RelativeLayout>

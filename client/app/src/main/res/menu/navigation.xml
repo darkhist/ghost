@@ -3,6 +3,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
+        android:id="@+id/nav_chat"
+        android:icon="@mipmap/ic_launcher_round"
+        android:title="@string/nav_chat" />
+
+    <item
         android:id="@+id/nav_messages"
         android:icon="@mipmap/ic_chat_black_24dp"
         android:title="@string/nav_messages" />
