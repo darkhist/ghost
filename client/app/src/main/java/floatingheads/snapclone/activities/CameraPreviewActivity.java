@@ -6,6 +6,8 @@ package floatingheads.snapclone.activities;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -25,9 +27,18 @@ import android.widget.Toast;
 
 import floatingheads.snapclone.R;
 import floatingheads.snapclone.androidScreenUtils.Utils;
+import floatingheads.snapclone.camera2VisionTools.Eyes.GooglyFaceTracker;
+
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.vision.Detector;
+import com.google.android.gms.vision.MultiProcessor;
+import com.google.android.gms.vision.Tracker;
+import com.google.android.gms.vision.face.Face;
 import com.google.android.gms.vision.face.FaceDetector;
+import com.google.android.gms.vision.face.LargestFaceFocusingProcessor;
+//import com.google.android.gms.vision.CameraSource;
+
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -75,11 +86,6 @@ public class CameraPreviewActivity extends AppCompatActivity  {
 
     // permission request codes need to be < 256
     private static final int RC_HANDLE_CAMERA_PERM = 2;
-
-
-
-
-
 
     // MUST BE CAREFUL USING THIS VARIABLE.
     // ANY ATTEMPT TO START CAMERA2 ON API < 21 WILL CRASH.
@@ -219,7 +225,8 @@ public class CameraPreviewActivity extends AppCompatActivity  {
     private void requestPermissionThenOpenCamera() {
         if(ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
             if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                createCameraSourceFront();
+                //createCameraSourceFront();
+                createCameraSource();
             } else {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_STORAGE_PERMISSION);
             }
@@ -311,20 +318,15 @@ public class CameraPreviewActivity extends AppCompatActivity  {
             facing = CameraSource.CAMERA_FACING_BACK;
         }
 
-        // The camera source is initialized to use either the front or rear facing camera.  We use a
-        // relatively low resolution for the camera preview, since this is sufficient for this app
-        // and the face detector will run faster at lower camera resolutions.
-        //
-        // However, note that there is a speed/accuracy trade-off with respect to choosing the
-        // camera resolution.  The face detector will run faster with lower camera resolutions,
-        // but may miss smaller faces, landmarks, or may not correctly detect eyes open/closed in
-        // comparison to using higher camera resolutions.  If you have any of these issues, you may
-        // want to increase the resolution.
+        // For both front facing and rear facing modes, the detector is initialized to do eye landmark classification.
+        // We are using fast mode, and tracking 1 face in front camera view, and multiple faces in rear camera view.
+        // Setting PromentnFaceOnly as true when usingFrontCamera will stop scanning for faces when single largest face is found
+        // The former results in greater efficiency, we also increase minfacesize from default for further optimizations
+        //***********(note tooke out setAutoFocusEnabled for now to fix errors)*******
         mCameraSource = new CameraSource.Builder(context, detector)
                 .setFacing(facing)
                 .setRequestedPreviewSize(320, 240)
                 .setRequestedFps(60.0f)
-                .setAutoFocusEnabled(true)
                 .build();
     }
 
@@ -368,6 +370,77 @@ public class CameraPreviewActivity extends AppCompatActivity  {
     };
     private void stopCameraSource() {
         mPreview.stop();
+    }
+
+    //==============================================================================================
+    // Detector
+    //==============================================================================================
+
+
+    /**
+     * Creates the face detector and associated processing pipeline to support either front facing
+     * mode or rear facing mode.  Checks if the detector is ready to use, and displays a low storage
+     * warning if it was not possible to download the face library.
+     */
+    @NonNull
+    private FaceDetector createFaceDetector(Context context) {
+        // For both front facing and rear facing modes, the detector is initialized to do eye landmark classification.
+        // We are using fast mode, and tracking 1 face in front camera view, and multiple faces in rear camera view.
+        // Setting PromentnFaceOnly as true when usingFrontCamera will stop scanning for faces when single largest face is found
+        // The former results in greater efficiency, we also increase minfacesize from default for further optimizations
+        FaceDetector detector = new FaceDetector.Builder(context)
+                .setLandmarkType(FaceDetector.ALL_LANDMARKS)
+                .setClassificationType(FaceDetector.ALL_CLASSIFICATIONS)
+                .setTrackingEnabled(true)
+                .setMode(FaceDetector.FAST_MODE)
+                .setProminentFaceOnly(usingFrontCamera)
+                .setMinFaceSize(usingFrontCamera ? 0.35f : 0.15f)
+                .build();
+
+        Detector.Processor<Face> processor;
+        if (usingFrontCamera) {
+            // For front facing mode, a single tracker instance is used with an associated focusing processor
+            Tracker<Face> tracker = new GooglyFaceTracker(mGraphicOverlay);
+            processor = new LargestFaceFocusingProcessor.Builder(detector, tracker).build();
+        } else {
+            // For rear facing mode, a factory is used to create per-face tracker instances.  A
+            // tracker is created for each face and is maintained as long as the same face is
+            // visible, enabling per-face state to be maintained over time.  This is used to store
+            // the iris position and velocity for each face independently, simulating the motion of
+            // the eyes of any number of faces over time.
+            MultiProcessor.Factory<Face> factory = new MultiProcessor.Factory<Face>() {
+                @Override
+                public Tracker<Face> create(Face face) {
+                    return new GooglyFaceTracker(mGraphicOverlay);
+                }
+            };
+            processor = new MultiProcessor.Builder<>(factory).build();
+        }
+
+        detector.setProcessor(processor);
+
+        if (!detector.isOperational()) {
+            // Note: The first time that an app using face API is installed on a device, GMS will
+            // download a native library to the device in order to do detection.  Usually this
+            // completes before the app is run for the first time.  But if that download has not yet
+            // completed, then the above call will not detect any faces.
+            //
+            // isOperational() can be used to check if the required native library is currently
+            // available.  The detector will automatically become operational once the library
+            // download completes on device.
+            Log.w(TAG, "Face detector dependencies are not yet available.");
+
+            // Check for low storage.  If there is low storage, the native library will not be
+            // downloaded, so detection will not become operational.
+            IntentFilter lowStorageFilter = new IntentFilter(Intent.ACTION_DEVICE_STORAGE_LOW);
+            boolean hasLowStorage = registerReceiver(null, lowStorageFilter) != null;
+
+            if (hasLowStorage) {
+                Toast.makeText(this, R.string.low_storage_error, Toast.LENGTH_LONG).show();
+                Log.w(TAG, getString(R.string.low_storage_error));
+            }
+        }
+        return detector;
     }
 
     /**
