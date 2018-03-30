@@ -11,7 +11,7 @@ import com.google.firebase.iid.FirebaseInstanceIdService;
 
 public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
 
-    public static final String TAG = "Error";
+    public static final String TAG = "FirebaseID";
 
     @Override
     public void onTokenRefresh() {
