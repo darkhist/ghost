@@ -2,7 +2,7 @@
 
 const connection = require('../database');
 
-exports.search = async data => {
+module.exports.search = async data => {
   try {
     data = await connection.query('SELECT * FROM FRIENDS');
   } catch (err) {

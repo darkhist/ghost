@@ -2,7 +2,7 @@
 
 const connection = require('../database');
 
-exports.search = async data => {
+module.exports.search = async data => {
   try {
     data = await connection.query('SELECT * FROM USERS');
   } catch (err) {
@@ -11,7 +11,7 @@ exports.search = async data => {
   return data;
 };
 
-exports.add = async (firstName, lastName, username, password, email) => {
+module.exports.add = async (firstName, lastName, username, password, email) => {
   try {
     await connection.query(
       `INSERT INTO USERS 
@@ -23,7 +23,7 @@ exports.add = async (firstName, lastName, username, password, email) => {
   }
 };
 
-exports.getPassword = async (email, password = undefined) => {
+module.exports.getPassword = async (email, password = undefined) => {
   try {
     password = await connection.query('SELECT password FROM USERS WHERE email = ?', [email]);
   } catch (err) {

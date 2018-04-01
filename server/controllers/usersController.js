@@ -4,13 +4,13 @@ const bcrypt = require('bcrypt');
 const usersModel = require('../models/usersModel');
 
 // Handle GET /users
-exports.get = async (req, res) => {
+module.exports.get = async (req, res) => {
   const results = await usersModel.search();
   res.send(results);
 };
 
 // Handle POST /users/signup
-exports.signup = (req, res) => {
+module.exports.signup = (req, res) => {
   const user = {
     name: req.body.name.split(' '),
     username: req.body.username,
@@ -34,7 +34,7 @@ exports.signup = (req, res) => {
 };
 
 // Handle POST /users/login
-exports.authenticate = (req, res) => {
+module.exports.authenticate = (req, res) => {
   const user = {
     email: req.body.email,
     password: req.body.password
