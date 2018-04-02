@@ -23,12 +23,12 @@ module.exports.add = async (firstName, lastName, username, password, email) => {
   }
 };
 
-module.exports.getPassword = async (email, password = undefined) => {
+module.exports.getPassword = async email => {
+  let password;
   try {
     password = await connection.query('SELECT password FROM USERS WHERE email = ?', [email]);
-  } catch (err) {
-    console.error(`Something went wrong! ${err.stack}`);
+  } catch (error) {
+    throw new Error('Unable to get Password');
   }
-  // Grab the password from the returned row
   return password[0].password;
 };

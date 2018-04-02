@@ -34,7 +34,7 @@ module.exports.signup = (req, res) => {
 };
 
 // Handle POST /users/login
-module.exports.authenticate = (req, res) => {
+module.exports.authenticate = async (req, res) => {
   const user = {
     email: req.body.email,
     password: req.body.password
@@ -44,15 +44,17 @@ module.exports.authenticate = (req, res) => {
   // Compare given password to hash
   // If passwords match -- Send 200 OK
   // Else -- Send 401 Unauthorized
-  usersModel.getPassword(user.email).then(data => {
-    bcrypt.compare(user.password, data).then(status => {
+
+  try {
+    const password = await usersModel.getPassword(user.email);
+    bcrypt.compare(user.password, password).then(status => {
       if (status) {
         res.status(200).send('Login Successful');
-        console.log('Login Successful');
       } else {
-        res.status(401).send('Unauthorized');
-        console.log('Unathorized');
+        res.status(401).send('Incorrect Password');
       }
     });
-  });
+  } catch (error) {
+    res.status(401).send('Unauthorized');
+  }
 };
