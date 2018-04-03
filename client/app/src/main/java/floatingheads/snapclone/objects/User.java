@@ -1,6 +1,8 @@
 package floatingheads.snapclone.objects;
 
 import android.graphics.Bitmap;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 /**
  * Created by Mike on 2/26/18.

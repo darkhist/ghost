@@ -384,15 +384,38 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
 
         @Override
-        protected void onPostExecute(final Boolean success) {
+        protected void onPostExecute(final Boolean success) { // add user info (response) as argument
             mAuthTask = null;
             showProgress(false);
+
+            // info pulled from users database
+            int tempID = 1;
+            String firstName = "Quinn";
+            String lastName = "Salas";
+            String username = "darkhist";
+            String email = "qmsalas321@gmail.edu";
+
+            // info pulled from friends database
+            String friends = "2";
+            String pending = null;
+            String rejected = null;
+            String blocked = null;
 
             if (success) {
                 finish();
                 // Open Navbar Activity on Login Success
+                // user
                 Intent i = new Intent(getApplicationContext(), NavBarActivity.class);
-//                i.putExtra("SESSION_UID", uid);
+                i.putExtra("uid", tempID);
+                i.putExtra("firstName", firstName);
+                i.putExtra("lastName", lastName);
+                i.putExtra("username", username);
+                i.putExtra("email", email);
+//                // friends
+//                i.putExtra("friends", friends);
+//                i.putExtra("pending", pending);
+//                i.putExtra("rejected", rejected);
+//                i.putExtra("blocked", blocked);
                 startActivity(i);
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));

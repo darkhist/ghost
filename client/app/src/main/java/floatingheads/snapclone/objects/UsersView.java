@@ -49,7 +49,7 @@ public class UsersView extends ListView {
     public void init() {
         setOnItemClickListener(
                 (AdapterView<?> parent, View view, int position, long id) -> {
-                    VolleyActions va = new VolleyActions();
+                    VolleyActions va = new VolleyActions(context);
                     va.makeJSONarrayRequest("http://proj-309-vc-4.cs.iastate.edu:3000/users", this);
                 }
         );

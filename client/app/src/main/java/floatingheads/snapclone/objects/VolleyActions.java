@@ -1,5 +1,6 @@
 package floatingheads.snapclone.objects;
 
+import android.content.Context;
 import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.View;
@@ -15,14 +16,20 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.RequestFuture;
 import com.android.volley.toolbox.StringRequest;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import floatingheads.snapclone.R;
 import floatingheads.snapclone.activities.NavBarActivity;
@@ -36,11 +43,13 @@ public class VolleyActions {
 
     private View view;
     private ViewGroup viewGroup;
+    private Context context;
 
     public static int VIEW = 0;
     public static int VIEW_GROUP = 1;
 
-    public VolleyActions() {
+    public VolleyActions(Context context) {
+        this.context = context;
         view = null;
     }
 
@@ -50,6 +59,29 @@ public class VolleyActions {
 
     public VolleyActions(ViewGroup viewGroup) {
         this.viewGroup = viewGroup;
+    }
+
+    public JSONArray makeSyncJSONArrayRequest(String url) {
+        RequestFuture<JSONArray> future = RequestFuture.newFuture();
+        JsonArrayRequest request =  new JsonArrayRequest(Request.Method.GET, url, new JSONArray(), future, future);
+        AppController.getInstance().addToRequestQueue(request);
+
+        try {
+
+            return future.get(30, TimeUnit.SECONDS);
+
+        } catch (InterruptedException ie) {
+            Toast.makeText(context, "Connection interrupted.", Toast.LENGTH_SHORT);
+            Log.d("connection", "Connection interrupted.");
+        } catch (TimeoutException toe) {
+            Toast.makeText(context, "Connection timed out.", Toast.LENGTH_SHORT);
+            Log.d("connection", "Connection timed out.");
+        } catch (ExecutionException ee) {
+            Toast.makeText(context, "Connection failed.", Toast.LENGTH_SHORT);
+            Log.d("connection", "Connection failed.");
+        }
+
+        return null;
     }
 
     public void makeStringRequest(String url, Object o) {
@@ -92,7 +124,7 @@ public class VolleyActions {
                     for (int i = 0; i < response.length(); i++) {
                         JSONObject jsonObject = response.getJSONObject(i);
                         int id = jsonObject.getInt("user_id");
-                        String phone = jsonObject.getString("phone_number");
+//                        String phone = jsonObject.getString("phone_number");
                         String first = jsonObject.getString("first_name");
                         String last = jsonObject.getString("last_name");
                         String username = jsonObject.getString("username");

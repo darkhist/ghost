@@ -54,7 +54,7 @@ public class AddFriendsActivity extends MainActivity {
             }
         });
 
-        VolleyActions va = new VolleyActions();
+        VolleyActions va = new VolleyActions(this);
         va.makeJSONarrayRequest(usersURL, usersView); //pulls users table from database and populates listview
 
         usersView.setOnItemClickListener(
