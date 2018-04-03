@@ -1,10 +1,10 @@
-"use strict";
+'use strict';
 
 // This file defines request handling behaviors for the /users route
 
-const bcrypt = require("bcrypt");
-const request = require("request");
-const usersModel = require("../models/usersModel");
+const bcrypt = require('bcrypt');
+const request = require('request');
+const usersModel = require('../models/usersModel');
 
 // Handle GET /users
 exports.get = async (req, res) => {
@@ -15,7 +15,7 @@ exports.get = async (req, res) => {
 // Handle POST /users/signup
 exports.signup = (req, res) => {
   let user = {
-    name: req.body.name.split(" "),
+    name: req.body.name.split(' '),
     username: req.body.username,
     email: req.body.email,
     password: req.body.password
@@ -28,10 +28,10 @@ exports.signup = (req, res) => {
   bcrypt.hash(user.password, 10, (err, hash) => {
     try {
       usersModel.add(firstName, lastName, user.username, hash, user.email);
-      res.status(201).send("User Added Successfully");
-      console.log("User Added Successfully");
+      res.status(201).send('User Added Successfully');
+      console.log('User Added Successfully');
     } catch (err) {
-      res.status(401).send("Unable to Add User");
+      res.status(401).send('Unable to Add User');
     }
   });
 };
@@ -50,11 +50,11 @@ exports.authenticate = (req, res) => {
   usersModel.getPassword(user.email).then(data => {
     bcrypt.compare(user.password, data).then(status => {
       if (status) {
-        res.status(200).send("Login Successful");
-        console.log("Login Successful");
+        res.status(200).send('Login Successful');
+        console.log('Login Successful');
       } else {
-        res.status(401).send("Unauthorized");
-        console.log("Unathorized");
+        res.status(401).send('Unauthorized');
+        console.log('Unathorized');
       }
     });
   });
