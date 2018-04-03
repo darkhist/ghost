@@ -45,6 +45,8 @@ public class VolleyActions {
     private ViewGroup viewGroup;
     private Context context;
 
+    private JSONArray jsonArray;
+
     public static int VIEW = 0;
     public static int VIEW_GROUP = 1;
 
@@ -61,27 +63,50 @@ public class VolleyActions {
         this.viewGroup = viewGroup;
     }
 
-    public JSONArray makeSyncJSONArrayRequest(String url) {
-        RequestFuture<JSONArray> future = RequestFuture.newFuture();
-        JsonArrayRequest request =  new JsonArrayRequest(Request.Method.GET, url, new JSONArray(), future, future);
-        AppController.getInstance().addToRequestQueue(request);
+//    public JSONArray makeSyncJSONArrayRequest(String url) {
+//        RequestFuture<JSONArray> future = RequestFuture.newFuture();
+//        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, new JSONArray(), future, future);
+//
+//        AppController.getInstance().addToRequestQueue(request);
+//
+//        try {
+//            Toast.makeText(context, "Got Response!", Toast.LENGTH_SHORT).show();
+//            return ;
+//        } catch (InterruptedException e) {
+//            Toast.makeText(context, "Connection interrupted", Toast.LENGTH_LONG).show();
+//        } catch (ExecutionException e) {
+//            Toast.makeText(context, "Connection error", Toast.LENGTH_LONG).show();
+//        } catch (TimeoutException e) {
+//            Toast.makeText(context, "Connection timed out", Toast.LENGTH_LONG).show();
+//        }
+//
+//        return null;
+//    }
 
-        try {
+    public void makeJSONArrayRequest(String url) {
+        JsonArrayRequest jar = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                setJSONArray(response);
+                if (response != null) {
+                    Toast.makeText(context, "Got Response!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(context, "Connection Error", Toast.LENGTH_SHORT).show();
+            }
+        });
+        AppController.getInstance().addToRequestQueue(jar);
+    }
 
-            return future.get(30, TimeUnit.SECONDS);
+    public void setJSONArray(JSONArray jsonArray) {
+        this.jsonArray = jsonArray;
+    }
 
-        } catch (InterruptedException ie) {
-            Toast.makeText(context, "Connection interrupted.", Toast.LENGTH_SHORT);
-            Log.d("connection", "Connection interrupted.");
-        } catch (TimeoutException toe) {
-            Toast.makeText(context, "Connection timed out.", Toast.LENGTH_SHORT);
-            Log.d("connection", "Connection timed out.");
-        } catch (ExecutionException ee) {
-            Toast.makeText(context, "Connection failed.", Toast.LENGTH_SHORT);
-            Log.d("connection", "Connection failed.");
-        }
-
-        return null;
+    public JSONArray getJSONArray() { // must be polled
+        return jsonArray;
     }
 
     public void makeStringRequest(String url, Object o) {
@@ -108,7 +133,7 @@ public class VolleyActions {
     }
 
 
-    public void makeJSONarrayRequest(String url, Object o) {
+    public void makeJSONArrayRequest(String url, Object o) {
         JsonArrayRequest req = new JsonArrayRequest(url, response -> {
 
             if (!(o instanceof ListView) || !(o instanceof View) || o == null) {
@@ -123,7 +148,7 @@ public class VolleyActions {
 
                     for (int i = 0; i < response.length(); i++) {
                         JSONObject jsonObject = response.getJSONObject(i);
-                        int id = jsonObject.getInt("user_id");
+                        int id = jsonObject.getInt("userID");
 //                        String phone = jsonObject.getString("phone_number");
                         String first = jsonObject.getString("first_name");
                         String last = jsonObject.getString("last_name");
