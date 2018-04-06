@@ -119,6 +119,7 @@ public class FriendsFragment extends Fragment {
                     }
                 }
                 if (friends == null) {
+                    // also occurs if user has no friends :'(
                     Toast.makeText(friendsFragmentContext, "Unable to load user data", Toast.LENGTH_LONG).show();
                     return;
                 }
@@ -160,7 +161,17 @@ public class FriendsFragment extends Fragment {
                         ListAdapter la = new CustomListAdapter(friendsFragmentContext, friendArrayList, CustomListAdapter.FRIENDS_SCREEN);
                         friendsList.setAdapter(la);
                     }
+
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        Toast.makeText(friendsFragmentContext, "Could not connect to database", Toast.LENGTH_LONG).show();
+                    }
                 });
+            }
+
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                Toast.makeText(friendsFragmentContext, "Could not connect to database", Toast.LENGTH_LONG).show();
             }
         });
 

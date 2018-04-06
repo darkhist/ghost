@@ -1,13 +1,16 @@
 package floatingheads.snapclone.objects;
 
+import com.android.volley.VolleyError;
 import org.json.JSONArray;
 
 /**
- * Created by root on 4/6/18.
+ * Created by Mike on 4/6/18.
  */
 
 public interface VolleyCallback {
 
-    public void onSuccessResponse(JSONArray result);
+    void onSuccessResponse(JSONArray result);
+
+    void onErrorResponse(VolleyError volleyError);
 
 }

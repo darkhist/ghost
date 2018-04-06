@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.support.v7.widget.Toolbar;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -23,12 +24,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import floatingheads.snapclone.R;
 import floatingheads.snapclone.objects.User;
 import floatingheads.snapclone.objects.UsersView;
 import floatingheads.snapclone.objects.VolleyActions;
+import floatingheads.snapclone.objects.VolleyCallback;
 
 
 public class AddFriendsActivity extends MainActivity {
@@ -55,7 +58,35 @@ public class AddFriendsActivity extends MainActivity {
         });
 
         VolleyActions va = new VolleyActions(this);
-        va.makeJSONArrayRequest(usersURL, usersView); //should use callback in future
+        va.makeJSONArrayRequest(usersURL, new VolleyCallback() {
+            @Override
+            public void onSuccessResponse(JSONArray result) {
+                ArrayList<User> userArrayList = new ArrayList<>();
+
+                for (int i = 0; i < result.length(); i++) {
+                    JSONObject jsonObject = null;
+                    try {
+                        jsonObject = result.getJSONObject(i);
+                        int id = jsonObject.getInt("userID");
+                        String first = jsonObject.getString("first_name");
+                        String last = jsonObject.getString("last_name");
+                        String username = jsonObject.getString("username");
+                        String email = jsonObject.getString("email");
+
+                        User user = new User(id, first, last, username, email);
+                        userArrayList.add(user);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    usersView.setContents(userArrayList);
+                }
+            }
+
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                Toast.makeText(context, "Could not connect to database", Toast.LENGTH_LONG).show();
+            }
+        }); //should use callback in future
 
         usersView.setOnItemClickListener(
                 (AdapterView<?> parent, View view, int position, long id) -> {

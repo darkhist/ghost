@@ -34,61 +34,29 @@ public class VolleyActions {
     private ViewGroup viewGroup;
     private Context context;
 
-    private JSONArray jsonArray;
-
-    public static int VIEW = 0;
-    public static int VIEW_GROUP = 1;
-
     public VolleyActions(Context context) {
         this.context = context;
         view = null;
     }
 
-    public VolleyActions(View view) {
-        this.view = view;
-    }
-
-    public VolleyActions(ViewGroup viewGroup) {
-        this.viewGroup = viewGroup;
-    }
-
-//    public JSONArray makeSyncJSONArrayRequest(String url) {
-//        RequestFuture<JSONArray> future = RequestFuture.newFuture();
-//        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, new JSONArray(), future, future);
-//
-//        AppController.getInstance().addToRequestQueue(request);
-//
-//        try {
-//            Toast.makeText(context, "Got Response!", Toast.LENGTH_SHORT).show();
-//            return ;
-//        } catch (InterruptedException e) {
-//            Toast.makeText(context, "Connection interrupted", Toast.LENGTH_LONG).show();
-//        } catch (ExecutionException e) {
-//            Toast.makeText(context, "Connection error", Toast.LENGTH_LONG).show();
-//        } catch (TimeoutException e) {
-//            Toast.makeText(context, "Connection timed out", Toast.LENGTH_LONG).show();
-//        }
-//
-//        return null;
-//    }
-
-    public JSONArray makeJSONArrayRequest(String url, final VolleyCallback volleyCallback) {
+    public void makeJSONArrayRequest(String url, final VolleyCallback volleyCallback) {
         JsonArrayRequest jar = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 volleyCallback.onSuccessResponse(response);
                 if (response != null) {
-                    Toast.makeText(context, "Got Response!", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(context, "Got Response!", Toast.LENGTH_SHORT).show();
                 }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(context, "Connection Error", Toast.LENGTH_SHORT).show();
+                volleyCallback.onErrorResponse(error);
+                VolleyLog.e("Error", error.getMessage());
+//                Toast.makeText(context, "Connection Error", Toast.LENGTH_SHORT).show();
             }
         });
         AppController.getInstance().addToRequestQueue(jar);
-        return null;
     }
 
     public void makeStringRequest(String url, Object o) {
@@ -111,55 +79,6 @@ public class VolleyActions {
         });
 
         // Add the request to the RequestQueue.
-        AppController.getInstance().addToRequestQueue(req);
-    }
-
-
-    public void makeJSONArrayRequest(String url, Object o) {
-        JsonArrayRequest req = new JsonArrayRequest(url, response -> {
-
-            if (!(o instanceof ListView) || !(o instanceof View) || o == null) {
-                return;
-            }
-
-            if (o instanceof ListView) {
-
-                try {
-
-                    ArrayList<User> userArrayList = new ArrayList<>();
-
-                    for (int i = 0; i < response.length(); i++) {
-                        JSONObject jsonObject = response.getJSONObject(i);
-                        int id = jsonObject.getInt("userID");
-//                        String phone = jsonObject.getString("phone_number");
-                        String first = jsonObject.getString("first_name");
-                        String last = jsonObject.getString("last_name");
-                        String username = jsonObject.getString("username");
-                        String email = jsonObject.getString("email");
-
-                        User user = new User(id, first, last, username, email);
-                        userArrayList.add(user);
-                    }
-
-                    if (o instanceof MessagesView) {
-                        MessagesView messagesView = (MessagesView) o;
-                        messagesView.setContents(userArrayList);
-                    }
-                    if (o instanceof UsersView) {
-                        UsersView usersView = (UsersView) o;
-                        usersView.setContents(userArrayList);
-                    }
-
-                    VolleyLog.v("Response:%n %s", response.toString(4));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-            }
-
-        }, error -> VolleyLog.e("Error: ", error.getMessage()));
-
-        // add the request object to the queue to be executed
         AppController.getInstance().addToRequestQueue(req);
     }
 
