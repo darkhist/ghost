@@ -1,11 +1,8 @@
 package floatingheads.snapclone.objects;
 
 import android.content.Context;
-import android.provider.ContactsContract;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -16,23 +13,15 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.RequestFuture;
 import com.android.volley.toolbox.StringRequest;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
-import floatingheads.snapclone.R;
-import floatingheads.snapclone.activities.NavBarActivity;
 import floatingheads.snapclone.volleyController.AppController;
 
 /**
@@ -83,11 +72,11 @@ public class VolleyActions {
 //        return null;
 //    }
 
-    public void makeJSONArrayRequest(String url) {
+    public JSONArray makeJSONArrayRequest(String url, final VolleyCallback volleyCallback) {
         JsonArrayRequest jar = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
-                setJSONArray(response);
+                volleyCallback.onSuccessResponse(response);
                 if (response != null) {
                     Toast.makeText(context, "Got Response!", Toast.LENGTH_SHORT).show();
                 }
@@ -99,14 +88,7 @@ public class VolleyActions {
             }
         });
         AppController.getInstance().addToRequestQueue(jar);
-    }
-
-    public void setJSONArray(JSONArray jsonArray) {
-        this.jsonArray = jsonArray;
-    }
-
-    public JSONArray getJSONArray() { // must be polled
-        return jsonArray;
+        return null;
     }
 
     public void makeStringRequest(String url, Object o) {
