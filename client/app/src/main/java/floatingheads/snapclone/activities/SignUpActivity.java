@@ -38,12 +38,12 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import floatingheads.snapclone.R;
 import floatingheads.snapclone.net_utils.Const;
@@ -209,12 +209,24 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
     }
 
     private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
-        return email.contains("@");
+        /*
+        requirements:
+        - email must have only one @
+        - email first or last char cannot be '.'
+        - email can only contain characters, digits, underscore, dash, dot
+        - top level domain (TLD) can't start with '.'
+        - TLD must contain > 2 chars
+        - TLD can only contain characters and digits
+        - double '.' ('..') not allowed
+         */
+
+        final String emailPattern = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+        Pattern pattern = Pattern.compile(emailPattern);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
     }
 
     private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
         return password.length() > 4;
     }
 

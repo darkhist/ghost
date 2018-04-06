@@ -59,5 +59,7 @@
     <string name="nav_messages">Messages</string>
     <string name="search_friends">Search</string>
     <string name="add_friend">Add Friend</string>
+    <string name="profile_friends">Friends</string>
+    <string name="profile_points">Points</string>
 
 </resources>

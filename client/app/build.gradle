@@ -58,6 +58,7 @@ dependencies {
     compile 'com.google.android.gms:play-services:12.0.0'
     compile 'com.google.android.gms:play-services-ads:12.0.0'
     compile 'com.miguelcatalan:materialsearchview:1.4.0'
+    compile 'com.cedarsoftware:json-io:4.5.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

@@ -168,3 +168,4 @@ public class CameraSourcePreview extends ViewGroup {
         try {startIfReady();} catch (IOException e) {Log.e(TAG, "Could not start camera source.", e);}
     }
 }
+
