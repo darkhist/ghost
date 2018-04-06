@@ -6,8 +6,6 @@ package floatingheads.snapclone.objects;
 
 public class Profile {
 
-
-
     public Profile() {
         init();
     }
@@ -19,5 +17,4 @@ public class Profile {
     public void init() {
 
     }
-
 }

@@ -7,48 +7,36 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
-import android.widget.AdapterView;
-import android.support.v7.widget.Toolbar;
 
-import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
-import com.cedarsoftware.util.io.JsonWriter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.Timer;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
+import floatingheads.snapclone.R;
 import floatingheads.snapclone.activities.AddFriendsActivity;
+import floatingheads.snapclone.net_utils.Const;
 import floatingheads.snapclone.objects.CustomListAdapter;
 import floatingheads.snapclone.objects.Friend;
-import floatingheads.snapclone.R;
 import floatingheads.snapclone.objects.User;
 import floatingheads.snapclone.objects.VolleyActions;
 import floatingheads.snapclone.objects.VolleyCallback;
-import floatingheads.snapclone.volleyController.AppController;
 
 
 /**
@@ -57,11 +45,10 @@ import floatingheads.snapclone.volleyController.AppController;
 public class FriendsFragment extends Fragment {
 
     private MaterialSearchView searchView;
-    private String usersURL = "http://proj-309-vc-4.cs.iastate.edu:3000/users";
-    private String friendsURL = "http://proj-309-vc-4.cs.iastate.edu:3000/friends";
+    private String usersURL = Const.usersURL;
+    private String friendsURL = Const.friendsURL;
 
     User masterUser;
-
 
     public FriendsFragment() {
         super();

@@ -1,23 +1,13 @@
 package floatingheads.snapclone.activities;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.support.v7.widget.Toolbar;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 import org.json.JSONArray;
@@ -25,9 +15,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import floatingheads.snapclone.R;
+import floatingheads.snapclone.net_utils.Const;
 import floatingheads.snapclone.objects.User;
 import floatingheads.snapclone.objects.UsersView;
 import floatingheads.snapclone.objects.VolleyActions;
@@ -37,7 +27,7 @@ import floatingheads.snapclone.objects.VolleyCallback;
 public class AddFriendsActivity extends MainActivity {
 
     private Context context = this;
-    private String usersURL = "http://proj-309-vc-4.cs.iastate.edu:3000/users";
+    private String usersURL = Const.usersURL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

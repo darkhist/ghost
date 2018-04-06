@@ -1,34 +1,30 @@
 package floatingheads.snapclone.activities;
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
+import floatingheads.snapclone.R;
 import floatingheads.snapclone.fragments.FriendsFragment;
 import floatingheads.snapclone.fragments.MessagesFragment;
-import floatingheads.snapclone.fragments.NotisFragment;
 import floatingheads.snapclone.fragments.ProfileFragment;
-import floatingheads.snapclone.R;
 import floatingheads.snapclone.objects.User;
-import floatingheads.snapclone.objects.VolleyActions;
 
 public class NavBarActivity extends AppCompatActivity {
 
     // User Information
     public User masterUser;
 
-    //
+    // UI
     private BottomNavigationView mMainNav;
     private FrameLayout mMainFrame;
 
+    // Fragments
     private ProfileFragment profileFragment;
     private FriendsFragment friendsFragment;
     private MessagesFragment messagesFragment;
