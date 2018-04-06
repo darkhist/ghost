@@ -86,10 +86,10 @@ public class CameraPreviewActivity extends AppCompatActivity  {
 
         takePictureButton = (Button) findViewById(R.id.btn_takepicture);
         switchButton = (Button) findViewById(R.id.btn_switch);
-        videoButton = (Button) findViewById(R.id.btn_video);
+//        videoButton = (Button) findViewById(R.id.btn_video);
         mPreview = (CameraSourcePreview) findViewById(R.id.preview2);
         mGraphicOverlay = (GraphicOverlay) findViewById(R.id.faceOverlay);
-        cameraVersion = (TextView) findViewById(R.id.cameraVersion);
+//        cameraVersion = (TextView) findViewById(R.id.cameraVersion);
         ivAutoFocus = (ImageView) findViewById(R.id.ivAutoFocus);
         counter = 0;
 
@@ -101,7 +101,7 @@ public class CameraPreviewActivity extends AppCompatActivity  {
         if(checkGooglePlayAvailability()) {
             requestPermissionThenOpenCamera();
 
-            //Change screens listener
+//            //Change screens listener
             switchButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -262,7 +262,7 @@ public class CameraPreviewActivity extends AppCompatActivity  {
      */
     private void startCameraSource() {
         if (mCameraSource != null) {
-            cameraVersion.setText("Camera 1");
+//            cameraVersion.setText("Camera 1");
             try {
                 mPreview.start(mCameraSource, mGraphicOverlay);
             } catch (IOException e) {

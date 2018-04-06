@@ -38,8 +38,8 @@ public class MessagesView extends ListView {
         init();
     }
 
-    public void setContents(ArrayList<Contact> contents) {
-        contactArrayList = contents;
+    public void setContents(ArrayList<? extends User> contents) {
+        contactArrayList = (ArrayList<Contact>) contents;
         ListAdapter la = new CustomListAdapter(context, contactArrayList, CustomListAdapter.MESSAGES_SCREEN);
         setAdapter(la);
     }
@@ -48,7 +48,7 @@ public class MessagesView extends ListView {
         setOnItemClickListener(
                 (AdapterView<?> parent, View view, int position, long id) -> {
                     Contact contact = (Contact) parent.getItemAtPosition(position);
-                    String name = contact.getUserFirstName() + " " + contact.getUserLastName();
+                    String name = contact.getFirstName() + " " + contact.getLastName();
                     Toast.makeText(this.getContext(), name, Toast.LENGTH_SHORT).show();
 
                     moveItemToTop(contact);

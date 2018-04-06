@@ -19,7 +19,7 @@ public class Contact extends Friend {
     }
 
     public Contact(int userID, String userFirstName, String userLastName, String lastMessage) {
-        super(userID, userFirstName,userLastName);
+        super(userID, userFirstName,userLastName, Friend.STATUS_ACCEPTED);
         this.lastMessage = lastMessage;
         this.avatar = null;
     }

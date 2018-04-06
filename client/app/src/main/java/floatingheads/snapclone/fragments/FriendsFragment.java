@@ -7,27 +7,36 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
-import android.widget.AdapterView;
-import android.support.v7.widget.Toolbar;
 
+import com.android.volley.VolleyError;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
+import floatingheads.snapclone.R;
 import floatingheads.snapclone.activities.AddFriendsActivity;
+import floatingheads.snapclone.net_utils.Const;
 import floatingheads.snapclone.objects.CustomListAdapter;
 import floatingheads.snapclone.objects.Friend;
-import floatingheads.snapclone.R;
+import floatingheads.snapclone.objects.User;
+import floatingheads.snapclone.objects.VolleyActions;
+import floatingheads.snapclone.objects.VolleyCallback;
 
 
 /**
@@ -36,13 +45,15 @@ import floatingheads.snapclone.R;
 public class FriendsFragment extends Fragment {
 
     private MaterialSearchView searchView;
+    private String usersURL = Const.usersURL;
+    private String friendsURL = Const.friendsURL;
 
+    User masterUser;
 
     public FriendsFragment() {
         super();
         searchView = null;
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -54,40 +65,121 @@ public class FriendsFragment extends Fragment {
 
         setHasOptionsMenu(true);
 
+        // create master user
+        masterUser = new User(
+                getArguments().getInt("uid"),
+                getArguments().getString("firstName"),
+                getArguments().getString("lastName"),
+                getArguments().getString("username"),
+                getArguments().getString("email")
+        );
+
         Toolbar toolbar = (Toolbar) inflatedView.findViewById(R.id.tool_bar);
         toolbar.setNavigationIcon(R.mipmap.ic_person_add_white_24dp);
 
-        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Friends");
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Friends");
         toolbar.setTitleTextColor(Color.WHITE);
 
         searchView = (MaterialSearchView) inflatedView.findViewById(R.id.search_view);
 
+        VolleyActions va = new VolleyActions(friendsFragmentContext);
         ArrayList<Friend> friendArrayList = new ArrayList<>();
+        ListView friendsList = (ListView) inflatedView.findViewById(R.id.friendsListView);
+
+        va.makeJSONArrayRequest(friendsURL, new VolleyCallback() {
+
+            @Override
+            public void onSuccessResponse(JSONArray result) {
+                JSONObject user;
+                String friends = null;
+                int[] friendsArr;
+
+                for (int i = 0; i < result.length(); i++) {
+                    try {
+                        if ((user = result.getJSONObject(i)).getInt("userID") == masterUser.getId()) {
+                            friends = user.getString("friends");
+                            break;
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if (friends == null) {
+                    // also occurs if user has no friends :'(
+                    Toast.makeText(friendsFragmentContext, "Unable to load user data", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                String[] tempArr = friends.split(",");
+                friendsArr = new int[tempArr.length];
+                for (int i = 0; i < tempArr.length; i++) {
+                    friendsArr[i] = Integer.parseInt(tempArr[i]);
+                }
+
+                va.makeJSONArrayRequest(usersURL, new VolleyCallback() {
+                    JSONObject user;
+
+                    @Override
+                    public void onSuccessResponse(JSONArray result) {
+                        int friendsCounter = friendsArr.length;
+                        int usersIndex = 0;
+                        while (friendsCounter > 0 && usersIndex < result.length()) {
+                            try {
+                                for (int i = 0; i < friendsArr.length; i++) {
+                                    if ((user = result.getJSONObject(usersIndex++)).getInt("userID") == friendsArr[i]) {
+                                        friendArrayList.add(new Friend(
+                                                user.getInt("userID"),
+                                                user.getString("first_name"),
+                                                user.getString("last_name"),
+                                                Friend.STATUS_ACCEPTED
+                                        ));
+                                        friendsCounter--;
+                                    }
+//                                    Log.d("callback2", "" + user.getInt("userID"));
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+//                        Log.d("callback2", friendArrayList.toString());
+                        //
+                        Collections.sort(friendArrayList);
+                        ListAdapter la = new CustomListAdapter(friendsFragmentContext, friendArrayList, CustomListAdapter.FRIENDS_SCREEN);
+                        friendsList.setAdapter(la);
+                    }
+
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        Toast.makeText(friendsFragmentContext, "Could not connect to database", Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                Toast.makeText(friendsFragmentContext, "Could not connect to database", Toast.LENGTH_LONG).show();
+            }
+        });
+
         // add friends to arraylist
         // TODO get these friends from database
-        friendArrayList.add(new Friend(1, "Quinn", "Salas"));
-        friendArrayList.add(new Friend(2, "Akira", "Demoss"));
-        friendArrayList.add(new Friend(4, "Simanta", "Mitra"));
-        friendArrayList.add(new Friend(6,"Mark", "Hammill"));
-        friendArrayList.add(new Friend(12,"Esperanza", "Spalding"));
-        friendArrayList.add(new Friend(13, "Harry", "Potter"));
-        friendArrayList.add(new Friend(21, "Hermione", "Granger"));
-        friendArrayList.add(new Friend(25, "Vamsi", "Calpakkam"));
-        friendArrayList.add(new Friend(34,"Tom", "Brady"));
-        friendArrayList.add(new Friend(54, "Magic","Johnson"));
-        friendArrayList.add(new Friend(56, "Michael", "Jordan"));
-
-        Collections.sort(friendArrayList); // sort list in alphabetical order
-
-        ListAdapter la = new CustomListAdapter(this.getContext(), friendArrayList, CustomListAdapter.FRIENDS_SCREEN);
-        ListView friendsList = (ListView) inflatedView.findViewById(R.id.friendsListView);
-        friendsList.setAdapter(la);
+//        friendArrayList.add(new Friend(1, "Quinn", "Salas", Friend.STATUS_ACCEPTED));
+//        friendArrayList.add(new Friend(2, "Akira", "Demoss", Friend.STATUS_ACCEPTED));
+//        friendArrayList.add(new Friend(4, "Simanta", "Mitra", Friend.STATUS_ACCEPTED));
+//        friendArrayList.add(new Friend(6, "Mark", "Hammill", Friend.STATUS_ACCEPTED));
+//        friendArrayList.add(new Friend(12, "Esperanza", "Spalding", Friend.STATUS_ACCEPTED));
+//        friendArrayList.add(new Friend(13, "Harry", "Potter", Friend.STATUS_ACCEPTED));
+//        friendArrayList.add(new Friend(21, "Hermione", "Granger", Friend.STATUS_ACCEPTED));
+//        friendArrayList.add(new Friend(25, "Vamsi", "Calpakkam", Friend.STATUS_ACCEPTED));
+//        friendArrayList.add(new Friend(34, "Tom", "Brady", Friend.STATUS_ACCEPTED));
+//        friendArrayList.add(new Friend(54, "Magic","Johnson", Friend.STATUS_ACCEPTED));
+//        friendArrayList.add(new Friend(56, "Michael", "Jordan", Friend.STATUS_ACCEPTED));
 
         friendsList.setOnItemClickListener(
                 (AdapterView<?> parent, View view, int position, long id) -> {
                     Friend friend = (Friend) parent.getItemAtPosition(position);
-                    String name = friend.getUserFirstName() + " " + friend.getUserLastName();
+                    String name = friend.getFirstName() + " " + friend.getLastName();
                     Toast.makeText(this.getContext(), name, Toast.LENGTH_SHORT).show();
                 }
         );
@@ -128,7 +220,7 @@ public class FriendsFragment extends Fragment {
                     ArrayList<Friend> listFound = new ArrayList<>();
                     for (Friend friend : friendArrayList) {
 
-                        if (friend.getUserFirstName().toLowerCase().startsWith(newText.toLowerCase()) || friend.getUserLastName().toLowerCase().startsWith(newText.toLowerCase())) {
+                        if (friend.getFirstName().toLowerCase().startsWith(newText.toLowerCase()) || friend.getLastName().toLowerCase().startsWith(newText.toLowerCase())) {
                             listFound.add(friend);
                         }
 
