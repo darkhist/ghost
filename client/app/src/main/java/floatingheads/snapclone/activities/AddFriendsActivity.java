@@ -55,7 +55,7 @@ public class AddFriendsActivity extends MainActivity {
         });
 
         VolleyActions va = new VolleyActions(this);
-        va.makeJSONArrayRequest(usersURL, usersView); //pulls users table from database and populates listview
+        va.makeJSONArrayRequest(usersURL, usersView); //should use callback in future
 
         usersView.setOnItemClickListener(
                 (AdapterView<?> parent, View view, int position, long id) -> {

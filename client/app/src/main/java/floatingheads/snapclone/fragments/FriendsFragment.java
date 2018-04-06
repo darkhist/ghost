@@ -100,8 +100,6 @@ public class FriendsFragment extends Fragment {
         ArrayList<Friend> friendArrayList = new ArrayList<>();
         ListView friendsList = (ListView) inflatedView.findViewById(R.id.friendsListView);
 
-        JSONArray response = null;
-
         va.makeJSONArrayRequest(friendsURL, new VolleyCallback() {
 
             @Override

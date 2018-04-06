@@ -70,7 +70,9 @@ public class NavBarActivity extends AppCompatActivity {
 
         friendsFragment = new FriendsFragment();
         friendsFragment.setArguments(masterUserBundle);
+
 //        notisFragment = new NotisFragment();
+
         messagesFragment = new MessagesFragment();
 
         setFragment(messagesFragment); // sets default fragment to messages

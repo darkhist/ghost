@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import floatingheads.snapclone.R;
 
@@ -34,6 +35,18 @@ public class ProfileFragment extends Fragment {
 //        LinearLayout pointsContainer = profileView.findViewById(R.id.pointsContainer);
 //
 //        int width = infoParentContainer.getWidth();
+
+        TextView name = profileView.findViewById(R.id.profileUsername);
+
+//        getArguments().getInt("uid");
+        String first = getArguments().getString("firstName");
+        String last = getArguments().getString("lastName");
+//        getArguments().getString("username");
+//        getArguments().getString("email");
+
+        String fullName = first + " " + last;
+
+        name.setText(fullName);
 
         return profileView;
     }

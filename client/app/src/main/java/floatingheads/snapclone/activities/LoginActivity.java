@@ -394,12 +394,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             String lastName = "Salas";
             String username = "darkhist";
             String email = "qmsalas321@gmail.edu";
-
-            // info pulled from friends database
-            String friends = "2";
-            String pending = null;
-            String rejected = null;
-            String blocked = null;
+//            int tempID = 2;
+//            String firstName = "Dan";
+//            String lastName = "Flavan";
+//            String username = "dflavin";
+//            String email = "flavin@moma.nyc";
 
             if (success) {
                 finish();
