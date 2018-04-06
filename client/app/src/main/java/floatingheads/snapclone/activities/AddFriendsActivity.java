@@ -38,7 +38,6 @@ public class AddFriendsActivity extends MainActivity {
 
     private Context context = this;
     private String usersURL = "http://proj-309-vc-4.cs.iastate.edu:3000/users";
-    private String friendsURL = "http://proj-309-vc-4.cs.iastate.edu:3000/friends";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

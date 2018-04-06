@@ -87,6 +87,7 @@ public class UsersView extends ListView {
                             Toast.makeText(context, "Could not connect to database", Toast.LENGTH_LONG).show();
                         }
                     });
-                });
+                }
+        );
     }
 }
