@@ -123,22 +123,6 @@ public class CameraPreviewActivity extends AppCompatActivity  {
         if(checkGooglePlayAvailability()) {
             requestPermissionThenOpenCamera();
 
-            //Change screens listener
-           /* switchButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if(usingFrontCamera) {
-                        stopCameraSource();
-                        createCameraSourceBack();
-                        usingFrontCamera = false;
-                    } else {
-                        stopCameraSource();
-                        createCameraSourceFront();
-                        usingFrontCamera = true;
-                    }
-                }
-            });*/
-
             //Image caputre listener
             takePictureButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -146,7 +130,7 @@ public class CameraPreviewActivity extends AppCompatActivity  {
                     switchButton.setEnabled(false);
                     videoButton.setEnabled(false);
                     takePictureButton.setEnabled(false);
-                     if(mCameraSource != null)mCameraSource.takePicture(cameraSourceShutterCallback, cameraSourcePictureCallback);
+                    if(mCameraSource != null)mCameraSource.takePicture(cameraSourceShutterCallback, cameraSourcePictureCallback);
                 }
             });
 
@@ -235,7 +219,6 @@ public class CameraPreviewActivity extends AppCompatActivity  {
         }
     }
 
-
     /**
      * Starts the Camerasource
      */
@@ -255,56 +238,11 @@ public class CameraPreviewActivity extends AppCompatActivity  {
 
     }
 
-    /**
-     *Declare the front camera
-     * This is where we add GraphicFaceTrackerShizz
-     */
-   /* private void createCameraSourceFront() {
-        previewFaceDetector = new FaceDetector.Builder(context)
-                .setClassificationType(FaceDetector.ALL_CLASSIFICATIONS)
-                .setLandmarkType(FaceDetector.ALL_LANDMARKS)
-                .setMode(FaceDetector.FAST_MODE)
-                .setProminentFaceOnly(true)
-                .setTrackingEnabled(true)
-                .build();
 
-        if(previewFaceDetector.isOperational()) {
-            previewFaceDetector.setProcessor(new MultiProcessor.Builder<>(new GraphicFaceTrackerFactory(mGraphicOverlay,this.context)).build());
-        } else {
-            Toast.makeText(context, "FACE DETECTION NOT AVAILABLE", Toast.LENGTH_SHORT).show();
-        }
-        mCameraSource = new CameraSource.Builder(context, previewFaceDetector)
-                .setFacing(CameraSource.CAMERA_FACING_FRONT)
-                .setRequestedFps(30.0f)
-                .build();
 
-            startCameraSource();
-
-    }*/
-
-    /**
-     *toggle camera source
-     */
-   /* private void createCameraSourceBack() {
-        previewFaceDetector = new FaceDetector.Builder(context)
-                .setClassificationType(FaceDetector.ALL_CLASSIFICATIONS)
-                .setLandmarkType(FaceDetector.ALL_LANDMARKS)
-                .setMode(FaceDetector.FAST_MODE)
-                .setProminentFaceOnly(true)
-                .setTrackingEnabled(true)
-                .build();
-        if(previewFaceDetector.isOperational()) {
-            previewFaceDetector.setProcessor(new MultiProcessor.Builder<>(new GraphicFaceTrackerFactory(mGraphicOverlay,this.context)).build());
-        } else {
-            Toast.makeText(context, "FACE DETECTION NOT AVAILABLE", Toast.LENGTH_SHORT).show();
-        }
-            mCameraSource = new CameraSource.Builder(context, previewFaceDetector)
-                    .setFacing(CameraSource.CAMERA_FACING_BACK)
-                    .setRequestedFps(30.0f)
-                    .build();
-            startCameraSource();
-
-    }*/
+    //==============================================================================================
+    // Detector
+    //==============================================================================================
 
     /**
      * Creates the face detector and the camera.
@@ -320,9 +258,8 @@ public class CameraPreviewActivity extends AppCompatActivity  {
 
         // For both front facing and rear facing modes, the detector is initialized to do eye landmark classification.
         // We are using fast mode, and tracking 1 face in front camera view, and multiple faces in rear camera view.
-        // Setting PromentnFaceOnly as true when usingFrontCamera will stop scanning for faces when single largest face is found
+        // Setting PromentFaceOnly as true when usingFrontCamera will stop scanning for faces when single largest face is found
         // The former results in greater efficiency, we also increase minfacesize from default for further optimizations
-        //***********(note tooke out setAutoFocusEnabled for now to fix errors)*******
         mCameraSource = new CameraSource.Builder(context, detector)
                 .setFacing(facing)
                 .setRequestedPreviewSize(320, 240)
@@ -371,10 +308,6 @@ public class CameraPreviewActivity extends AppCompatActivity  {
     private void stopCameraSource() {
         mPreview.stop();
     }
-
-    //==============================================================================================
-    // Detector
-    //==============================================================================================
 
 
     /**
@@ -475,6 +408,9 @@ public class CameraPreviewActivity extends AppCompatActivity  {
     };
 
 
+    /**
+     * Autofocus feature functionality
+     */
     @Override
     protected void onResume() {
         super.onResume();
@@ -484,6 +420,9 @@ public class CameraPreviewActivity extends AppCompatActivity  {
 
     }
 
+    /**
+     * Autofocus feature functionality
+     */
     @Override
     protected void onPause() {
         super.onPause();
@@ -491,6 +430,9 @@ public class CameraPreviewActivity extends AppCompatActivity  {
         stopCameraSource();
     }
 
+    /**
+     * Autofocus feature functionality
+     */
     @Override
     protected void onDestroy() {
         super.onDestroy();
