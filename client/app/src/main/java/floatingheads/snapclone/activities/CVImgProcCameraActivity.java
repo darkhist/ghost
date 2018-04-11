@@ -123,7 +123,7 @@ public class CVImgProcCameraActivity extends Activity implements SurfaceHolder.C
         });
 
     }
-
+//***************************THIS IS WHERE THE "MAGIC" HAPPENS!!!"
     private Camera.PictureCallback mPicture = new Camera.PictureCallback() {
 
         @Override

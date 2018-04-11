@@ -123,7 +123,7 @@ public class CameraPreviewActivity extends AppCompatActivity  {
         if(checkGooglePlayAvailability()) {
             requestPermissionThenOpenCamera();
 
-            //Image caputre listener
+            //Image capture listener
             takePictureButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -137,8 +137,6 @@ public class CameraPreviewActivity extends AppCompatActivity  {
             mPreview.setOnTouchListener(CameraPreviewTouchListener);
         }
     }
-
-
 
 
     final CameraSource.ShutterCallback cameraSourceShutterCallback = new CameraSource.ShutterCallback() {@Override public void onShutter() {Log.d(TAG, "Shutter Callback!");}};
@@ -203,6 +201,8 @@ public class CameraPreviewActivity extends AppCompatActivity  {
         }
     }
 
+
+
     /**
      * Permissions for Camera features
      */
@@ -218,6 +218,8 @@ public class CameraPreviewActivity extends AppCompatActivity  {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION);
         }
     }
+
+
 
     /**
      * Starts the Camerasource
@@ -267,13 +269,17 @@ public class CameraPreviewActivity extends AppCompatActivity  {
                 .build();
     }
 
+
+
     /**
      * Callback for camera image capture (deprecated), Takes the image and stores photos in album with the appropriate date
      */
     final CameraSource.PictureCallback cameraSourcePictureCallback = new CameraSource.PictureCallback() {
         @Override
+        //***************************THIS IS WHERE THE "MAGIC" HAPPENS!!!"
         public void onPictureTaken(Bitmap picture) {
             Log.d(TAG, "Taken picture is here!");
+            //***************************BUTTONS RUN ON THREAD"
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -305,6 +311,12 @@ public class CameraPreviewActivity extends AppCompatActivity  {
             }
         }
     };
+
+
+
+    /**
+     * Stops this class' instance of CameraSourcePreview
+     */
     private void stopCameraSource() {
         mPreview.stop();
     }
@@ -408,8 +420,9 @@ public class CameraPreviewActivity extends AppCompatActivity  {
     };
 
 
+
     /**
-     * Autofocus feature functionality
+     * on resume
      */
     @Override
     protected void onResume() {
@@ -420,8 +433,10 @@ public class CameraPreviewActivity extends AppCompatActivity  {
 
     }
 
+
+
     /**
-     * Autofocus feature functionality
+     * On pause
      */
     @Override
     protected void onPause() {
@@ -430,8 +445,10 @@ public class CameraPreviewActivity extends AppCompatActivity  {
         stopCameraSource();
     }
 
+
+
     /**
-     * Autofocus feature functionality
+     * on destroy
      */
     @Override
     protected void onDestroy() {
