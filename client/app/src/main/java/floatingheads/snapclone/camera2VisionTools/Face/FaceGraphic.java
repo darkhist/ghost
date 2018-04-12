@@ -1,4 +1,4 @@
-package floatingheads.snapclone.camera2VisionTools;
+package floatingheads.snapclone.camera2VisionTools.Face;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -12,12 +12,13 @@ import android.graphics.PorterDuff;
 
 
 import floatingheads.snapclone.R;
+import floatingheads.snapclone.camera2VisionTools.GraphicOverlay;
+
 import com.google.android.gms.vision.face.Face;
 import com.google.android.gms.vision.face.Landmark;
 
 /**
- * Graphic instance for rendering face position, orientation, and landmarks within an associated
- * graphic overlay view.
+ * This class renders the graphic overlay of the facial landmarks.
  */
 public class FaceGraphic extends GraphicOverlay.Graphic {
     private Bitmap marker;
@@ -92,6 +93,7 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
         mFace = null;
     }
 
+    //Overriding GraphicOverlay's draw method
     @Override
     public void draw(Canvas canvas) {
         Face face = mFace;

@@ -17,11 +17,15 @@ package floatingheads.snapclone.camera2VisionTools;
 
 
 /**
- * A view which renders a series of custom graphics to be overlayed on top of an associated preview
- * (i.e., the camera preview).  The creator can add graphics objects, update the objects, and remove
+ * This view is the view which overlays all of the custom graphics to a camerapreview
+ * We can add graphics objects, update the objects, and remove
  * them, triggering the appropriate drawing and invalidation within the view.<p>
  *
- * Supports scaling and mirroring of the graphics relative the camera's preview properties.  The
+ *
+ * This is more like a utility class, in the respect that we will constatly be having our graphics
+ * extend this class to use its methods for drawing the overlays
+ *
+ * We can scale and mirror the graphics relative to the camera's preview properties.  The
  * idea is that detection items are expressed in terms of a preview size, but need to be scaled up
  * to the full view size, and also mirrored in the case of the front-facing camera.<p>
  *
@@ -51,6 +55,10 @@ public class GraphicOverlay extends View {
     public static abstract class Graphic {
         private GraphicOverlay mOverlay;
 
+        /**
+         *
+         * @param overlay
+         */
         public Graphic(GraphicOverlay overlay) {
             mOverlay = overlay;
         }

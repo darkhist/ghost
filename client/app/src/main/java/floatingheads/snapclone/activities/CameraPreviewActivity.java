@@ -6,6 +6,8 @@ package floatingheads.snapclone.activities;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -25,14 +27,22 @@ import android.widget.Toast;
 
 import floatingheads.snapclone.R;
 import floatingheads.snapclone.androidScreenUtils.Utils;
+import floatingheads.snapclone.camera2VisionTools.Eyes.GooglyFaceTracker;
+
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.MultiProcessor;
 import com.google.android.gms.vision.face.FaceDetector;
+import com.google.android.gms.vision.face.LargestFaceFocusingProcessor;
+//import com.google.android.gms.vision.CameraSource;
+
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Random;
 
 import floatingheads.snapclone.camera2VisionTools.CameraSource;
@@ -40,6 +50,9 @@ import floatingheads.snapclone.camera2VisionTools.CameraSourcePreview;
 import floatingheads.snapclone.camera2VisionTools.GraphicFaceTrackerFactory;
 import floatingheads.snapclone.camera2VisionTools.GraphicOverlay;
 
+/**
+ * Screen that holds the main camera activity and corresponding buttons
+ */
 public class CameraPreviewActivity extends AppCompatActivity  {
     private static final String TAG = "Akira Camera";
     private Context context;
@@ -62,7 +75,6 @@ public class CameraPreviewActivity extends AppCompatActivity  {
     private Button videoButton;
     private int counter;
     private Random rand;
-    //private Context mContext;
 
     // FILE STORAGE DECLARATIONS
     private File directory;
@@ -72,10 +84,19 @@ public class CameraPreviewActivity extends AppCompatActivity  {
     // DEFAULT CAMERA BEING OPENED
     private boolean usingFrontCamera = true;
 
+    private static final int RC_HANDLE_GMS = 9001;
+
+    // permission request codes need to be < 256
+    private static final int RC_HANDLE_CAMERA_PERM = 2;
+
     // MUST BE CAREFUL USING THIS VARIABLE.
     // ANY ATTEMPT TO START CAMERA2 ON API < 21 WILL CRASH.
     private boolean useCamera2 = true;
 
+    /**
+     * Initializes buttons for the camera screen and provides corresponding functionality to each button
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,6 +104,7 @@ public class CameraPreviewActivity extends AppCompatActivity  {
         setContentView(R.layout.activity_camera_preview);
         context = getApplicationContext();
         rand = new Random();
+
 
         takePictureButton = (Button) findViewById(R.id.btn_takepicture);
         switchButton = (Button) findViewById(R.id.btn_switch);
@@ -93,7 +115,14 @@ public class CameraPreviewActivity extends AppCompatActivity  {
         ivAutoFocus = (ImageView) findViewById(R.id.ivAutoFocus);
         counter = 0;
 
+        //New Directory path
         String snapCloneDir = Environment.getExternalStorageDirectory()+File.separator+"Pictures"+File.separator+"SnapClone";
+
+        //listener toggle - get rid of need for 2 camerasource view methods
+        switchButton.setOnClickListener(mFlipButtonListener);
+        if (savedInstanceState != null) {
+            usingFrontCamera = savedInstanceState.getBoolean("IsFrontFacing");
+        }
 
         directory = new File(Environment.getExternalStorageDirectory()+File.separator+"Pictures"+File.separator+"SnapClone");
         directory.mkdir();
@@ -182,6 +211,9 @@ public class CameraPreviewActivity extends AppCompatActivity  {
                     e.printStackTrace();
                 }
             }
+
+            createCameraSource();
+            startCameraSource();
         }
     };
 
@@ -218,14 +250,6 @@ public class CameraPreviewActivity extends AppCompatActivity  {
         }
     }
 
-    private void createCameraSourceFront() {
-        previewFaceDetector = new FaceDetector.Builder(context)
-                .setClassificationType(FaceDetector.ALL_CLASSIFICATIONS)
-                .setLandmarkType(FaceDetector.ALL_LANDMARKS)
-                .setMode(FaceDetector.FAST_MODE)
-                .setProminentFaceOnly(true)
-                .setTrackingEnabled(true)
-                .build();
 
         if(previewFaceDetector.isOperational()) {
             previewFaceDetector.setProcessor(new MultiProcessor.Builder<>(new GraphicFaceTrackerFactory(mGraphicOverlay,this.context)).build());
@@ -282,9 +306,6 @@ public class CameraPreviewActivity extends AppCompatActivity  {
 
     }
 
-    private void stopCameraSource() {
-        mPreview.stop();
-    }
 
     /**
      * Autofocus feature functionality
@@ -339,6 +360,10 @@ public class CameraPreviewActivity extends AppCompatActivity  {
         }
     }
 
+
+    /**
+     * on resume
+     */
     @Override
     protected void onResume() {
         super.onResume();
@@ -348,6 +373,11 @@ public class CameraPreviewActivity extends AppCompatActivity  {
 
     }
 
+
+
+    /**
+     * On pause
+     */
     @Override
     protected void onPause() {
         super.onPause();
@@ -355,6 +385,11 @@ public class CameraPreviewActivity extends AppCompatActivity  {
         stopCameraSource();
     }
 
+
+
+    /**
+     * on destroy
+     */
     @Override
     protected void onDestroy() {
         super.onDestroy();

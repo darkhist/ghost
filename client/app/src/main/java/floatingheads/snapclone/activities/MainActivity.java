@@ -1,18 +1,24 @@
 package floatingheads.snapclone.activities;
 
+
 import android.content.Intent;
 import android.os.Bundle;
+
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
+
 import floatingheads.snapclone.R;
 
+
 public class MainActivity extends AppCompatActivity {
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         // Button to call OpenCV Camera Activity
         Button cameraInit = findViewById(R.id.openCamera);
@@ -59,4 +65,5 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
 }

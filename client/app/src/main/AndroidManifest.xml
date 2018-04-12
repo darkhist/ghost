@@ -69,10 +69,18 @@
         <activity
             android:name=".activities.CameraPreviewActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" />
-        <activity
-            android:name=".opencv.MyRealTimeImageProcessing"
-            android:screenOrientation="sensorLandscape" />
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen">
+        </activity>
+        <!--
+        <activity android:name=".opencv.MyRealTimeImageProcessing"
+            android:screenOrientation="sensorLandscape">
+        </activity>-->
+
+        <activity android:name=".activities.CVImgProcCameraActivity"
+            android:screenOrientation="sensorLandscape">
+        </activity>
+
+
         <activity
             android:name=".activities.LoginActivity"
             android:label="@string/title_activity_login"

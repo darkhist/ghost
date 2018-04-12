@@ -40,6 +40,11 @@ public class AutoFitTextureView extends TextureView {
         requestLayout();
     }
 
+    /**
+     *
+     * @param widthMeasureSpec
+     * @param heightMeasureSpec
+     */
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
