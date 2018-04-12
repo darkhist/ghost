@@ -1,19 +1,19 @@
 package floatingheads.snapclone.camera2VisionTools;
 
-        import android.content.Context;
-        import android.graphics.SurfaceTexture;
-        import android.util.AttributeSet;
-        import android.util.Log;
-        import android.view.SurfaceHolder;
-        import android.view.SurfaceView;
-        import android.view.TextureView;
-        import android.view.ViewGroup;
+import android.content.Context;
+import android.graphics.SurfaceTexture;
+import android.util.AttributeSet;
+import android.util.Log;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
+import android.view.TextureView;
+import android.view.ViewGroup;
 
-        import floatingheads.snapclone.androidScreenUtils.Utils;
+import floatingheads.snapclone.androidScreenUtils.Utils;
 
-        import com.google.android.gms.common.images.Size;
+import com.google.android.gms.common.images.Size;
 
-        import java.io.IOException;
+import java.io.IOException;
 
 
 public class CameraSourcePreview extends ViewGroup {

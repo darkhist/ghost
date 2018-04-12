@@ -4,7 +4,7 @@
 
 const express = require('express');
 const router = express.Router();
-const friendsController = require("./../controllers/friendsController");
+const friendsController = require('../controllers/friendsController');
 
 // GET /friends
 router.get('/', friendsController.get);

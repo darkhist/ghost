@@ -3,8 +3,10 @@ package floatingheads.snapclone.activities;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -21,16 +23,31 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.StringRequest;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import floatingheads.snapclone.R;
+import floatingheads.snapclone.net_utils.Const;
+import floatingheads.snapclone.volleyController.AppController;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -45,22 +62,18 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
     private static final int REQUEST_READ_CONTACTS = 0;
 
     /**
-     * A dummy authentication store containing known user names and passwords.
-     * TODO: remove after connecting to a real authentication system.
-     */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "foo@example.com:hello", "bar@example.com:world"
-    };
-    /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
     private UserLoginTask mAuthTask = null;
 
-    // UI references.
+    // UI references
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
+
+    // Volley Stuff
+    private final String URL = Const.signupURL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,7 +102,6 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
                 attemptLogin();
             }
         });
-
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
     }
@@ -126,6 +138,9 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
 
     /**
      * Callback received when a permissions request has been completed.
+     * @param requestCode
+     * @param permissions
+     * @param grantResults
      */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
@@ -137,13 +152,15 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
         }
     }
 
-
     /**
      * Attempts to sign in or register the account specified by the login form.
      * If there are form errors (invalid email, missing fields, etc.), the
      * errors are presented and no actual login attempt is made.
      */
     private void attemptLogin() {
+        TextView nameView = findViewById(R.id.name);
+        TextView usernameView = findViewById(R.id.username);
+
         if (mAuthTask != null) {
             return;
         }
@@ -152,9 +169,11 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
         mEmailView.setError(null);
         mPasswordView.setError(null);
 
-        // Store values at the time of the login attempt.
-        String email = mEmailView.getText().toString();
+        // Store values at the time of the sign up attempt.
+        String name = nameView.getText().toString();
+        String username = usernameView.getText().toString();
         String password = mPasswordView.getText().toString();
+        String email = mEmailView.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
@@ -182,6 +201,8 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
             // form field with an error.
             focusView.requestFocus();
         } else {
+            // Create new user account via /users/signup
+            sendUserInfo(name, username, password, email);
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
@@ -191,12 +212,24 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
     }
 
     private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
-        return email.contains("@");
+        /*
+        requirements:
+        - email must have only one @
+        - email first or last char cannot be '.'
+        - email can only contain characters, digits, underscore, dash, dot
+        - top level domain (TLD) can't start with '.'
+        - TLD must contain > 2 chars
+        - TLD can only contain characters and digits
+        - double '.' ('..') not allowed
+         */
+
+        final String emailPattern = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+        Pattern pattern = Pattern.compile(emailPattern);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
     }
 
     private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
         return password.length() > 4;
     }
 
@@ -236,6 +269,12 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
         }
     }
 
+    /**
+     *
+     * @param i
+     * @param bundle
+     * @return
+     */
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         return new CursorLoader(this,
@@ -253,6 +292,11 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
                 ContactsContract.Contacts.Data.IS_PRIMARY + " DESC");
     }
 
+    /**
+     *
+     * @param cursorLoader
+     * @param cursor
+     */
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
         List<String> emails = new ArrayList<>();
@@ -261,14 +305,15 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
             emails.add(cursor.getString(ProfileQuery.ADDRESS));
             cursor.moveToNext();
         }
-
         addEmailsToAutoComplete(emails);
     }
 
+    /**
+     * Adds sign in email to a list of previously tried emails for autocomplete
+     * @param cursorLoader
+     */
     @Override
-    public void onLoaderReset(Loader<Cursor> cursorLoader) {
-
-    }
+    public void onLoaderReset(Loader<Cursor> cursorLoader) {}
 
     private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
         //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
@@ -279,15 +324,70 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
         mEmailView.setAdapter(adapter);
     }
 
+    /**
+     * Redirects user to sign up activity if they click the login link
+     * @param v
+     */
+    // Click Handler for Suggest Login Text
+    public void onClick(View v) {
+        Intent i = new Intent(getApplicationContext(), LoginActivity.class);
+        startActivity(i);
+    }
 
     private interface ProfileQuery {
         String[] PROJECTION = {
                 ContactsContract.CommonDataKinds.Email.ADDRESS,
                 ContactsContract.CommonDataKinds.Email.IS_PRIMARY,
         };
-
         int ADDRESS = 0;
         int IS_PRIMARY = 1;
+    }
+
+    /**
+     * The following method is used to send user information
+     * to the /users/signup endpoint
+     * @param name
+     * @param username
+     * @param password
+     * @param email
+     */
+    private void sendUserInfo(String name, String username, String password, String email) {
+        StringRequest postRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                VolleyLog.v("Response is: ", response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                // Cancel Sign Up Task
+                mAuthTask.cancel(true);
+                // Hide Keyboard
+                InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+                imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+                // Display Error Message
+                Toast.makeText(getApplicationContext(), "Sign Up Failed", Toast.LENGTH_LONG).show();
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                HashMap<String, String> params = new HashMap<>();
+                params.put("name", name);
+                params.put("username", username);
+                params.put("password", password);
+                params.put("email", email);
+                return params;
+            }
+        };
+
+        // Handling Volley Double POST
+        postRequest.setRetryPolicy(new DefaultRetryPolicy(
+                0,
+                0,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+        AppController.getInstance().addToRequestQueue(postRequest);
     }
 
     /**
@@ -306,24 +406,12 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
-
             try {
                 // Simulate network access.
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
                 return false;
             }
-
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
-            }
-
-            // TODO: register the new account here.
             return true;
         }
 
@@ -334,6 +422,9 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
 
             if (success) {
                 finish();
+                // Open Navbar Activity on Login Success
+                Intent i = new Intent(getApplicationContext(), NavBarActivity.class);
+                startActivity(i);
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();

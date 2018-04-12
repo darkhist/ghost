@@ -16,10 +16,13 @@ import floatingheads.snapclone.R;
 public class NotisFragment extends Fragment {
 
 
+    /**
+     * Required default constructor
+     * This class in not implemented anymore
+     */
     public NotisFragment() {
-        // Required empty public constructor
+         //Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
