@@ -1,0 +1,6 @@
+public/normal users
+	public users pictures always visible - stored in different database
+
+view user's profile when adding them as friend
+finish masteruser profile
+

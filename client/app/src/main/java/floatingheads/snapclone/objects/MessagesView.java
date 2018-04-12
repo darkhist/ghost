@@ -19,6 +19,11 @@ public class MessagesView extends ListView {
     ArrayList<Contact> contactArrayList;
     Context context;
 
+    /**
+     * Default constructor calls ListView constructor, initializes variables, and calls init() method
+     * init() method uses ClickListener to change order of ListView
+     * @param context
+     */
     // default constructor should never get called
     public MessagesView(Context context) {
         super(context);
@@ -26,25 +31,42 @@ public class MessagesView extends ListView {
         init();
     }
 
+    /**
+     * Constructor calls ListView constructor passing in context and attrs, initialized variables and calls init() method.  Used for instantiating from xml
+     * init() method uses ClickListener to change order of ListView
+     * @param context
+     * @param attrs
+     */
     public MessagesView(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
         init();
     }
 
+    /**
+     * Constructor calls ListView constructor passing in context and attrs, initialized variables and calls init() method.  Used for instantiating from xml
+     * init() method uses ClickListener to change order of ListView
+     * @param context
+     * @param attrs
+     * @param defStyle
+     */
     public MessagesView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         this.context = context;
         init();
     }
 
+    /**
+     * Updates Contact ArrayList and CustomListAdapter so changes are reflected in MessagesFragment
+     * @param contents
+     */
     public void setContents(ArrayList<? extends User> contents) {
         contactArrayList = (ArrayList<Contact>) contents;
         ListAdapter la = new CustomListAdapter(context, contactArrayList, CustomListAdapter.MESSAGES_SCREEN);
         setAdapter(la);
     }
 
-    public void init() {
+    private void init() {
         setOnItemClickListener(
                 (AdapterView<?> parent, View view, int position, long id) -> {
                     Contact contact = (Contact) parent.getItemAtPosition(position);

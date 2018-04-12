@@ -138,6 +138,9 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
 
     /**
      * Callback received when a permissions request has been completed.
+     * @param requestCode
+     * @param permissions
+     * @param grantResults
      */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
@@ -266,6 +269,12 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
         }
     }
 
+    /**
+     *
+     * @param i
+     * @param bundle
+     * @return
+     */
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         return new CursorLoader(this,
@@ -283,6 +292,11 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
                 ContactsContract.Contacts.Data.IS_PRIMARY + " DESC");
     }
 
+    /**
+     *
+     * @param cursorLoader
+     * @param cursor
+     */
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
         List<String> emails = new ArrayList<>();
@@ -294,6 +308,10 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
         addEmailsToAutoComplete(emails);
     }
 
+    /**
+     * Adds sign in email to a list of previously tried emails for autocomplete
+     * @param cursorLoader
+     */
     @Override
     public void onLoaderReset(Loader<Cursor> cursorLoader) {}
 
@@ -306,6 +324,10 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
         mEmailView.setAdapter(adapter);
     }
 
+    /**
+     * Redirects user to sign up activity if they click the login link
+     * @param v
+     */
     // Click Handler for Suggest Login Text
     public void onClick(View v) {
         Intent i = new Intent(getApplicationContext(), LoginActivity.class);

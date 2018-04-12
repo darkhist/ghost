@@ -17,6 +17,11 @@ public class MainActivity extends AppCompatActivity {
         // Button to call OpenCV Camera Activity
         Button cameraInit = findViewById(R.id.openCamera);
         cameraInit.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Opens CameraPreviewActivity.
+             * CameraPreviewActivity launches the camera
+             * @param v
+             */
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(getApplicationContext(),CameraPreviewActivity.class);
@@ -27,6 +32,11 @@ public class MainActivity extends AppCompatActivity {
         // On Log In Button Click - Open Log In Screen
         Button login = findViewById(R.id.logIn);
         login.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Opens LoginActivity
+             * LoginActivity processes login entries and either logs the user in or returns an error
+             * @param v
+             */
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(getApplicationContext(), LoginActivity.class);
@@ -37,6 +47,11 @@ public class MainActivity extends AppCompatActivity {
         // On Sign Up Button Click - Open Sign Up Screen
         Button signup = findViewById(R.id.signUp);
         signup.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Opens SignUpActivity
+             * SignUpActivity asks user for information which it then uploads to the USERS database
+             * @param v
+             */
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(getApplicationContext(), SignUpActivity.class);

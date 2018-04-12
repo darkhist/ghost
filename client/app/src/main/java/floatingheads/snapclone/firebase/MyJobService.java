@@ -9,6 +9,11 @@ public class MyJobService extends JobService {
 
     private static final String TAG = "MyJobService";
 
+    /**
+     *
+     * @param jobParameters
+     * @return
+     */
     @Override
     public boolean onStartJob(JobParameters jobParameters) {
         Log.d(TAG, "Performing long running task in scheduled job");
@@ -16,6 +21,11 @@ public class MyJobService extends JobService {
         return false;
     }
 
+    /**
+     * Returns false
+     * @param jobParameters
+     * @return
+     */
     @Override
     public boolean onStopJob(JobParameters jobParameters) {
         return false;

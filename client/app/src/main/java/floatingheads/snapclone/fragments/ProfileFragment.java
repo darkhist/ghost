@@ -16,10 +16,21 @@ import floatingheads.snapclone.R;
  */
 public class ProfileFragment extends Fragment {
 
+    /**
+     * Required default constructor
+     */
     public ProfileFragment() {
         // Required empty public constructor
     }
 
+    /**
+     * Returns View containing user's profile
+     * User's profile displays information about the user like their name, friends, and points
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

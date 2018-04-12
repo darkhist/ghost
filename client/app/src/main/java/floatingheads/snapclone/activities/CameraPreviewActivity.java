@@ -103,6 +103,10 @@ public class CameraPreviewActivity extends AppCompatActivity  {
 
 //            //Change screens listener
             switchButton.setOnClickListener(new View.OnClickListener() {
+                /**
+                 * Switches camera view
+                 * @param v
+                 */
                 @Override
                 public void onClick(View v) {
                     if(usingFrontCamera) {
@@ -117,8 +121,12 @@ public class CameraPreviewActivity extends AppCompatActivity  {
                 }
             });
 
-            //Image caputre listener
+            //Image capture listener
             takePictureButton.setOnClickListener(new View.OnClickListener() {
+                /**
+                 * Takes picture
+                 * @param v
+                 */
                 @Override
                 public void onClick(View v) {
                     //update counter;

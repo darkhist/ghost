@@ -25,11 +25,26 @@ public class CustomListAdapter<T extends User> extends ArrayAdapter<T> {
 
     private int screen_type;
 
+    /**
+     * Constructor calls ArrayAdapter constructor and sets screen type
+     * Screen type can be either FRIENDS_SCREEN, MESSAGES_SCREEN, or USERS_SCREEN
+     * @param context
+     * @param friends
+     * @param screen_type
+     */
     public CustomListAdapter(Context context, ArrayList<T> friends, int screen_type) {
         super(context, R.layout.custom_contact, friends);
         this.screen_type = screen_type;
     }
 
+    /**
+     * Returns View which contains information from either a Friend, User, or Contact
+     * This view is used in a ListView.
+     * @param position
+     * @param convertView
+     * @param parent
+     * @return
+     */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater friendsInflator = LayoutInflater.from(getContext());

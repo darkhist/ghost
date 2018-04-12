@@ -48,6 +48,11 @@ public class AddFriendsActivity extends MainActivity {
 
         VolleyActions va = new VolleyActions(this);
         va.makeJSONArrayRequest(usersURL, new VolleyCallback() {
+            /**
+             * Creates new User from result data if server successfully responds.
+             *
+             * @param result
+             */
             @Override
             public void onSuccessResponse(JSONArray result) {
                 ArrayList<User> userArrayList = new ArrayList<>();
@@ -71,6 +76,10 @@ public class AddFriendsActivity extends MainActivity {
                 }
             }
 
+            /**
+             * Shows a Toast error message if server fails to respond.
+             * @param volleyError
+             */
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 Toast.makeText(context, "Could not connect to database", Toast.LENGTH_LONG).show();

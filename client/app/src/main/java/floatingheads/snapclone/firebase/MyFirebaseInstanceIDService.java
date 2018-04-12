@@ -13,6 +13,9 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
 
     public static final String TAG = "FirebaseID";
 
+    /**
+     * Get updated InstanceID token
+     */
     @Override
     public void onTokenRefresh() {
         // Get updated InstanceID token.
