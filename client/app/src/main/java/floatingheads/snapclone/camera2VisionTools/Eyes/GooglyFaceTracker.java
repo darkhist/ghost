@@ -64,6 +64,8 @@ public class GooglyFaceTracker extends Tracker<Face> {
 
     /**
      * Resets the underlying googly eyes graphic and associated physics state.
+     * @param id unique face id for corresponding face
+     * @param face face to observe
      */
     @Override
     public void onNewItem(int id, Face face) {
@@ -74,6 +76,8 @@ public class GooglyFaceTracker extends Tracker<Face> {
      * Updates the positions and state of eyes to the underlying graphic, according to the most
      * recent face detection results.  The graphic will render the eyes and simulate the motion of
      * the iris based upon these changes over time.
+     * @param detectionResults real time updates on positions
+     * @param face face observed
      */
     @Override
     public void onUpdate(FaceDetector.Detections<Face> detectionResults, Face face) {
@@ -109,11 +113,13 @@ public class GooglyFaceTracker extends Tracker<Face> {
      * Hide the graphic when the corresponding face was not detected.  This can happen for
      * intermediate frames temporarily (e.g., if the face was momentarily blocked from
      * view).
+     * @param detectionResults
      */
     @Override
     public void onMissing(FaceDetector.Detections<Face> detectionResults) {
         mOverlay.remove(mEyesGraphic);
     }
+
 
     /**
      * Called when the face is assumed to be gone for good. Remove the googly eyes graphic from

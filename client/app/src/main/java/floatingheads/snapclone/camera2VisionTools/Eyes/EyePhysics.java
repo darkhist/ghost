@@ -72,9 +72,14 @@ class EyePhysics {
     // Methods
     //==============================================================================================
 
+
     /**
      * Generate the next position of the iris based on simulated velocity, eye boundaries, gravity,
      * friction, and bounce momentum.
+     * @param eyePosition position of eye
+     * @param eyeRadius radius of eye
+     * @param irisRadius radius of iris
+     * @return
      */
     PointF nextIrisPosition(PointF eyePosition, float eyeRadius, float irisRadius) {
         // Correct the current eye position and size based on recent motion of the face within the
@@ -131,12 +136,14 @@ class EyePhysics {
         return velocity;
     }
 
+
     /**
      * Correct the iris position to be in-bounds within the eye, if it is now out of bounds.  Being
      * out of bounds could have been due to a sudden movement of the head and/or camera, or the
      * result of just bouncing/rolling around.<p>
      *
      * In addition, modify the velocity to cause a bounce in the opposite direction.
+     * @param simulationRate
      */
     private void makeIrisInBounds(float simulationRate) {
         float irisOffsetX = mIrisPosition.x - mEyePosition.x;
@@ -173,10 +180,15 @@ class EyePhysics {
         mIrisPosition = new PointF(x, y);
     }
 
+
     /**
      * Update velocity in response to bouncing off the sides of the eye (i.e., when iris hits the
      * bottom or the eye moves quickly).  This is the only way to gain horizontal velocity, since
      * there is no other horizontal force.
+     * @param velocity
+     * @param distOutOfBounds
+     * @param simulationRate
+     * @return
      */
     private float applyBounce(float velocity, float distOutOfBounds, float simulationRate) {
         if (isZero(distOutOfBounds)) {
@@ -202,6 +214,7 @@ class EyePhysics {
 
     /**
      * The iris is stopped if it is at the bottom of the eye and its velocity is zero.
+     * @return
      */
     private boolean isStopped() {
         if (mEyePosition.y >= mIrisPosition.y) {
@@ -219,6 +232,8 @@ class EyePhysics {
 
     /**
      * Allow for a small tolerance in floating point values in considering whether a value is zero.
+     * @param num
+     * @return
      */
     private boolean isZero(float num) {
         return ((num < ZERO_TOLERANCE) && (num > -1 * ZERO_TOLERANCE));

@@ -55,6 +55,10 @@ public class GraphicOverlay extends View {
     public static abstract class Graphic {
         private GraphicOverlay mOverlay;
 
+        /**
+         *
+         * @param overlay
+         */
         public Graphic(GraphicOverlay overlay) {
             mOverlay = overlay;
         }

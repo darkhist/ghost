@@ -51,6 +51,9 @@ import floatingheads.snapclone.camera2VisionTools.CameraSource;
 import floatingheads.snapclone.camera2VisionTools.CameraSourcePreview;
 import floatingheads.snapclone.camera2VisionTools.GraphicOverlay;
 
+/**
+ * Screen that holds the main camera activity and corresponding buttons
+ */
 public class CameraPreviewActivity extends AppCompatActivity  {
     private static final String TAG = "Akira Camera";
     private Context context;
@@ -91,6 +94,10 @@ public class CameraPreviewActivity extends AppCompatActivity  {
     // ANY ATTEMPT TO START CAMERA2 ON API < 21 WILL CRASH.
     private boolean useCamera2 = true;
 
+    /**
+     * Initializes buttons for the camera screen and provides corresponding functionality to each button
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -180,7 +187,10 @@ public class CameraPreviewActivity extends AppCompatActivity  {
 
 
     /**
-     * Setup Camera permissions
+     * When this app is initially installed, we will need to set up a prompt to allow the app to access the user's camera
+     * @param requestCode code to request
+     * @param permissions description of the requested permissions to be granted
+     * @param grantResults result of granted permissions
      */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {

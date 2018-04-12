@@ -48,6 +48,11 @@ class GooglyEyesGraphic extends GraphicOverlay.Graphic {
     // Methods
     //==============================================================================================
 
+    /**
+     * Constructor for the overlay graphic
+     * Initializes all possible graphics for any given state of the user eyes
+     * @param overlay
+     */
     GooglyEyesGraphic(GraphicOverlay overlay) {
         super(overlay);
 
@@ -69,9 +74,14 @@ class GooglyEyesGraphic extends GraphicOverlay.Graphic {
         mEyeOutlinePaint.setStrokeWidth(5);
     }
 
+
     /**
      * Updates the eye positions and state from the detection of the most recent frame.  Invalidates
      * the relevant portions of the overlay to trigger a redraw.
+     * @param leftPosition
+     * @param leftOpen
+     * @param rightPosition
+     * @param rightOpen
      */
     void updateEyes(PointF leftPosition, boolean leftOpen,
                     PointF rightPosition, boolean rightOpen) {
@@ -92,6 +102,7 @@ class GooglyEyesGraphic extends GraphicOverlay.Graphic {
      * Draws the current eye state to the supplied canvas.  This will draw the eyes at the last
      * reported position from the tracker, and the iris positions according to the physics
      * simulations for each iris given motion and other forces.
+     * @param canvas drawing canvas
      */
     @Override
     public void draw(Canvas canvas) {
@@ -125,9 +136,14 @@ class GooglyEyesGraphic extends GraphicOverlay.Graphic {
     }
 
 
-
     /**
      * Draws the eye, either closed or open with the iris in the current position.
+     * @param canvas canvas for overlay graphic
+     * @param eyePosition position of the eye
+     * @param eyeRadius radius of the eye
+     * @param irisPosition position of the irus
+     * @param irisRadius radius of the iris
+     * @param isOpen true if eye is open
      */
     private void drawEye(Canvas canvas, PointF eyePosition, float eyeRadius,
                          PointF irisPosition, float irisRadius, boolean isOpen) {

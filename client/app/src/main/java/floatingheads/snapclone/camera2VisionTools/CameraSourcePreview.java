@@ -36,6 +36,11 @@ public class CameraSourcePreview extends ViewGroup {
     private int screenRotation;
     private Context mContext;
 
+    /**
+     *
+     * @param context
+     * @param attrs
+     */
     public CameraSourcePreview(Context context, AttributeSet attrs) {
         super(context, attrs);
         mContext = context;
@@ -50,11 +55,22 @@ public class CameraSourcePreview extends ViewGroup {
         mAutoFitTextureView.setSurfaceTextureListener(mSurfaceTextureListener);
     }
 
+    /**
+     *
+     * @param cameraSource
+     * @param overlay
+     * @throws IOException
+     */
     public void start(CameraSource cameraSource, GraphicOverlay overlay) throws IOException {
         mOverlay = overlay;
         start(cameraSource);
     }
 
+    /**
+     *
+     * @param cameraSource
+     * @throws IOException
+     */
     private void start(CameraSource cameraSource) throws IOException {
         if (cameraSource == null) {stop();}
         mCameraSource = cameraSource;
@@ -68,6 +84,9 @@ public class CameraSourcePreview extends ViewGroup {
         }
     }
 
+    /**
+     *
+     */
     public void stop() {
         mStartRequested = false;
             if (mCameraSource != null) {
@@ -134,6 +153,14 @@ public class CameraSourcePreview extends ViewGroup {
         public void onSurfaceTextureUpdated(SurfaceTexture texture) {}
     };
 
+    /**
+     *
+     * @param changed
+     * @param left
+     * @param top
+     * @param right
+     * @param bottom
+     */
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         int width = 480;
