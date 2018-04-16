@@ -56,7 +56,7 @@ public class ImageViewActivity extends AppCompatActivity {
 
 
         Drawable d = new BitmapDrawable(getResources(), bmp);
-        //mPhotoView.setImageDrawable(d);
+        mPhotoView.setImageDrawable(d);
 
         // Lets attach some listeners, not required though!
         //mPhotoView.setOnMatrixChangeListener(new MatrixChangeListener());
