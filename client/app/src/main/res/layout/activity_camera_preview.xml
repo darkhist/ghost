@@ -1,85 +1,64 @@
-<?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="false"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:fitsSystemWindows="false">
 
     <!-- This is the camera preview source settings, with the faceOverlay nested inside of it-->
     <floatingheads.snapclone.camera2VisionTools.CameraSourcePreview
         android:id="@+id/preview2"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
+        android:layout_height="match_parent">
         <floatingheads.snapclone.camera2VisionTools.GraphicOverlay
             android:id="@+id/faceOverlay"
+            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal" />
-
+            android:layout_height="match_parent" />
     </floatingheads.snapclone.camera2VisionTools.CameraSourcePreview>
 
-    <!--<LinearLayout-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:orientation="horizontal">-->
-    <!--<Button-->
-    <!--android:id="@+id/btn_takepicture"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:text="@string/take_picture" />-->
-    <!--<Button-->
-    <!--android:id="@+id/btn_video"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:text="@string/record_video"/>-->
-    <!--<Button-->
-    <!--android:id="@+id/btn_switch"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:text="@string/switch_camera"/>-->
-    <!--<LinearLayout-->
-    <!--android:layout_width="0dp"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:layout_weight="1"-->
-    <!--android:gravity="end|center_vertical">-->
-
-    <!--</LinearLayout>-->
-    <!--</LinearLayout>-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/btn_takepicture"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/take_picture" />
+        <Button
+            android:id="@+id/btn_video"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/record_video"/>
+        <Button
+            android:id="@+id/btn_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/switch_camera"/>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="end|center_vertical">
+            <TextView
+                android:id="@+id/cameraVersion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:layout_marginRight="10dp"
+                android:textSize="18sp"
+                android:textColor="@android:color/white"
+                android:background="@android:color/black"/>
+        </LinearLayout>
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/ivAutoFocus"
+        android:contentDescription="@null"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:contentDescription="@null"
         android:src="@drawable/btn_autofocus"
-        android:visibility="gone" />
-
-    <Button
-        android:id="@+id/btn_takepicture"
-        android:layout_width="75dp"
-        android:layout_height="75dp"
-        android:layout_marginBottom="16dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:background="@mipmap/ic_camera_white_48dp"
-        app:layout_constraintBottom_toBottomOf="@+id/preview2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/btn_switch"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginTop="8dp"
-        android:background="@mipmap/ic_switch_camera_white_36dp"
-        app:layout_constraintBottom_toBottomOf="@+id/btn_takepicture"
-        app:layout_constraintEnd_toStartOf="@+id/btn_takepicture"
-        app:layout_constraintTop_toTopOf="@+id/btn_takepicture" />
-
-</android.support.constraint.ConstraintLayout>
+        android:visibility="gone"/>
+</FrameLayout>

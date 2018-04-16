@@ -16,7 +16,7 @@ public class GraphicFaceTracker extends Tracker<Face> {
     private GraphicOverlay mOverlay;
     private FaceGraphic mFaceGraphic;
 
-    GraphicFaceTracker(GraphicOverlay overlay, Context context) {
+    public GraphicFaceTracker(GraphicOverlay overlay, Context context) {
         mOverlay = overlay;
         mFaceGraphic = new FaceGraphic(overlay, context);
     }

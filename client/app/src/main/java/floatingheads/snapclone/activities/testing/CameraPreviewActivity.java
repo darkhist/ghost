@@ -37,6 +37,8 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.MultiProcessor;
+import com.google.android.gms.vision.Tracker;
+import com.google.android.gms.vision.face.Face;
 import com.google.android.gms.vision.face.FaceDetector;
 import com.google.android.gms.vision.face.LargestFaceFocusingProcessor;
 
@@ -52,7 +54,6 @@ import java.util.Random;
 
 import floatingheads.snapclone.camera2VisionTools.CameraSource;
 import floatingheads.snapclone.camera2VisionTools.CameraSourcePreview;
-import floatingheads.snapclone.camera2VisionTools.GraphicFaceTrackerFactory;
 import floatingheads.snapclone.camera2VisionTools.GraphicOverlay;
 
 /**
@@ -112,15 +113,14 @@ public class CameraPreviewActivity extends AppCompatActivity  {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_camera_preview);
         context = getApplicationContext();
-        rand = new Random();
 
 
         takePictureButton = (Button) findViewById(R.id.btn_takepicture);
         switchButton = (Button) findViewById(R.id.btn_switch);
-//        videoButton = (Button) findViewById(R.id.btn_video);
+        videoButton = (Button) findViewById(R.id.btn_video);
         mPreview = (CameraSourcePreview) findViewById(R.id.preview2);
         mGraphicOverlay = (GraphicOverlay) findViewById(R.id.faceOverlay);
-//        cameraVersion = (TextView) findViewById(R.id.cameraVersion);
+        cameraVersion = (TextView) findViewById(R.id.cameraVersion);
         ivAutoFocus = (ImageView) findViewById(R.id.ivAutoFocus);
         counter = 0;
 
@@ -139,36 +139,10 @@ public class CameraPreviewActivity extends AppCompatActivity  {
         if(checkGooglePlayAvailability()) {
             requestPermissionThenOpenCamera();
 
-//            //Change screens listener
-            switchButton.setOnClickListener(new View.OnClickListener() {
-                /**
-                 * Switches camera view
-                 * @param v
-                 */
-                @Override
-                public void onClick(View v) {
-                    if(usingFrontCamera) {
-                        stopCameraSource();
-                        createCameraSourceBack();
-                        usingFrontCamera = false;
-                    } else {
-                        stopCameraSource();
-                        createCameraSourceFront();
-                        usingFrontCamera = true;
-                    }
-                }
-            });
-
             //Image capture listener
             takePictureButton.setOnClickListener(new View.OnClickListener() {
-                /**
-                 * Takes picture
-                 * @param v
-                 */
                 @Override
                 public void onClick(View v) {
-                    //update counter;
-                    counter = rand.nextInt(1000)+1;
                     switchButton.setEnabled(false);
                     videoButton.setEnabled(false);
                     takePictureButton.setEnabled(false);
@@ -181,50 +155,26 @@ public class CameraPreviewActivity extends AppCompatActivity  {
     }
 
 
-
-
     final CameraSource.ShutterCallback cameraSourceShutterCallback = new CameraSource.ShutterCallback() {@Override public void onShutter() {Log.d(TAG, "Shutter Callback!");}};
 
+
     /**
-     * Callback for camera image capture (deprecated), can set location to save files in this initialization
+     * Toggles between front-facing and rear-facing modes.
      */
-    final CameraSource.PictureCallback cameraSourcePictureCallback = new CameraSource.PictureCallback() {
-        @Override
-        public void onPictureTaken(Bitmap picture) {
-            Log.d(TAG, "Taken picture is here!");
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    switchButton.setEnabled(true);
-                    videoButton.setEnabled(true);
-                    takePictureButton.setEnabled(true);
-                }
-            });
-            FileOutputStream out = null;
-            try {
-                //Functionality for saving image
-                String path = Environment.getExternalStorageDirectory().toString()+File.separator+"Pictures"+File.separator+"SnapClone";
-                File file = new File(path, "SnapClone"+counter+".png");
-                fileOut = new FileOutputStream(file);
-                picture.compress(Bitmap.CompressFormat.JPEG, 95, fileOut);
-                fileOut.flush(); // Not really required
-                fileOut.close(); // do not forget to close the stream
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                try {
-                    if (out != null) {
-                        out.close();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+    private View.OnClickListener mFlipButtonListener = new View.OnClickListener() {
+        public void onClick(View v) {
+            usingFrontCamera = !usingFrontCamera;
+
+            if (mCameraSource != null) {
+                mCameraSource.release();
+                mCameraSource = null;
             }
 
             createCameraSource();
             startCameraSource();
         }
     };
+
 
     /**
      * Check the device to make sure it has the Google Play Services APK. If
@@ -244,13 +194,42 @@ public class CameraPreviewActivity extends AppCompatActivity  {
         return false;
     }
 
+
+    /**
+     * When this app is initially installed, we will need to set up a prompt to allow the app to access the user's camera
+     * @param requestCode code to request
+     * @param permissions description of the requested permissions to be granted
+     * @param grantResults result of granted permissions
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == REQUEST_CAMERA_PERMISSION) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                requestPermissionThenOpenCamera();
+            } else {
+                Toast.makeText(CameraPreviewActivity.this, "CAMERA PERMISSION REQUIRED", Toast.LENGTH_LONG).show();
+                finish();
+            }
+        }
+        if(requestCode == REQUEST_STORAGE_PERMISSION) {
+            if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                requestPermissionThenOpenCamera();
+            } else {
+                Toast.makeText(CameraPreviewActivity.this, "STORAGE PERMISSION REQUIRED", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+
+
     /**
      * Permissions for Camera features
      */
     private void requestPermissionThenOpenCamera() {
         if(ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
             if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                createCameraSourceFront();
+                //createCameraSourceFront();
+                createCameraSource();
             } else {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_STORAGE_PERMISSION);
             }
@@ -260,46 +239,59 @@ public class CameraPreviewActivity extends AppCompatActivity  {
     }
 
 
-        if(previewFaceDetector.isOperational()) {
-            previewFaceDetector.setProcessor(new MultiProcessor.Builder<>(new GraphicFaceTrackerFactory(mGraphicOverlay,this.context)).build());
-        } else {
-            Toast.makeText(context, "FACE DETECTION NOT AVAILABLE", Toast.LENGTH_SHORT).show();
-        }
-        mCameraSource = new CameraSource.Builder(context, previewFaceDetector)
-                .setFacing(CameraSource.CAMERA_FACING_FRONT)
-                .setRequestedFps(30.0f)
-                .build();
-
-        startCameraSource();
-
-    }
-
-    /**
-     *toggle camera source
-     */
-    private void createCameraSourceBack() {
-        previewFaceDetector = new FaceDetector.Builder(context)
-                .setClassificationType(FaceDetector.ALL_CLASSIFICATIONS)
-                .setLandmarkType(FaceDetector.ALL_LANDMARKS)
-                .setMode(FaceDetector.FAST_MODE)
-                .setProminentFaceOnly(true)
-                .setTrackingEnabled(true)
-                .build();
-        if(previewFaceDetector.isOperational()) {
-            previewFaceDetector.setProcessor(new MultiProcessor.Builder<>(new GraphicFaceTrackerFactory(mGraphicOverlay,this.context)).build());
-        } else {
-            Toast.makeText(context, "FACE DETECTION NOT AVAILABLE", Toast.LENGTH_SHORT).show();
-        }
-        mCameraSource = new CameraSource.Builder(context, previewFaceDetector)
-                .setFacing(CameraSource.CAMERA_FACING_BACK)
-                .setRequestedFps(30.0f)
-                .build();
-        startCameraSource();
-
-    }
 
     /**
      * Starts the Camerasource
+     */
+    private void startCameraSource() {
+        if (mCameraSource != null) {
+            cameraVersion.setText("Camera 1");
+            try {
+                //Graphic Overlay declared
+                // When camera source is started
+                mPreview.start(mCameraSource, mGraphicOverlay);
+            } catch (IOException e) {
+                Log.e(TAG, "Unable to start camera source.", e);
+                mCameraSource.release();
+                mCameraSource = null;
+            }
+        }
+
+    }
+
+
+
+    //==============================================================================================
+    // Detector
+    //==============================================================================================
+
+    /**
+     * Creates the face detector and the camera.
+     */
+    private void createCameraSource() {
+        Context context = getApplicationContext();
+        FaceDetector detector = createFaceDetector(context);
+
+        int facing = CameraSource.CAMERA_FACING_FRONT;
+        if (!usingFrontCamera) {
+            facing = CameraSource.CAMERA_FACING_BACK;
+        }
+
+        // For both front facing and rear facing modes, the detector is initialized to do eye landmark classification.
+        // We are using fast mode, and tracking 1 face in front camera view, and multiple faces in rear camera view.
+        // Setting PromentFaceOnly as true when usingFrontCamera will stop scanning for faces when single largest face is found
+        // The former results in greater efficiency, we also increase minfacesize from default for further optimizations
+        mCameraSource = new CameraSource.Builder(context, detector)
+                .setFacing(facing)
+                .setRequestedPreviewSize(320, 240)
+                .setRequestedFps(60.0f)
+                .build();
+    }
+
+
+
+    /**
+     * Callback for camera image capture (deprecated), Takes the image and stores photos in album with the appropriate date
      */
     final CameraSource.PictureCallback cameraSourcePictureCallback = new CameraSource.PictureCallback() {
         private byte[] byteArray;
@@ -340,36 +332,79 @@ public class CameraPreviewActivity extends AppCompatActivity  {
 
     };
 
-
-
-    /* Get the real path from the URI */
-    public String getPathFromURI(Uri contentUri) {
-        String res = null;
-        String[] proj = {MediaStore.Images.Media.DATA};
-        Cursor cursor = getContentResolver().query(contentUri, proj, null, null, null);
-        if (cursor.moveToFirst()) {
-            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            res = cursor.getString(column_index);
-        }
-        cursor.close();
-        return res;
+    /**
+     * Stops this class' instance of CameraSourcePreview
+     */
+    private void stopCameraSource() {
+        mPreview.stop();
     }
 
-    private void startCameraSource() {
-        if (mCameraSource != null) {
-//            cameraVersion.setText("Camera 1");
-            try {
-                mPreview.start(mCameraSource, mGraphicOverlay);
-            } catch (IOException e) {
-                Log.e(TAG, "Unable to start camera source.", e);
-                mCameraSource.release();
-                mCameraSource = null;
+
+    /**
+     * Creates the face detector and associated processing pipeline to support either front facing
+     * mode or rear facing mode.  Checks if the detector is ready to use, and displays a low storage
+     * warning if it was not possible to download the face library.
+     */
+    @NonNull
+    private FaceDetector createFaceDetector(Context context) {
+        // For both front facing and rear facing modes, the detector is initialized to do eye landmark classification.
+        // We are using fast mode, and tracking 1 face in front camera view, and multiple faces in rear camera view.
+        // Setting PromentnFaceOnly as true when usingFrontCamera will stop scanning for faces when single largest face is found
+        // The former results in greater efficiency, we also increase minfacesize from default for further optimizations
+        FaceDetector detector = new FaceDetector.Builder(context)
+                .setLandmarkType(FaceDetector.ALL_LANDMARKS)
+                .setClassificationType(FaceDetector.ALL_CLASSIFICATIONS)
+                .setTrackingEnabled(true)
+                .setMode(FaceDetector.FAST_MODE)
+                .setProminentFaceOnly(usingFrontCamera)
+                .setMinFaceSize(usingFrontCamera ? 0.35f : 0.15f)
+                .build();
+
+        Detector.Processor<Face> processor;
+        if (usingFrontCamera) {
+            // For front facing mode, a single tracker instance is used with an associated focusing processor
+            Tracker<Face> tracker = new GooglyFaceTracker(mGraphicOverlay);
+            processor = new LargestFaceFocusingProcessor.Builder(detector, tracker).build();
+        } else {
+            // For rear facing mode, a factory is used to create per-face tracker instances.  A
+            // tracker is created for each face and is maintained as long as the same face is
+            // visible, enabling per-face state to be maintained over time.  This is used to store
+            // the iris position and velocity for each face independently, simulating the motion of
+            // the eyes of any number of faces over time.
+            MultiProcessor.Factory<Face> factory = new MultiProcessor.Factory<Face>() {
+                @Override
+                public Tracker<Face> create(Face face) {
+                    return new GooglyFaceTracker(mGraphicOverlay);
+                }
+            };
+            processor = new MultiProcessor.Builder<>(factory).build();
+        }
+
+        detector.setProcessor(processor);
+
+        if (!detector.isOperational()) {
+            // Note: The first time that an app using face API is installed on a device, GMS will
+            // download a native library to the device in order to do detection.  Usually this
+            // completes before the app is run for the first time.  But if that download has not yet
+            // completed, then the above call will not detect any faces.
+            //
+            // isOperational() can be used to check if the required native library is currently
+            // available.  The detector will automatically become operational once the library
+            // download completes on device.
+            Log.w(TAG, "Face detector dependencies are not yet available.");
+
+            // Check for low storage.  If there is low storage, the native library will not be
+            // downloaded, so detection will not become operational.
+            IntentFilter lowStorageFilter = new IntentFilter(Intent.ACTION_DEVICE_STORAGE_LOW);
+            boolean hasLowStorage = registerReceiver(null, lowStorageFilter) != null;
+
+            if (hasLowStorage) {
+                Toast.makeText(this, R.string.low_storage_error, Toast.LENGTH_LONG).show();
+                Log.w(TAG, getString(R.string.low_storage_error));
             }
         }
-
-
+        return detector;
     }
-
 
     /**
      * Autofocus feature functionality
@@ -402,27 +437,6 @@ public class CameraPreviewActivity extends AppCompatActivity  {
         }
     };
 
-    /**
-     * Setup Camera permissions
-     */
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == REQUEST_CAMERA_PERMISSION) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                requestPermissionThenOpenCamera();
-            } else {
-                Toast.makeText(CameraPreviewActivity.this, "CAMERA PERMISSION REQUIRED", Toast.LENGTH_LONG).show();
-                finish();
-            }
-        }
-        if(requestCode == REQUEST_STORAGE_PERMISSION) {
-            if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                requestPermissionThenOpenCamera();
-            } else {
-                Toast.makeText(CameraPreviewActivity.this, "STORAGE PERMISSION REQUIRED", Toast.LENGTH_LONG).show();
-            }
-        }
-    }
 
 
 
@@ -463,4 +477,5 @@ public class CameraPreviewActivity extends AppCompatActivity  {
             previewFaceDetector.release();
         }
     }
+
 }

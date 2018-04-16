@@ -41,9 +41,6 @@ public class ImageViewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.imageview);
 
-        //===byteArray = getIntent().getByteArrayExtra("BitmapImage");
-        //===Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
-        //===Drawable d = new BitmapDrawable(getResources(), bmp);
         Bitmap bmp = null;
         String filename = getIntent().getStringExtra("image");
         try {
@@ -54,15 +51,12 @@ public class ImageViewActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-
-
         mPhotoView = findViewById(R.id.iv_photo);
         //mCurrMatrixTv = findViewById(R.id.tv_current_matrix);
 
 
         Drawable d = new BitmapDrawable(getResources(), bmp);
-        //Drawable bitmap = ContextCompat.getDrawable(this, R.drawable.wallpaper);
-        mPhotoView.setImageDrawable(d);
+        //mPhotoView.setImageDrawable(d);
 
         // Lets attach some listeners, not required though!
         //mPhotoView.setOnMatrixChangeListener(new MatrixChangeListener());
