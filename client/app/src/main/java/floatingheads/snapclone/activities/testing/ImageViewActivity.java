@@ -57,7 +57,7 @@ public class ImageViewActivity extends AppCompatActivity {
 
 
         mPhotoView = findViewById(R.id.iv_photo);
-        mCurrMatrixTv = findViewById(R.id.tv_current_matrix);
+        //mCurrMatrixTv = findViewById(R.id.tv_current_matrix);
 
 
         Drawable d = new BitmapDrawable(getResources(), bmp);

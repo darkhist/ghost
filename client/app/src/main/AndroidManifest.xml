@@ -78,10 +78,10 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen">
         </activity>
 
-        <activity android:name=".activities.testing.ImageViewActivity"/>
-            <!--android:screenOrientation="portrait"
+        <activity android:name=".activities.testing.ImageViewActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen">
-        </activity>-->
+        </activity>
         <!--
         <activity android:name=".opencv.MyRealTimeImageProcessing"
             android:screenOrientation="sensorLandscape">
