@@ -1,4 +1,4 @@
-package floatingheads.snapclone.activities;
+package floatingheads.snapclone.activities.testing;
 
 /**
  * Created by Akira on 2/26/2018.
@@ -9,9 +9,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -25,6 +28,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
 import floatingheads.snapclone.R;
 import floatingheads.snapclone.androidScreenUtils.Utils;
 import floatingheads.snapclone.camera2VisionTools.Eyes.GooglyFaceTracker;
@@ -37,12 +41,13 @@ import com.google.android.gms.vision.Tracker;
 import com.google.android.gms.vision.face.Face;
 import com.google.android.gms.vision.face.FaceDetector;
 import com.google.android.gms.vision.face.LargestFaceFocusingProcessor;
-//import com.google.android.gms.vision.CameraSource;
 
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
@@ -93,6 +98,10 @@ public class CameraPreviewActivity extends AppCompatActivity  {
     // MUST BE CAREFUL USING THIS VARIABLE.
     // ANY ATTEMPT TO START CAMERA2 ON API < 21 WILL CRASH.
     private boolean useCamera2 = true;
+
+    //Declare variables
+    private static final int SELECT_PICTURE = 50;
+    ImageView image;
 
     /**
      * Initializes buttons for the camera screen and provides corresponding functionality to each button
@@ -285,6 +294,7 @@ public class CameraPreviewActivity extends AppCompatActivity  {
      * Callback for camera image capture (deprecated), Takes the image and stores photos in album with the appropriate date
      */
     final CameraSource.PictureCallback cameraSourcePictureCallback = new CameraSource.PictureCallback() {
+        private byte[] byteArray;
         @Override
         //***************************THIS IS WHERE THE "MAGIC" HAPPENS!!!"
         public void onPictureTaken(Bitmap picture) {
@@ -298,31 +308,59 @@ public class CameraPreviewActivity extends AppCompatActivity  {
                     takePictureButton.setEnabled(true);
                 }
             });
+
             FileOutputStream out = null;
             try {
-                //Functionality for saving image
-                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-                String path = Environment.getExternalStorageDirectory().toString()+File.separator+"Pictures"+File.separator+"SnapClone";
-                File file = new File(path, "SnapClone"+timeStamp+".jpeg");
-                fileOut = new FileOutputStream(file);
-                picture.compress(Bitmap.CompressFormat.JPEG, 85, fileOut);
-                fileOut.flush(); // Not really required
-                fileOut.close(); // do not forget to close the stream
+                String filename = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+                FileOutputStream stream = context.openFileOutput(filename, Context.MODE_PRIVATE);
+                picture.compress(Bitmap.CompressFormat.PNG, 100, stream);
+
+                //Cleanup
+                stream.close();
+                picture.recycle();
+
+                //pop intent
+                Intent intent = new Intent(getApplicationContext(), ImageViewActivity.class);
+                intent.putExtra("image", filename);
+                startActivity(intent);
+
             } catch (Exception e) {
                 e.printStackTrace();
-            } finally {
-                try {
-                    if (out != null) {
-                        out.close();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
             }
         }
+
+
     };
 
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            setContentView(R.layout.imageview);
+            /*if (requestCode == SELECT_PICTURE) {
+                // Get the url from data
+                Uri selectedImageUri = data.getData();
+                if (null != selectedImageUri) {
+                    // Get the path from the Uri
+                    String path = getPathFromURI(selectedImageUri);
+                    Log.i("MainActivity", "Image Path : " + path);
+                    // Set the image in ImageView
+                    image.setImageURI(selectedImageUri);
+                }
+            }*/
+        }
+    }
 
+    /* Get the real path from the URI */
+    public String getPathFromURI(Uri contentUri) {
+        String res = null;
+        String[] proj = {MediaStore.Images.Media.DATA};
+        Cursor cursor = getContentResolver().query(contentUri, proj, null, null, null);
+        if (cursor.moveToFirst()) {
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            res = cursor.getString(column_index);
+        }
+        cursor.close();
+        return res;
+    }
 
     /**
      * Stops this class' instance of CameraSourcePreview
@@ -428,6 +466,7 @@ public class CameraPreviewActivity extends AppCompatActivity  {
             return false;
         }
     };
+
 
 
 
