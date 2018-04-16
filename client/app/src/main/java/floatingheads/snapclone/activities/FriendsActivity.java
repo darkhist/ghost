@@ -39,6 +39,11 @@ public class FriendsActivity extends AppCompatActivity {
         rl.addView(ll);
 
         viewFriends.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Launches NavBarActivity
+             * NavBarActivity contains Fragments which allows the user to navigate the app.
+             * @param v
+             */
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(getApplicationContext(), NavBarActivity.class);
@@ -48,6 +53,12 @@ public class FriendsActivity extends AppCompatActivity {
 
         //Add a friend to your friend's list
         addFriends.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Launches AddFriendsActivity
+             * AddFriendsActivity Lists all users in the USERS database and allows the local user to view their
+             * profiles and send them friend requests.
+             * @param v
+             */
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(getApplicationContext(), AddFriendsActivity.class);

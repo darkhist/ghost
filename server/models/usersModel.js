@@ -2,22 +2,35 @@
 
 // This file defines behavior for interation with the USERS Table
 
-const config = require('.././config.json');
+const connection = require('../database');
 
-exports.main = async () => {
-  const mysql = require('mysql2/promise');
+exports.search = async data => {
+  try {
+    data = await connection.query('SELECT * FROM USERS');
+  } catch (err) {
+    console.error('Something went wrong!' + err.stack);
+  }
+  return data;
+};
 
-  // Establish Database Connection
-  const conn = await mysql.createConnection({
-    host: `${config.host}`,
-    user: `${config.user}`,
-    password: `${config.password}`,
-    database: `${config.schema}`
-  });
+exports.add = async (firstName, lastName, username, password, email) => {
+  try {
+    await connection.query(
+      `INSERT INTO USERS 
+    SET first_name = ?, last_name = ?, username = ?, password = ?, email = ?, creationDate = NOW()`,
+      [firstName, lastName, username, password, email]
+    );
+  } catch (err) {
+    console.error('Something went wrong!' + err.stack);
+  }
+};
 
-  // Query USERS Table
-  const results = await conn.execute('SELECT * FROM USERS');
-
-  // Return Rows from USERS Table
-  return results[0];
-}
+exports.getPassword = async (email, password = undefined) => {
+  try {
+    password = await connection.query(`SELECT password FROM USERS WHERE email = ?`, [email]);
+  } catch (err) {
+    console.error('Something went wrong!' + err.stack);
+  }
+  // Grab the password from the returned row
+  return password[0].password;
+};
