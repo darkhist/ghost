@@ -21,12 +21,15 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 
 import floatingheads.snapclone.R;
+import floatingheads.snapclone.activities.FriendsActivity;
+import floatingheads.snapclone.activities.MessagesListActivity;
 import floatingheads.snapclone.androidScreenUtils.Utils;
 import floatingheads.snapclone.camera2VisionTools.Eyes.GooglyFaceTracker;
 
@@ -59,7 +62,6 @@ public class CameraPreviewActivity extends AppCompatActivity  {
     private Context context;
     private static final int REQUEST_CAMERA_PERMISSION = 200;
     private static final int REQUEST_STORAGE_PERMISSION = 201;
-    private TextView cameraVersion;
     private ImageView ivAutoFocus;
 
     // CAMERA VERSION ONE DECLARATIONS
@@ -70,10 +72,10 @@ public class CameraPreviewActivity extends AppCompatActivity  {
     private FaceDetector previewFaceDetector = null;
     private GraphicOverlay mGraphicOverlay;
     private boolean wasActivityResumed = false;
-    private boolean isRecordingVideo = false;
-    private Button takePictureButton;
-    private Button switchButton;
-    private Button videoButton;
+    private ImageButton takePictureButton;
+    private ImageButton switchButton;
+    private ImageButton mFriends;
+    private ImageButton mMsgs;
     private int counter;
     private Random rand;
 
@@ -109,37 +111,32 @@ public class CameraPreviewActivity extends AppCompatActivity  {
         setContentView(R.layout.activity_camera_preview);
         context = getApplicationContext();
 
-
-        takePictureButton = (Button) findViewById(R.id.btn_takepicture);
-        switchButton = (Button) findViewById(R.id.btn_switch);
-        videoButton = (Button) findViewById(R.id.btn_video);
+        takePictureButton = (ImageButton) findViewById(R.id.btn_takepicture);
+        switchButton = (ImageButton) findViewById(R.id.btn_switch);
         mPreview = (CameraSourcePreview) findViewById(R.id.preview2);
         mGraphicOverlay = (GraphicOverlay) findViewById(R.id.faceOverlay);
-        cameraVersion = (TextView) findViewById(R.id.cameraVersion);
         ivAutoFocus = (ImageView) findViewById(R.id.ivAutoFocus);
-        counter = 0;
-
-        //New Directory path
-        String snapCloneDir = Environment.getExternalStorageDirectory()+File.separator+"Pictures"+File.separator+"SnapClone";
-
-        //listener toggle - get rid of need for 2 camerasource view methods
-        switchButton.setOnClickListener(mFlipButtonListener);
-        if (savedInstanceState != null) {
-            usingFrontCamera = savedInstanceState.getBoolean("IsFrontFacing");
-        }
-
-        directory = new File(Environment.getExternalStorageDirectory()+File.separator+"Pictures"+File.separator+"SnapClone");
-        directory.mkdir();
 
         if(checkGooglePlayAvailability()) {
             requestPermissionThenOpenCamera();
+
+            //listener toggle - get rid of need for 2 camerasource view methods
+            switchButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v){
+                    if (mCameraSource != null) {
+                        usingFrontCamera = !usingFrontCamera;
+                    }
+                    stopCameraSource();
+                    createCameraSource();
+                }
+            });
 
             //Image capture listener
             takePictureButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     switchButton.setEnabled(false);
-                    videoButton.setEnabled(false);
                     takePictureButton.setEnabled(false);
                     if(mCameraSource != null)mCameraSource.takePicture(cameraSourceShutterCallback, cameraSourcePictureCallback);
                 }
@@ -147,29 +144,36 @@ public class CameraPreviewActivity extends AppCompatActivity  {
 
             mPreview.setOnTouchListener(CameraPreviewTouchListener);
         }
+
+        // On Log In Button Click - Open Log In Screen
+        mFriends = findViewById(R.id.btn_friends);
+        mFriends.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getApplicationContext(), FriendsActivity.class);
+                startActivity(i);
+            }
+        });
+
+        // On Log In Button Click - Open Log In Screen
+        mMsgs = findViewById(R.id.btn_msgs);
+        mMsgs.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getApplicationContext(), MessagesListActivity.class);
+                startActivity(i);
+            }
+        });
+
+        //New Directory path
+        String snapCloneDir = Environment.getExternalStorageDirectory()+File.separator+"Pictures"+File.separator+"SnapClone";
+
+        directory = new File(Environment.getExternalStorageDirectory()+File.separator+"Pictures"+File.separator+"SnapClone");
+        directory.mkdir();
     }
 
 
     final CameraSource.ShutterCallback cameraSourceShutterCallback = new CameraSource.ShutterCallback() {@Override public void onShutter() {Log.d(TAG, "Shutter Callback!");}};
-
-
-    /**
-     * Toggles between front-facing and rear-facing modes.
-     */
-    private View.OnClickListener mFlipButtonListener = new View.OnClickListener() {
-        public void onClick(View v) {
-            usingFrontCamera = !usingFrontCamera;
-
-            if (mCameraSource != null) {
-                mCameraSource.release();
-                mCameraSource = null;
-            }
-
-            createCameraSource();
-            startCameraSource();
-        }
-    };
-
 
     /**
      * Check the device to make sure it has the Google Play Services APK. If
@@ -240,7 +244,6 @@ public class CameraPreviewActivity extends AppCompatActivity  {
      */
     private void startCameraSource() {
         if (mCameraSource != null) {
-            cameraVersion.setText("Camera 1");
             try {
                 //Graphic Overlay declared
                 // When camera source is started
@@ -279,8 +282,10 @@ public class CameraPreviewActivity extends AppCompatActivity  {
         mCameraSource = new CameraSource.Builder(context, detector)
                 .setFacing(facing)
                 .setRequestedPreviewSize(320, 240)
-                .setRequestedFps(60.0f)
+                .setRequestedFps(30.0f)
                 .build();
+
+        startCameraSource();
     }
 
 
@@ -299,7 +304,6 @@ public class CameraPreviewActivity extends AppCompatActivity  {
                 @Override
                 public void run() {
                     switchButton.setEnabled(true);
-                    videoButton.setEnabled(true);
                     takePictureButton.setEnabled(true);
                 }
             });
@@ -341,7 +345,7 @@ public class CameraPreviewActivity extends AppCompatActivity  {
      * warning if it was not possible to download the face library.
      */
     @NonNull
-    private FaceDetector createFaceDetector(Context context) {
+    protected FaceDetector createFaceDetector(Context context) {
         // For both front facing and rear facing modes, the detector is initialized to do eye landmark classification.
         // We are using fast mode, and tracking 1 face in front camera view, and multiple faces in rear camera view.
         // Setting PromentnFaceOnly as true when usingFrontCamera will stop scanning for faces when single largest face is found
