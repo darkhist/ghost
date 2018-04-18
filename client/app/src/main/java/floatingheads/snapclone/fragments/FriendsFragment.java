@@ -48,13 +48,26 @@ public class FriendsFragment extends Fragment {
     private String usersURL = Const.usersURL;
     private String friendsURL = Const.friendsURL;
 
-    User masterUser;
+    /**
+     * User which contains logged in user's credentials
+     */
+    public User masterUser;
 
+    /**
+     * Default constructor calls constructor for Fragment class initialized variables
+     */
     public FriendsFragment() {
         super();
         searchView = null;
     }
 
+    /**
+     * Returns a View which contains a list of the user's friends, an add friends button, and a search bar
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -163,7 +176,6 @@ public class FriendsFragment extends Fragment {
         });
 
         // add friends to arraylist
-        // TODO get these friends from database
 //        friendArrayList.add(new Friend(1, "Quinn", "Salas", Friend.STATUS_ACCEPTED));
 //        friendArrayList.add(new Friend(2, "Akira", "Demoss", Friend.STATUS_ACCEPTED));
 //        friendArrayList.add(new Friend(4, "Simanta", "Mitra", Friend.STATUS_ACCEPTED));
@@ -239,6 +251,11 @@ public class FriendsFragment extends Fragment {
         return inflatedView;
     }
 
+    /**
+     * Functionality for search bar
+     * @param menu
+     * @param menuInflater
+     */
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
         menuInflater.inflate(R.menu.search_menu_item, menu);

@@ -9,8 +9,16 @@ import org.json.JSONArray;
 
 public interface VolleyCallback {
 
+    /**
+     * Implements onResponse from Volley HTTP request for JSONArrays
+     * @param result
+     */
     void onSuccessResponse(JSONArray result);
 
+    /**
+     * Implements onErrorResponse from Volley HTTP request
+     * @param volleyError
+     */
     void onErrorResponse(VolleyError volleyError);
 
 }

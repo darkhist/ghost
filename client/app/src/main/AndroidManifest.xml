@@ -66,13 +66,24 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".activities.CameraPreviewActivity"
+
+
+
+        <activity android:name=".activities.CameraPreviewActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" />
-        <activity
-            android:name=".opencv.MyRealTimeImageProcessing"
-            android:screenOrientation="sensorLandscape" />
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen">
+        </activity>
+
+        <activity android:name=".activities.ImageViewActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen">
+        </activity>
+
+        <activity android:name=".activities.CVImgProcCameraActivity"
+            android:screenOrientation="sensorLandscape">
+        </activity>
+
+
         <activity
             android:name=".activities.LoginActivity"
             android:label="@string/title_activity_login"
@@ -109,13 +120,13 @@
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="@string/default_notification_channel_id"/>
 
-        <service
+        <!--<service
             android:exported="false"
             android:name=".firebase.MyJobService">
             <intent-filter>
                 <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE" />
             </intent-filter>
-        </service>
+        </service>-->
 
         <meta-data
             android:name="preloaded_fonts"

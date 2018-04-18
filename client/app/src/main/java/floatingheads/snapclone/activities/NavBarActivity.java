@@ -18,6 +18,9 @@ import floatingheads.snapclone.objects.User;
 
 public class NavBarActivity extends AppCompatActivity {
     // User Information
+    /**
+     * User which contains all credentials of logged in user
+     */
     public User masterUser;
 
     // UI
@@ -61,6 +64,11 @@ public class NavBarActivity extends AppCompatActivity {
         mMainNav.getMenu().getItem(0).setChecked(true); // selects message nav item as default
 
         mMainNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            /**
+             * Opens Fragments for the user's profile, friends list, or messages.
+             * @param item
+             * @return
+             */
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {

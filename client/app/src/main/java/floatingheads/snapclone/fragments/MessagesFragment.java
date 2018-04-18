@@ -24,6 +24,13 @@ public class MessagesFragment extends Fragment {
         // Required empty public constructor
     }
 
+    /**
+     * Return View which contains Message data from friends
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -37,6 +44,7 @@ public class MessagesFragment extends Fragment {
 
         Context messagesFragmentContext = this.getContext();
 
+        // TODO integrate with firebase
         ArrayList<Contact> contactArrayList = new ArrayList<>();
         contactArrayList.add(new Contact(1, "Quinn", "Salas", "yo wassup homie?"));
         contactArrayList.add(new Contact(2, "Akira", "Demoss", "New Multimedia Message"));

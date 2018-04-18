@@ -15,10 +15,20 @@ public class Friend extends User implements Comparable<Friend> {
     private int status;
 
 
+    /**
+     * Constructor calls default User constructor
+     */
     public Friend() {
         super();
     }
 
+    /**
+     * Constructor calls default constructor and initialized variables using User methods
+     * @param userID
+     * @param userFirstName
+     * @param userLastName
+     * @param status
+     */
     public Friend(int userID, String userFirstName, String userLastName, int status) {
         this();
         setId(userID);
@@ -28,6 +38,15 @@ public class Friend extends User implements Comparable<Friend> {
         setAvatar();
     }
 
+    /**
+     * Constructor calls default constructor and initialized variables using User methods
+     * Initializes avatar
+     * @param userID
+     * @param userFirstName
+     * @param userLastName
+     * @param status
+     * @param avatar
+     */
     public Friend(int userID, String userFirstName, String userLastName, int status, Bitmap avatar) {
         this(userID, userFirstName, userLastName, status);
         setAvatar();
@@ -65,6 +84,17 @@ public class Friend extends User implements Comparable<Friend> {
         return status == STATUS_BLOCKED;
     }
 
+    /**
+     * Compared friends based on alphabetical order of names
+     * A name is the friends first and last name
+     *
+     * Returns -1 if friend 1 comes before friend 2 (o)
+     * Returns 1 if friend 1 comes after friend 2 (o)
+     * Returns 0 if friends names are identical
+     *
+     * @param o
+     * @return
+     */
 //    @Override
     public int compareTo(@NonNull Friend o) {
 
