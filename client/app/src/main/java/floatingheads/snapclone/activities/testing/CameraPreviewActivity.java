@@ -20,10 +20,8 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -74,10 +72,13 @@ public class CameraPreviewActivity extends AppCompatActivity  {
     private boolean wasActivityResumed = false;
     private ImageButton takePictureButton;
     private ImageButton switchButton;
-    private ImageButton mFriends;
-    private ImageButton mMsgs;
+    private ImageButton friendsButton;
+    private ImageButton msgsButton;
+    private ImageButton filtersButton;
     private int counter;
     private Random rand;
+    private boolean isSystemUiShown;
+    private View decorView;
 
     // FILE STORAGE DECLARATIONS
     private File directory;
@@ -107,6 +108,8 @@ public class CameraPreviewActivity extends AppCompatActivity  {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //decorView = getWindow().getDecorView();
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_camera_preview);
         context = getApplicationContext();
@@ -115,7 +118,10 @@ public class CameraPreviewActivity extends AppCompatActivity  {
         switchButton = (ImageButton) findViewById(R.id.btn_switch);
         mPreview = (CameraSourcePreview) findViewById(R.id.preview2);
         mGraphicOverlay = (GraphicOverlay) findViewById(R.id.faceOverlay);
+        friendsButton = (ImageButton) findViewById(R.id.btn_friends);
         ivAutoFocus = (ImageView) findViewById(R.id.ivAutoFocus);
+        msgsButton = (ImageButton) findViewById(R.id.btn_msgs);
+        filtersButton = (ImageButton) findViewById(R.id.btn_filters);
 
         if(checkGooglePlayAvailability()) {
             requestPermissionThenOpenCamera();
@@ -136,42 +142,100 @@ public class CameraPreviewActivity extends AppCompatActivity  {
             takePictureButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
                     switchButton.setEnabled(false);
                     takePictureButton.setEnabled(false);
-                    if(mCameraSource != null)mCameraSource.takePicture(cameraSourceShutterCallback, cameraSourcePictureCallback);
+                    ivAutoFocus.setEnabled(false);
+
+                    switchButton.setVisibility(View.GONE);
+                    takePictureButton.setVisibility(View.GONE);
+                    msgsButton.setVisibility(View.GONE);
+                    friendsButton.setVisibility(View.GONE);
+                    filtersButton.setVisibility(View.GONE);
+
+                    if(mCameraSource != null)
+                        mCameraSource.takePicture(cameraSourceShutterCallback, cameraSourcePictureCallback);
+                }
+            });
+
+            // On Log In Button Click - Open Log In Screen
+            friendsButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent i = new Intent(getApplicationContext(), FriendsActivity.class);
+                    startActivity(i);
+                }
+            });
+
+            // On Log In Button Click - Open Log In Screen
+            msgsButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent i = new Intent(getApplicationContext(), MessagesListActivity.class);
+                    startActivity(i);
+                }
+            });
+
+            // On Log In Button Click - Open Log In Screen
+            filtersButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent i = new Intent(getApplicationContext(), ImageViewActivity.class);
+                    startActivity(i);
                 }
             });
 
             mPreview.setOnTouchListener(CameraPreviewTouchListener);
         }
 
-        // On Log In Button Click - Open Log In Screen
-        mFriends = findViewById(R.id.btn_friends);
-        mFriends.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(), FriendsActivity.class);
-                startActivity(i);
-            }
-        });
-
-        // On Log In Button Click - Open Log In Screen
-        mMsgs = findViewById(R.id.btn_msgs);
-        mMsgs.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(), MessagesListActivity.class);
-                startActivity(i);
-            }
-        });
-
         //New Directory path
         String snapCloneDir = Environment.getExternalStorageDirectory()+File.separator+"Pictures"+File.separator+"SnapClone";
-
         directory = new File(Environment.getExternalStorageDirectory()+File.separator+"Pictures"+File.separator+"SnapClone");
         directory.mkdir();
     }
 
+    /**
+     * Callback for camera image capture (deprecated), Takes the image and stores photos in album with the appropriate date
+     */
+    final CameraSource.PictureCallback cameraSourcePictureCallback = new CameraSource.PictureCallback() {
+        @Override
+
+        //***************************THIS IS WHERE THE "MAGIC" HAPPENS!!!"
+        public void onPictureTaken(Bitmap picture) {
+            mPreview.stop();
+            Log.d(TAG, "Taken picture is here!");
+            //***************************BUTTONS RUN ON THREAD"
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    ivAutoFocus.setEnabled(true);
+                    switchButton.setEnabled(true);
+                    takePictureButton.setEnabled(true);
+                }
+            });
+
+            FileOutputStream out = null;
+            try {
+                String filename = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+                FileOutputStream stream = context.openFileOutput(filename, Context.MODE_PRIVATE);
+                picture.compress(Bitmap.CompressFormat.PNG, 100, stream);
+
+                //Cleanup
+                stream.close();
+                picture.recycle();
+
+                //pop intent
+                Intent intent = new Intent(getApplicationContext(), ImageViewActivity.class);
+                intent.putExtra("image", filename);
+                intent.putExtra("usingFrontCamera", usingFrontCamera);
+                startActivity(intent);
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    };
 
     final CameraSource.ShutterCallback cameraSourceShutterCallback = new CameraSource.ShutterCallback() {@Override public void onShutter() {Log.d(TAG, "Shutter Callback!");}};
 
@@ -219,8 +283,6 @@ public class CameraPreviewActivity extends AppCompatActivity  {
         }
     }
 
-
-
     /**
      * Permissions for Camera features
      */
@@ -236,8 +298,6 @@ public class CameraPreviewActivity extends AppCompatActivity  {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION);
         }
     }
-
-
 
     /**
      * Starts the Camerasource
@@ -256,8 +316,6 @@ public class CameraPreviewActivity extends AppCompatActivity  {
         }
 
     }
-
-
 
     //==============================================================================================
     // Detector
@@ -289,47 +347,6 @@ public class CameraPreviewActivity extends AppCompatActivity  {
     }
 
 
-
-    /**
-     * Callback for camera image capture (deprecated), Takes the image and stores photos in album with the appropriate date
-     */
-    final CameraSource.PictureCallback cameraSourcePictureCallback = new CameraSource.PictureCallback() {
-        private byte[] byteArray;
-        @Override
-        //***************************THIS IS WHERE THE "MAGIC" HAPPENS!!!"
-        public void onPictureTaken(Bitmap picture) {
-            Log.d(TAG, "Taken picture is here!");
-            //***************************BUTTONS RUN ON THREAD"
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    switchButton.setEnabled(true);
-                    takePictureButton.setEnabled(true);
-                }
-            });
-
-            FileOutputStream out = null;
-            try {
-                String filename = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-                FileOutputStream stream = context.openFileOutput(filename, Context.MODE_PRIVATE);
-                picture.compress(Bitmap.CompressFormat.PNG, 100, stream);
-
-                //Cleanup
-                stream.close();
-                picture.recycle();
-
-                //pop intent
-                Intent intent = new Intent(getApplicationContext(), ImageViewActivity.class);
-                intent.putExtra("image", filename);
-                startActivity(intent);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-
-    };
 
     /**
      * Stops this class' instance of CameraSourcePreview
@@ -444,6 +461,11 @@ public class CameraPreviewActivity extends AppCompatActivity  {
     protected void onResume() {
         super.onResume();
         if(wasActivityResumed)
+            switchButton.setVisibility(View.VISIBLE);
+            takePictureButton.setVisibility(View.VISIBLE);
+            msgsButton.setVisibility(View.VISIBLE);
+            friendsButton.setVisibility(View.VISIBLE);
+            filtersButton.setVisibility(View.VISIBLE);
             //If the CAMERA2 is paused then resumed, it won't start again unless creating the whole camera again.
             startCameraSource();
 
@@ -458,8 +480,6 @@ public class CameraPreviewActivity extends AppCompatActivity  {
         wasActivityResumed = true;
         stopCameraSource();
     }
-
-
 
     /**
      * on destroy

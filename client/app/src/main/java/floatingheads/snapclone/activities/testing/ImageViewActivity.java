@@ -1,5 +1,7 @@
 package floatingheads.snapclone.activities.testing;
 
+import floatingheads.snapclone.R;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -11,6 +13,8 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,6 +22,8 @@ import android.widget.Toast;
 import java.io.FileInputStream;
 
 import floatingheads.snapclone.R;
+import floatingheads.snapclone.activities.FriendsActivity;
+import floatingheads.snapclone.camera2VisionTools.CameraSource;
 
 /**
  * Created by Akira on 4/15/2018.
@@ -35,13 +41,38 @@ public class ImageViewActivity extends AppCompatActivity {
     private TextView mCurrMatrixTv;
     private Toast mCurrentToast;
     private Matrix mCurrentDisplayMatrix = null;
+    private Bitmap bOut;
+    private boolean usingFront;
+    private ImageButton sendButton;
+    private ImageButton saveButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.imageview);
 
+        sendButton = (ImageButton) findViewById(R.id.btn_send);
+        saveButton = (ImageButton) findViewById(R.id.btn_save);
+
+        sendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getApplicationContext(), FriendsActivity.class);
+                startActivity(i);
+            }
+        });
+
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Pop up message indicating image saved
+            }
+        });
+
+
+
         Bitmap bmp = null;
+        usingFront = getIntent().getExtras().getBoolean("usingFrontCamera");
         String filename = getIntent().getStringExtra("image");
         try {
             FileInputStream is = this.openFileInput(filename);
@@ -54,9 +85,24 @@ public class ImageViewActivity extends AppCompatActivity {
         mPhotoView = findViewById(R.id.iv_photo);
         //mCurrMatrixTv = findViewById(R.id.tv_current_matrix);
 
+        if(!usingFront){
+            Drawable d = new BitmapDrawable(getResources(), bmp);
+            mPhotoView.setImageDrawable(d);
+        }
 
-        Drawable d = new BitmapDrawable(getResources(), bmp);
-        mPhotoView.setImageDrawable(d);
+        else {
+
+            Matrix matrix = new Matrix();
+            matrix.preScale(-1.0f, 1.0f);
+            bOut = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), matrix, true);
+            Drawable d = new BitmapDrawable(getResources(), bOut);
+            mPhotoView.setImageDrawable(d);
+
+        }
+
+
+
+
 
         // Lets attach some listeners, not required though!
         //mPhotoView.setOnMatrixChangeListener(new MatrixChangeListener());
