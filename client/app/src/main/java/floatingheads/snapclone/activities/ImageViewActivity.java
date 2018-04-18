@@ -57,6 +57,7 @@ public class ImageViewActivity extends AppCompatActivity {
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //Map to where you want to send the bitmap
                 Intent i = new Intent(getApplicationContext(), FriendsActivity.class);
                 startActivity(i);
             }
@@ -71,6 +72,8 @@ public class ImageViewActivity extends AppCompatActivity {
 
         Bitmap bmp = null;
         usingFront = getIntent().getExtras().getBoolean("usingFrontCamera");
+
+        //Getting the bitmap sent in CameraPreviewActivity
         String filename = getIntent().getStringExtra("image");
         try {
             FileInputStream is = this.openFileInput(filename);
