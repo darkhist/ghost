@@ -212,6 +212,7 @@ public class CameraPreviewActivity extends AppCompatActivity  {
                 }
             });
 
+            //Sending the bitmap to ImageViewActivity
             FileOutputStream out = null;
             try {
                 String filename = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());

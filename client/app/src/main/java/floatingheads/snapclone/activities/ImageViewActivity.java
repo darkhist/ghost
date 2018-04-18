@@ -73,6 +73,8 @@ public class ImageViewActivity extends AppCompatActivity {
 
         Bitmap bmp = null;
         usingFront = getIntent().getExtras().getBoolean("usingFrontCamera");
+
+        //Getting the bitmap sent in CameraPreviewActivity
         String filename = getIntent().getStringExtra("image");
         try {
             FileInputStream is = this.openFileInput(filename);
