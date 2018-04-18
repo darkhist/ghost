@@ -1,4 +1,4 @@
-package floatingheads.snapclone.activities.testing;
+package floatingheads.snapclone.ImageViewGestures;
 
 import android.view.MotionEvent;
 

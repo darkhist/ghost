@@ -1,4 +1,4 @@
-package floatingheads.snapclone.activities.testing;
+package floatingheads.snapclone.activities;
 
 import floatingheads.snapclone.R;
 import android.content.Intent;
@@ -9,7 +9,6 @@ import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -21,9 +20,10 @@ import android.widget.Toast;
 
 import java.io.FileInputStream;
 
-import floatingheads.snapclone.R;
-import floatingheads.snapclone.activities.FriendsActivity;
-import floatingheads.snapclone.camera2VisionTools.CameraSource;
+import floatingheads.snapclone.ImageViewGestures.OnMatrixChangedListener;
+import floatingheads.snapclone.ImageViewGestures.OnPhotoTapListener;
+import floatingheads.snapclone.ImageViewGestures.OnSingleFlingListener;
+import floatingheads.snapclone.ImageViewGestures.PhotoView;
 
 /**
  * Created by Akira on 4/15/2018.

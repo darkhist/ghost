@@ -1,4 +1,4 @@
-package floatingheads.snapclone.activities.testing;
+package floatingheads.snapclone.activities;
 
 /**
  * Created by Akira on 2/26/2018.
@@ -26,8 +26,6 @@ import android.widget.Toast;
 
 
 import floatingheads.snapclone.R;
-import floatingheads.snapclone.activities.FriendsActivity;
-import floatingheads.snapclone.activities.MessagesListActivity;
 import floatingheads.snapclone.androidScreenUtils.Utils;
 import floatingheads.snapclone.camera2VisionTools.Eyes.GooglyFaceTracker;
 

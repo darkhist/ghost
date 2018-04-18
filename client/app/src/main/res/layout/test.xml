@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:layout_alignParentBottom="false"
     android:background="#0099aa"
-    tools:context="floatingheads.snapclone.activities.testing.CameraPreviewActivity">
+    tools:context="floatingheads.snapclone.activities.CameraPreviewActivity">
 
     <ImageView
         android:id="@+id/imageView"

@@ -69,12 +69,12 @@
 
 
 
-        <activity android:name=".activities.testing.CameraPreviewActivity"
+        <activity android:name=".activities.CameraPreviewActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen">
         </activity>
 
-        <activity android:name=".activities.testing.ImageViewActivity"
+        <activity android:name=".activities.ImageViewActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen">
         </activity>

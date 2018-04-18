@@ -10,7 +10,6 @@ import android.widget.Button;
 
 
 import floatingheads.snapclone.R;
-import floatingheads.snapclone.activities.testing.CameraPreviewActivity;
 
 
 public class MainActivity extends AppCompatActivity {
