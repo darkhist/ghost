@@ -1,6 +1,5 @@
 package floatingheads.snapclone.activities;
 
-import floatingheads.snapclone.R;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -24,6 +23,7 @@ import floatingheads.snapclone.ImageViewGestures.OnMatrixChangedListener;
 import floatingheads.snapclone.ImageViewGestures.OnPhotoTapListener;
 import floatingheads.snapclone.ImageViewGestures.OnSingleFlingListener;
 import floatingheads.snapclone.ImageViewGestures.PhotoView;
+import floatingheads.snapclone.R;
 
 /**
  * Created by Akira on 4/15/2018.
@@ -68,8 +68,6 @@ public class ImageViewActivity extends AppCompatActivity {
                 //Pop up message indicating image saved
             }
         });
-
-
 
         Bitmap bmp = null;
         usingFront = getIntent().getExtras().getBoolean("usingFrontCamera");

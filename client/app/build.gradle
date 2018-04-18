@@ -16,7 +16,6 @@ android {
             moduleName "detection_based_tracker"
             abiFilters "armeabi-v7a"
         }
-
     }
 
     buildTypes {

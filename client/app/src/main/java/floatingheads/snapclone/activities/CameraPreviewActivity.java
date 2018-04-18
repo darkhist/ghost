@@ -24,11 +24,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-
-import floatingheads.snapclone.R;
-import floatingheads.snapclone.androidScreenUtils.Utils;
-import floatingheads.snapclone.camera2VisionTools.Eyes.GooglyFaceTracker;
-
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.vision.Detector;
@@ -38,7 +33,6 @@ import com.google.android.gms.vision.face.Face;
 import com.google.android.gms.vision.face.FaceDetector;
 import com.google.android.gms.vision.face.LargestFaceFocusingProcessor;
 
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -46,8 +40,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
 
+import floatingheads.snapclone.R;
+import floatingheads.snapclone.androidScreenUtils.Utils;
 import floatingheads.snapclone.camera2VisionTools.CameraSource;
 import floatingheads.snapclone.camera2VisionTools.CameraSourcePreview;
+import floatingheads.snapclone.camera2VisionTools.Eyes.GooglyFaceTracker;
 import floatingheads.snapclone.camera2VisionTools.GraphicOverlay;
 
 /**
@@ -182,7 +179,6 @@ public class CameraPreviewActivity extends AppCompatActivity  {
                     startActivity(i);
                 }
             });
-
             mPreview.setOnTouchListener(CameraPreviewTouchListener);
         }
 
@@ -227,8 +223,6 @@ public class CameraPreviewActivity extends AppCompatActivity  {
                 intent.putExtra("image", filename);
                 intent.putExtra("usingFrontCamera", usingFrontCamera);
                 startActivity(intent);
-
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
