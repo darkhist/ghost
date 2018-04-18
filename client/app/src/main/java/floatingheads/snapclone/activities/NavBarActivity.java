@@ -10,14 +10,13 @@ import android.view.MenuItem;
 import android.widget.FrameLayout;
 
 import floatingheads.snapclone.R;
+import floatingheads.snapclone.fragments.ChatFragment;
 import floatingheads.snapclone.fragments.FriendsFragment;
 import floatingheads.snapclone.fragments.MessagesFragment;
 import floatingheads.snapclone.fragments.ProfileFragment;
-import floatingheads.snapclone.fragments.ChatFragment;
 import floatingheads.snapclone.objects.User;
 
 public class NavBarActivity extends AppCompatActivity {
-
     // User Information
     public User masterUser;
 
@@ -36,16 +35,7 @@ public class NavBarActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nav_bar);
 
-//        String strUid = getIntent().getStringExtra("SESSION_UID");
-//        int uid = Integer.parseInt(strUid);
-
-//        int tempID = getIntent().getExtras().getInt("uid");
-//        String firstName = getIntent().getExtras().getString("firstName");
-//        String lastName = getIntent().getExtras().getString("lastName");
-//        String username = getIntent().getExtras().getString("username");
-//        String email = getIntent().getExtras().getString("email");
-
-        // create bundle to pass user data< to other fragments
+        // create bundle to pass user data to other fragments
 
         // users
         Bundle masterUserBundle = new Bundle();
@@ -54,22 +44,15 @@ public class NavBarActivity extends AppCompatActivity {
         masterUserBundle.putString("lastName", getIntent().getExtras().getString("lastName"));
         masterUserBundle.putString("username", getIntent().getExtras().getString("username"));
         masterUserBundle.putString("email", getIntent().getExtras().getString("email"));
-//        // friends
-//        masterUserBundle.putString("friends", getIntent().getExtras().getString("friends"));
-//        masterUserBundle.putString("pending", getIntent().getExtras().getString("pending"));
-//        masterUserBundle.putString("rejected", getIntent().getExtras().getString("rejected"));
-//        masterUserBundle.putString("blocked", getIntent().getExtras().getString("blocked"));
 
-        mMainNav = (BottomNavigationView) findViewById(R.id.navigation);
-        mMainFrame = (FrameLayout) findViewById(R.id.main_frame);
+        mMainNav = findViewById(R.id.navigation);
+        mMainFrame = findViewById(R.id.main_frame);
 
         profileFragment = new ProfileFragment();
         profileFragment.setArguments(masterUserBundle);
 
         friendsFragment = new FriendsFragment();
         friendsFragment.setArguments(masterUserBundle);
-
-//        notisFragment = new NotisFragment();
 
         messagesFragment = new MessagesFragment();
         chatFragment = new ChatFragment();
@@ -89,10 +72,6 @@ public class NavBarActivity extends AppCompatActivity {
                         setFragment(friendsFragment);
                         return true;
 
-//                    case R.id.nav_notifications:
-//                         setFragment(notisFragment);
-//                        return true;
-
                     case R.id.nav_messages:
                          setFragment(messagesFragment);
                         return true;
@@ -104,7 +83,6 @@ public class NavBarActivity extends AppCompatActivity {
                 return false;
             }
         });
-
     }
 
     private void setFragment(Fragment f) {
