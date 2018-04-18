@@ -57,6 +57,7 @@ public class ImageViewActivity extends AppCompatActivity {
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //Map to where you want to send the bitmap
                 Intent i = new Intent(getApplicationContext(), FriendsActivity.class);
                 startActivity(i);
             }
