@@ -12,7 +12,7 @@ import android.widget.FrameLayout;
 import floatingheads.snapclone.R;
 import floatingheads.snapclone.fragments.ChatFragment;
 import floatingheads.snapclone.fragments.FriendsFragment;
-import floatingheads.snapclone.fragments.MessagesFragment;
+import floatingheads.snapclone.fragments.NotificationsFragment;
 import floatingheads.snapclone.fragments.ProfileFragment;
 import floatingheads.snapclone.objects.User;
 
@@ -30,7 +30,7 @@ public class NavBarActivity extends AppCompatActivity {
     // Fragments
     private ProfileFragment profileFragment;
     private FriendsFragment friendsFragment;
-    private MessagesFragment messagesFragment;
+    private NotificationsFragment notificationsFragment;
     private ChatFragment chatFragment;
 
     @Override
@@ -57,11 +57,12 @@ public class NavBarActivity extends AppCompatActivity {
         friendsFragment = new FriendsFragment();
         friendsFragment.setArguments(masterUserBundle);
 
-        messagesFragment = new MessagesFragment();
+        notificationsFragment = new NotificationsFragment();
+
         chatFragment = new ChatFragment();
 
-        setFragment(messagesFragment); // sets default fragment to messages
-        mMainNav.getMenu().getItem(0).setChecked(true); // selects message nav item as default
+        setFragment(notificationsFragment); // sets default fragment to notifications
+        mMainNav.getMenu().getItem(1).setChecked(true); // selects notification nav item as default
 
         mMainNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             /**
@@ -80,8 +81,8 @@ public class NavBarActivity extends AppCompatActivity {
                         setFragment(friendsFragment);
                         return true;
 
-                    case R.id.nav_messages:
-                         setFragment(messagesFragment);
+                    case R.id.nav_notifications:
+                         setFragment(notificationsFragment);
                         return true;
 
                     case R.id.nav_chat:

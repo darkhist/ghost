@@ -18,9 +18,9 @@ import floatingheads.snapclone.objects.MessagesView;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MessagesFragment extends Fragment {
+public class NotificationsFragment extends Fragment {
 
-    public MessagesFragment() {
+    public NotificationsFragment() {
         // Required empty public constructor
     }
 

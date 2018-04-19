@@ -84,7 +84,6 @@ public class ChatFragment extends Fragment {
                 Log.d("FirebaseDatabase", "Suceess");
                 handleEvent(dataSnapshot);
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Log.d("FirebaseDatabase", "Failure" + databaseError.getMessage());
@@ -101,6 +100,4 @@ public class ChatFragment extends Fragment {
         }
         chatAdapter.notifyDataSetChanged();
     }
-
-
 }
