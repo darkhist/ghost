@@ -1,5 +1,6 @@
 package floatingheads.snapclone.fragments;
 
+import android.content.Intent;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
@@ -32,6 +34,8 @@ public class ChatFragment extends Fragment {
     private DatabaseReference databaseRef;
     private EditText chatInput;
     private ChatAdapter chatAdapter;
+    private ImageButton attachImage;
+    private final int PICK_IMAGE = 1;
 
     // Constructor
     public static ChatFragment newInstance() {
@@ -50,6 +54,7 @@ public class ChatFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_chat, container, false);
 
         chatInput = root.findViewById(R.id.chat_input);
+        attachImage = root.findViewById(R.id.attach);
 
         chatInput.setOnEditorActionListener(new OnEditorActionListener() {
             @Override
@@ -62,6 +67,17 @@ public class ChatFragment extends Fragment {
                 databaseRef.child(String.valueOf(new Date().getTime())).setValue(chat);
                 return true;
             }
+        });
+
+        attachImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent galleryIntent = new Intent();
+                galleryIntent.setType("image/* video/*");
+                galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(galleryIntent, "Select Image"), PICK_IMAGE);
+            }
+            // TODO Finish Image Selection
         });
 
         RecyclerView chat = (RecyclerView) root.findViewById(R.id.chat_message);
