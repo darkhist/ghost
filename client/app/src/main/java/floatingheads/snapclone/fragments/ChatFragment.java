@@ -1,9 +1,14 @@
 package floatingheads.snapclone.fragments;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.provider.MediaStore.Images.Media;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
@@ -23,6 +29,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.IOException;
 import java.util.Date;
 
 import floatingheads.snapclone.R;
@@ -35,7 +42,8 @@ public class ChatFragment extends Fragment {
     private EditText chatInput;
     private ChatAdapter chatAdapter;
     private ImageButton attachImage;
-    private final int PICK_IMAGE = 1;
+    private ImageView gallery;
+    private final int GALLERY_REQUEST = 1;
 
     // Constructor
     public static ChatFragment newInstance() {
@@ -47,6 +55,23 @@ public class ChatFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         createConnection();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == Activity.RESULT_OK)
+            switch (requestCode){
+                case GALLERY_REQUEST:
+                    Uri selectedImage = data.getData();
+                    try {
+                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), selectedImage);
+                        gallery.setImageBitmap(bitmap);
+                    } catch (IOException e) {
+                        Log.i("TAG", "Some exception " + e);
+                    }
+                    break;
+            }
     }
 
     @Override
@@ -72,12 +97,10 @@ public class ChatFragment extends Fragment {
         attachImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent galleryIntent = new Intent();
+                Intent galleryIntent = new Intent(Intent.ACTION_PICK, Media.EXTERNAL_CONTENT_URI);
                 galleryIntent.setType("image/* video/*");
-                galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(galleryIntent, "Select Image"), PICK_IMAGE);
+                startActivityForResult(Intent.createChooser(galleryIntent, "Select Image"), GALLERY_REQUEST);
             }
-            // TODO Finish Image Selection
         });
 
         RecyclerView chat = (RecyclerView) root.findViewById(R.id.chat_message);
