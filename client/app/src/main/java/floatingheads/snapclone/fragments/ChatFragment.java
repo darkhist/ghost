@@ -42,7 +42,7 @@ public class ChatFragment extends Fragment {
     private EditText chatInput;
     private ChatAdapter chatAdapter;
     private ImageButton attachImage;
-    private ImageView gallery;
+    private ImageView imageBubble;
     private final int GALLERY_REQUEST = 1;
 
     // Constructor
@@ -66,7 +66,7 @@ public class ChatFragment extends Fragment {
                     Uri selectedImage = data.getData();
                     try {
                         Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), selectedImage);
-                        gallery.setImageBitmap(bitmap);
+                        imageBubble.setImageBitmap(bitmap);
                     } catch (IOException e) {
                         Log.i("TAG", "Some exception " + e);
                     }
@@ -80,6 +80,7 @@ public class ChatFragment extends Fragment {
 
         chatInput = root.findViewById(R.id.chat_input);
         attachImage = root.findViewById(R.id.attach);
+        imageBubble = root.findViewById(R.id.chat_bubble);
 
         chatInput.setOnEditorActionListener(new OnEditorActionListener() {
             @Override

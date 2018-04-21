@@ -31,6 +31,8 @@
     <string name="default_notification_channel_id">Channel ID</string>
     <string name="chat_input">Enter Message...</string>
     <string name="add_btn_content_description">Attach an image!</string>
+    <string name="chat_bubble_content_description">Image</string>
+
     <!-- Camera Stuff -->
     <string name="open_camera"> Open Camera </string>
 

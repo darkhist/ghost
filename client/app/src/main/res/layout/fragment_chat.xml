@@ -15,6 +15,12 @@
         android:background="@android:color/darker_gray"
         android:paddingBottom="20dp" />
 
+    <ImageView
+        android:id="@+id/chat_bubble"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/chat_bubble_content_description" />
+
     <EditText
         android:id="@+id/chat_input"
         android:layout_width="fill_parent"
