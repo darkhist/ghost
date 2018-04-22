@@ -34,7 +34,7 @@ import java.util.Date;
 
 import floatingheads.snapclone.R;
 import floatingheads.snapclone.adapters.ChatAdapter;
-import floatingheads.snapclone.objects.Chat;
+import floatingheads.snapclone.objects.Message;
 
 public class ChatFragment extends Fragment {
 
@@ -85,12 +85,13 @@ public class ChatFragment extends Fragment {
         chatInput.setOnEditorActionListener(new OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                // TODO: Don't hardcode values for chatID and chatName
-                Chat chat = new Chat();
-                chat.setID("1");
-                chat.setMessage(chatInput.getText().toString());
-                chat.setName("Quinn");
-                databaseRef.child(String.valueOf(new Date().getTime())).setValue(chat);
+                // TODO: Don't hardcode values for chatID and user
+                Message msg = new Message();
+                msg.setID("1");
+                msg.setUser("Quinn");
+                msg.setMessage(chatInput.getText().toString());
+                msg.setTimestamp(System.currentTimeMillis());
+                databaseRef.child(String.valueOf(new Date().getTime())).setValue(msg);
                 return true;
             }
         });
@@ -104,13 +105,13 @@ public class ChatFragment extends Fragment {
             }
         });
 
-        RecyclerView chat = (RecyclerView) root.findViewById(R.id.chat_message);
+        RecyclerView recyclerView = root.findViewById(R.id.chat_message);
         if (VERSION.SDK_INT >= VERSION_CODES.M) {
-            chat.setLayoutManager(new LinearLayoutManager(getContext()));
+            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         }
 
         chatAdapter = new ChatAdapter();
-        chat.setAdapter(chatAdapter);
+        recyclerView.setAdapter(chatAdapter);
 
         return root;
     }
@@ -135,8 +136,8 @@ public class ChatFragment extends Fragment {
         chatAdapter.clearData();
 
         for (DataSnapshot ds : dataSnapshot.getChildren()) {
-            Chat chat = ds.getValue(Chat.class);
-            chatAdapter.addData(chat);
+            Message msg = ds.getValue(Message.class);
+            chatAdapter.addData(msg);
         }
         chatAdapter.notifyDataSetChanged();
     }

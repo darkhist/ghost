@@ -4,14 +4,14 @@ package floatingheads.snapclone.objects;
  * Created by QuinnSalas on 3/28/18.
  */
 
-public class Chat {
+public class Message {
 
     private String ID;
     private String message;
-    private String name;
+    private String user;
+    private long timestamp;
 
-
-    public Chat() {
+    public Message() {
         // Constructor
     }
 
@@ -23,9 +23,11 @@ public class Chat {
         return message;
     }
 
-    public String getName() {
-        return name;
+    public String getUser() {
+        return user;
     }
+
+    public long getTimestamp() {return timestamp; }
 
     public void setID(String ID) {
         this.ID = ID;
@@ -35,7 +37,7 @@ public class Chat {
        this.message = message;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    public void setUser(String name) { this.user = user; }
+
+    public void setTimestamp(long timestamp) {this.timestamp = timestamp;}
 }

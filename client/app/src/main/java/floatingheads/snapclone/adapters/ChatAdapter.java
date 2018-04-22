@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import floatingheads.snapclone.R;
-import floatingheads.snapclone.objects.Chat;
+import floatingheads.snapclone.objects.Message;
 
 /**
  * Created by QuinnSalas on 3/29/18.
@@ -29,13 +29,13 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
         }
     }
 
-    private List<Chat> chatList = new ArrayList<>();
+    private List<Message> chatList = new ArrayList<>();
 
     public void clearData() {
         chatList.clear();
     }
 
-    public void addData(Chat data) {
+    public void addData(Message data) {
         chatList.add(data);
     }
 
@@ -52,8 +52,8 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
 
     @Override
     public void onBindViewHolder(ChatViewHolder holder, int position) {
-        Chat data = chatList.get(position);
+        Message data = chatList.get(position);
         holder.message.setText(data.getMessage());
-        holder.name.setText(data.getName());
+        holder.name.setText(data.getUser());
     }
 }
