@@ -6,15 +6,15 @@ package floatingheads.snapclone.objects;
 
 public class Profile {
 
-    public Profile() {
-        init();
+    public Profile(User user) {
+        init(user);
     }
 
     public void setContents() {
 
     }
 
-    public void init() {
+    public void init(User user) {
 
     }
 }

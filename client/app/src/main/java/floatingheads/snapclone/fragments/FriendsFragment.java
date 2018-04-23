@@ -1,6 +1,7 @@
 package floatingheads.snapclone.fragments;
 
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
