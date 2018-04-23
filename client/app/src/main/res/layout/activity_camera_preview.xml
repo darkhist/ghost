@@ -34,7 +34,6 @@
         style="@android:style/Widget.Holo.Light.ImageButton"
         android:backgroundTint="@android:color/transparent"
         android:scaleType="fitCenter"
-        android:text="@string/switch_camera"
         android:layout_alignParentEnd="true"
         android:src="@drawable/othercam_w"
         tools:ignore="ContentDescription"/>
@@ -50,7 +49,6 @@
            android:layout_centerHorizontal="true"
            android:layout_alignParentBottom="true"
            android:src="@drawable/btn_shutter_background"
-           android:text="@string/take_picture"
            tools:ignore="ContentDescription"/>
 
     <ImageButton
@@ -64,7 +62,6 @@
         android:backgroundTint="@android:color/transparent"
         android:scaleType="fitCenter"
         android:src="@drawable/filters_w"
-        android:text="@string/take_picture"
         tools:ignore="ContentDescription" />
 
     <ImageButton
@@ -78,7 +75,6 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:src="@drawable/msgs_w"
-        android:text="@string/take_picture"
         tools:ignore="ContentDescription"/>
 
     <ImageButton
@@ -92,7 +88,6 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
         android:src="@drawable/friends_w"
-        android:text="@string/take_picture"
         tools:ignore="ContentDescription"/>
 
     <ImageView
@@ -109,3 +104,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </RelativeLayout>
+
+
+

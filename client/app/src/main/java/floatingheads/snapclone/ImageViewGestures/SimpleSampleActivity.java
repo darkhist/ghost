@@ -46,7 +46,7 @@ public class SimpleSampleActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.imageview);
+        setContentView(R.layout.activity_imageview);
 
        /* Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Simple Sample");

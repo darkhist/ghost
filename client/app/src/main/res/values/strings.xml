@@ -67,5 +67,6 @@
     <string name="add_friend">Add Friend</string>
     <string name="profile_friends">Friends</string>
     <string name="profile_points">Points</string>
+    <string name="file_saved">Image Saved! Check path root/sdcard/Pictures/Snapclone</string>
 
 </resources>

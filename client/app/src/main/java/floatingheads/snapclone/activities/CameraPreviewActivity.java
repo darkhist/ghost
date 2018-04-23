@@ -7,7 +7,6 @@ package floatingheads.snapclone.activities;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -25,18 +24,14 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.vision.Detector;
-import com.google.android.gms.vision.MultiProcessor;
-import com.google.android.gms.vision.Tracker;
-import com.google.android.gms.vision.face.Face;
 import com.google.android.gms.vision.face.FaceDetector;
-import com.google.android.gms.vision.face.LargestFaceFocusingProcessor;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -48,7 +43,8 @@ import floatingheads.snapclone.R;
 import floatingheads.snapclone.androidScreenUtils.Utils;
 import floatingheads.snapclone.camera2VisionTools.CameraSource;
 import floatingheads.snapclone.camera2VisionTools.CameraSourcePreview;
-import floatingheads.snapclone.camera2VisionTools.Eyes.GooglyFaceTracker;
+import floatingheads.snapclone.camera2VisionTools.Clear.ClearOverlay;
+import floatingheads.snapclone.camera2VisionTools.Eyes.GooglyOverlay;
 import floatingheads.snapclone.camera2VisionTools.GraphicOverlay;
 import floatingheads.snapclone.fragments.ChatFragment;
 
@@ -77,10 +73,13 @@ public class CameraPreviewActivity extends AppCompatActivity  {
     private ImageButton filtersButton;
     private FrameLayout mSavedImg;
     private Intent intent;
+    private HorizontalScrollView scrollView;
 
     // FILE STORAGE DECLARATIONS
     private File directory;
     private FileOutputStream fileOut;
+
+    private FaceDetector detector;
 
     // DEFAULT CAMERA BEING OPENED
     private boolean usingFrontCamera = true;
@@ -116,6 +115,12 @@ public class CameraPreviewActivity extends AppCompatActivity  {
         msgsButton = (ImageButton) findViewById(R.id.btn_msgs);
         filtersButton = (ImageButton) findViewById(R.id.btn_filters);
         mSavedImg = (FrameLayout) findViewById(R.id.mSavedImg);
+        //scrollView = (HorizontalScrollView) findViewById(R.id.ScrollView);
+
+        //scrollView.setVisibility(View.GONE);
+
+        // ViewGroup vg = (ViewGroup)(scrollView.getParent());
+        //vg.removeView(scrollView);
 
         if(checkGooglePlayAvailability()) {
             requestPermissionThenOpenCamera();
@@ -128,7 +133,7 @@ public class CameraPreviewActivity extends AppCompatActivity  {
                         usingFrontCamera = !usingFrontCamera;
                     }
                     stopCameraSource();
-                    createCameraSource();
+                    createCameraSource(detector);
                 }
             });
 
@@ -180,8 +185,9 @@ public class CameraPreviewActivity extends AppCompatActivity  {
             filtersButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent i = new Intent(getApplicationContext(), ImageViewActivity.class);
-                    startActivity(i);
+                    Context context = getApplicationContext();
+                    GooglyOverlay googly = new GooglyOverlay(usingFrontCamera, mGraphicOverlay);
+                    detector = googly.createFaceDetector(context);
                 }
             });
         }
@@ -211,18 +217,35 @@ public class CameraPreviewActivity extends AppCompatActivity  {
 
             intent = new Intent(getApplicationContext(), ImageViewActivity.class);
             try {
-                String filename = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-                FileOutputStream stream = context.openFileOutput(filename, Context.MODE_PRIVATE);
-                picture.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                //Need to resize the picture to fit the overlay ovre
+                picture = getResizedBitmap(picture, 1024);
 
-                //Cleanup
-                stream.close();
-                picture.recycle();
+                //picture Needs to be flipped if using front camera
+                if(usingFrontCamera) {
+                    Matrix matrix = new Matrix();
+                    matrix.preScale(-1.0f, 1.0f);
+                    picture = Bitmap.createBitmap(picture, 0, 0, picture.getWidth(), picture.getHeight(), matrix, true);
+                }
 
-                //pop intent
-                Intent intent = new Intent(getApplicationContext(), ImageViewActivity.class);
-                intent.putExtra("image", filename);
-                intent.putExtra("usingFrontCamera", usingFrontCamera);
+                //screenshot Filenamelogic
+                String fname = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+                mPreview.setDrawingCacheEnabled(true);
+                Bitmap screenshot = Bitmap.createBitmap(mPreview.getDrawingCache());
+                screenshot = getResizedBitmap(screenshot, 1024);
+                mPreview.setDrawingCacheEnabled(false);
+                //debugging
+                Log.d("Screenshot Resolution", "Resolution Width: " + screenshot.getWidth());
+                Log.d("Screenshot Resolution", "Resolution Height: " + screenshot.getHeight());
+
+                //overlay method merges the 2 bitmaps into a single image
+                screenshot = overlay(picture,screenshot);
+                FileOutputStream strm =  context.openFileOutput(fname, Context.MODE_PRIVATE);
+                screenshot.compress(Bitmap.CompressFormat.JPEG, 100, strm);
+
+                strm.close();
+                screenshot.recycle();
+                //SEND bitmap TO IMAGEVIEWACTIVITY
+                intent.putExtra("screenshot", fname);
                 startActivity(intent);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -309,7 +332,10 @@ public class CameraPreviewActivity extends AppCompatActivity  {
         if(ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
             if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                 //createCameraSourceFront();
-                createCameraSource();
+                Context context = getApplicationContext();
+                ClearOverlay transparent = new ClearOverlay(usingFrontCamera, mGraphicOverlay);
+                detector = transparent.createFaceDetector(context);
+                createCameraSource(detector);
             } else {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_STORAGE_PERMISSION);
             }
@@ -336,16 +362,10 @@ public class CameraPreviewActivity extends AppCompatActivity  {
 
     }
 
-    //==============================================================================================
-    // Detector
-    //==============================================================================================
-
     /**
      * Creates the face detector and the camera.
      */
-    private void createCameraSource() {
-        Context context = getApplicationContext();
-        FaceDetector detector = createFaceDetector(context);
+    private void createCameraSource(FaceDetector detector) {
 
         int facing = CameraSource.CAMERA_FACING_FRONT;
         if (!usingFrontCamera) {
@@ -375,72 +395,6 @@ public class CameraPreviewActivity extends AppCompatActivity  {
         mPreview.stop();
     }
 
-
-    /**
-     * Creates the face detector and associated processing pipeline to support either front facing
-     * mode or rear facing mode.  Checks if the detector is ready to use, and displays a low storage
-     * warning if it was not possible to download the face library.
-     */
-    @NonNull
-    protected FaceDetector createFaceDetector(Context context) {
-        // For both front facing and rear facing modes, the detector is initialized to do eye landmark classification.
-        // We are using fast mode, and tracking 1 face in front camera view, and multiple faces in rear camera view.
-        // Setting PromentnFaceOnly as true when usingFrontCamera will stop scanning for faces when single largest face is found
-        // The former results in greater efficiency, we also increase minfacesize from default for further optimizations
-        FaceDetector detector = new FaceDetector.Builder(context)
-                .setLandmarkType(FaceDetector.ALL_LANDMARKS)
-                .setClassificationType(FaceDetector.ALL_CLASSIFICATIONS)
-                .setTrackingEnabled(true)
-                .setMode(FaceDetector.FAST_MODE)
-                .setProminentFaceOnly(usingFrontCamera)
-                .setMinFaceSize(usingFrontCamera ? 0.35f : 0.15f)
-                .build();
-
-        Detector.Processor<Face> processor;
-        if (usingFrontCamera) {
-            // For front facing mode, a single tracker instance is used with an associated focusing processor
-            Tracker<Face> tracker = new GooglyFaceTracker(mGraphicOverlay);
-            processor = new LargestFaceFocusingProcessor.Builder(detector, tracker).build();
-        } else {
-            // For rear facing mode, a factory is used to create per-face tracker instances.  A
-            // tracker is created for each face and is maintained as long as the same face is
-            // visible, enabling per-face state to be maintained over time.  This is used to store
-            // the iris position and velocity for each face independently, simulating the motion of
-            // the eyes of any number of faces over time.
-            MultiProcessor.Factory<Face> factory = new MultiProcessor.Factory<Face>() {
-                @Override
-                public Tracker<Face> create(Face face) {
-                    return new GooglyFaceTracker(mGraphicOverlay);
-                }
-            };
-            processor = new MultiProcessor.Builder<>(factory).build();
-        }
-
-        detector.setProcessor(processor);
-
-        if (!detector.isOperational()) {
-            // Note: The first time that an app using face API is installed on a device, GMS will
-            // download a native library to the device in order to do detection.  Usually this
-            // completes before the app is run for the first time.  But if that download has not yet
-            // completed, then the above call will not detect any faces.
-            //
-            // isOperational() can be used to check if the required native library is currently
-            // available.  The detector will automatically become operational once the library
-            // download completes on device.
-            Log.w(TAG, "Face detector dependencies are not yet available.");
-
-            // Check for low storage.  If there is low storage, the native library will not be
-            // downloaded, so detection will not become operational.
-            IntentFilter lowStorageFilter = new IntentFilter(Intent.ACTION_DEVICE_STORAGE_LOW);
-            boolean hasLowStorage = registerReceiver(null, lowStorageFilter) != null;
-
-            if (hasLowStorage) {
-                Toast.makeText(this, R.string.low_storage_error, Toast.LENGTH_LONG).show();
-                Log.w(TAG, getString(R.string.low_storage_error));
-            }
-        }
-        return detector;
-    }
 
     /**
      * Autofocus feature functionality
@@ -482,12 +436,12 @@ public class CameraPreviewActivity extends AppCompatActivity  {
         super.onResume();
         if(wasActivityResumed)
             switchButton.setVisibility(View.VISIBLE);
-            takePictureButton.setVisibility(View.VISIBLE);
-            msgsButton.setVisibility(View.VISIBLE);
-            friendsButton.setVisibility(View.VISIBLE);
-            filtersButton.setVisibility(View.VISIBLE);
-            //If the CAMERA2 is paused then resumed, it won't start again unless creating the whole camera again.
-            startCameraSource();
+        takePictureButton.setVisibility(View.VISIBLE);
+        msgsButton.setVisibility(View.VISIBLE);
+        friendsButton.setVisibility(View.VISIBLE);
+        filtersButton.setVisibility(View.VISIBLE);
+        //If the CAMERA2 is paused then resumed, it won't start again unless creating the whole camera again.
+        startCameraSource();
 
     }
 
