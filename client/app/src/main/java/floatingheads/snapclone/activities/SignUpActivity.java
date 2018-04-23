@@ -48,6 +48,7 @@ import java.util.regex.Pattern;
 import floatingheads.snapclone.R;
 import floatingheads.snapclone.net_utils.Const;
 import floatingheads.snapclone.controllers.AppController;
+import floatingheads.snapclone.objects.User;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -71,6 +72,8 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
+
+    private User user = new User();
 
     // Volley Stuff
     private final String URL = Const.signupURL;
@@ -423,7 +426,7 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
             if (success) {
                 finish();
                 // Open Navbar Activity on Login Success
-                Intent i = new Intent(getApplicationContext(), NavBarActivity.class);
+                Intent i = new Intent(getApplicationContext(), CameraPreviewActivity.class);
                 startActivity(i);
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));

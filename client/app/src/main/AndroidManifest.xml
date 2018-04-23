@@ -13,11 +13,11 @@
 
     <supports-screens
         android:anyDensity="true"
-        android:resizeable="true"
-        android:xlargeScreens="true"
         android:largeScreens="true"
         android:normalScreens="true"
-        android:smallScreens="true" />
+        android:resizeable="true"
+        android:smallScreens="true"
+        android:xlargeScreens="true" />
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -69,24 +69,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-
-
-        <activity android:name=".activities.CameraPreviewActivity"
+        <activity
+            android:name=".activities.CameraPreviewActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen">
-        </activity>
-
-        <activity android:name=".activities.ImageViewActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"></activity>
+        <activity
+            android:name=".activities.ImageViewActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen">
-        </activity>
-
-        <activity android:name=".activities.CVImgProcCameraActivity"
-            android:screenOrientation="sensorLandscape">
-        </activity>
-
-
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"></activity>
+        <activity
+            android:name=".activities.CVImgProcCameraActivity"
+            android:screenOrientation="sensorLandscape"></activity>
         <activity
             android:name=".activities.LoginActivity"
             android:label="@string/title_activity_login"
@@ -101,7 +94,7 @@
         <activity
             android:name=".activities.NavBarActivity"
             android:label="NavBarActivity" />
-        <activity android:name=".activities.AddFriendsActivity" />
+        <activity android:name=".activities.AddFriendsActivity"/>
         <activity android:name=".activities.MessageActivity" />
         <activity android:name=".activities.MessagesListActivity" />
 
@@ -111,29 +104,34 @@
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
-
-        <service
-            android:name=".firebase.MyFirebaseMessagingService">
+        <service android:name=".firebase.MyFirebaseMessagingService">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
-            android:value="@string/default_notification_channel_id"/>
+            android:value="@string/default_notification_channel_id" />
 
-        <!--<service
+        <!--
+        <service
             android:exported="false"
             android:name=".firebase.MyJobService">
             <intent-filter>
                 <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE" />
             </intent-filter>
-        </service>-->
+        </service>
+        -->
 
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
+
+        <activity
+            android:name=".activities.ProfileViewActivity"
+            android:label="@string/title_activity_profile_view"
+            android:theme="@style/Theme.AppCompat.Dialog"></activity>
     </application>
 
 </manifest>
