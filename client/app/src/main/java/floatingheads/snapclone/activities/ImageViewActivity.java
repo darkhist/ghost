@@ -9,8 +9,10 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -34,7 +36,7 @@ public class ImageViewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         //Setup Resource Files
         //TESTING IMAGEVIEW
-        PhotoView mPhotoView;
+        ImageView mImageView;
         ImageButton sendButton;
         ImageButton saveButton;
         Bitmap screenshotBmp;
@@ -43,7 +45,7 @@ public class ImageViewActivity extends AppCompatActivity {
         setContentView(R.layout.activity_imageview);
         sendButton = findViewById(R.id.btn_send);
         saveButton = findViewById(R.id.btn_save);
-        mPhotoView = findViewById(R.id.iv_photo);
+        mImageView = findViewById(R.id.iv_photo);
 
         //Initialize variables
         screenshotBmp = null;
@@ -61,9 +63,12 @@ public class ImageViewActivity extends AppCompatActivity {
         //final bmp for use in savebutton
         bmp = screenshotBmp;
 
+        Log.d("Screenshot Resolution", "Resolution Width: " + screenshotBmp.getWidth());
+        Log.d("Screenshot Resolution", "Resolution Height: " + screenshotBmp.getHeight());
+
         //Get screenshot
-        dScreenshot = new BitmapDrawable(getResources(), screenshotBmp);
-        mPhotoView.setImageDrawable(dScreenshot);
+        //dScreenshot = new BitmapDrawable(getResources(), screenshotBmp);
+        mImageView.setImageBitmap(screenshotBmp);
 
         //Listener for Send Button
         sendButton.setOnClickListener(new View.OnClickListener() {
