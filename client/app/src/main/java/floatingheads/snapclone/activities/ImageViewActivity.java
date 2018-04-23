@@ -25,12 +25,6 @@ import floatingheads.snapclone.ImageViewGestures.OnPhotoTapListener;
 import floatingheads.snapclone.ImageViewGestures.OnSingleFlingListener;
 import floatingheads.snapclone.ImageViewGestures.PhotoView;
 
-import org.opencv.android.BaseLoaderCallback;
-import org.opencv.android.LoaderCallbackInterface;
-import org.opencv.android.OpenCVLoader;
-import org.opencv.android.Utils;
-import org.opencv.core.Mat;
-import org.opencv.core.Core;
 
 /**
  * Created by Akira on 4/15/2018.
@@ -56,26 +50,6 @@ public class ImageViewActivity extends AppCompatActivity {
     private Bitmap screenshotBmp;
     private Drawable dPicture;
     private Drawable dScreenshot;
-    private Mat mat;
-    private Mat flipped;
-
-  /*  private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
-        @Override
-        public void onManagerConnected(int status) {
-            switch (status) {
-                case LoaderCallbackInterface.SUCCESS:
-                {
-                    Log.i("OpenCV", "OpenCV loaded successfully");
-                    flipped = new Mat();
-                    mat = new Mat();
-                } break;
-                default:
-                {
-                    super.onManagerConnected(status);
-                } break;
-            }
-        }
-    };*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,48 +76,14 @@ public class ImageViewActivity extends AppCompatActivity {
         }
 
 
-        //Getting the picture sent from the CameraPreviewActivity
-       /* String filename = getIntent().getStringExtra("picture");
-        try {
-            FileInputStream is = this.openFileInput(filename);
-            pictureBmp = BitmapFactory.decodeStream(is);
-            is.close();
-            } catch (Exception e) {
-            e.printStackTrace();
-            }*/
-
-
-
-        //Check if picture needs to be flipped and get picture
-        //needs2BeFlipped = getIntent().getExtras().getBoolean("needs2BeFlipped");
-
-       /* if(needs2BeFlipped){
-            mat =new Mat(pictureBmp.getWidth(), pictureBmp.getHeight(), 22);
-            flipped = new Mat(pictureBmp.getWidth(), pictureBmp.getHeight(), 22);
-            pictureBmp = pictureBmp.copy(Bitmap.Config.ARGB_8888, true);
-            Utils.bitmapToMat(pictureBmp, mat);
-            Core.flip(mat,flipped,-1);
-            Utils.matToBitmap(mat,pictureBmp,true);
-
-            Matrix matrix = new Matrix();
-            matrix.preScale(-1.0f, 1.0f);
-            pictureBmp = Bitmap.createBitmap(pictureBmp, 0, 0, pictureBmp.getWidth(), pictureBmp.getHeight(), matrix, true);
-        }*/
-
         //Get screenshot
         dScreenshot = new BitmapDrawable(getResources(), screenshotBmp);
         mPhotoView.setImageDrawable(dScreenshot);
 
-
-        //dScreenshot = new BitmapDrawable(getResources(), screenshotBmp);
-        //mPhotoView.setImageDrawable(dScreenshot);
-
-
-
         // Lets attach some listeners, not required though!
-        //mPhotoView.setOnMatrixChangeListener(new MatrixChangeListener());
-        //mPhotoView.setOnPhotoTapListener(new PhotoTapListener());
-        //mPhotoView.setOnSingleFlingListener(new SingleFlingListener());
+        mPhotoView.setOnMatrixChangeListener(new MatrixChangeListener());
+        mPhotoView.setOnPhotoTapListener(new PhotoTapListener());
+        mPhotoView.setOnSingleFlingListener(new SingleFlingListener());
 
         //Listener for Send Button
         sendButton.setOnClickListener(new View.OnClickListener() {
@@ -163,9 +103,6 @@ public class ImageViewActivity extends AppCompatActivity {
             }
         });
     }
-
-
-
 
     private class PhotoTapListener implements OnPhotoTapListener {
 

@@ -48,8 +48,9 @@ public class NavBarActivity extends AppCompatActivity {
 
         // create bundle to pass user data< to other fragments
 
-        // users
+
         Bundle masterUserBundle = new Bundle();
+
         masterUserBundle.putInt("uid", getIntent().getExtras().getInt("uid"));
         masterUserBundle.putString("firstName", getIntent().getExtras().getString("firstName"));
         masterUserBundle.putString("lastName", getIntent().getExtras().getString("lastName"));

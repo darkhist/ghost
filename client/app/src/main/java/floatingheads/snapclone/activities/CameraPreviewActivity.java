@@ -47,7 +47,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Random;
 
 import floatingheads.snapclone.camera2VisionTools.CameraSource;
 import floatingheads.snapclone.camera2VisionTools.CameraSourcePreview;
@@ -76,12 +75,7 @@ public class CameraPreviewActivity extends AppCompatActivity  {
     private ImageButton friendsButton;
     private ImageButton msgsButton;
     private ImageButton filtersButton;
-    private int counter;
-    private Random rand;
-    private boolean isSystemUiShown;
-    private View decorView;
     private FrameLayout mSavedImg;
-    private Bitmap pic;
     private Intent intent;
 
     // FILE STORAGE DECLARATIONS
@@ -96,10 +90,6 @@ public class CameraPreviewActivity extends AppCompatActivity  {
 
     // permission request codes need to be < 256
     private static final int RC_HANDLE_CAMERA_PERM = 2;
-
-    // MUST BE CAREFUL USING THIS VARIABLE.
-    // ANY ATTEMPT TO START CAMERA2 ON API < 21 WILL CRASH.
-    private boolean useCamera2 = true;
 
     //Declare variables
     private static final int SELECT_PICTURE = 50;
@@ -142,6 +132,8 @@ public class CameraPreviewActivity extends AppCompatActivity  {
                     createCameraSource();
                 }
             });
+
+            mPreview.setOnTouchListener(CameraPreviewTouchListener);
 
             //Image capture listener
             takePictureButton.setOnClickListener(new View.OnClickListener() {
@@ -190,7 +182,7 @@ public class CameraPreviewActivity extends AppCompatActivity  {
                 }
             });
 
-            mPreview.setOnTouchListener(CameraPreviewTouchListener);
+
         }
 
         //New Directory path
@@ -204,12 +196,9 @@ public class CameraPreviewActivity extends AppCompatActivity  {
      */
     final CameraSource.PictureCallback cameraSourcePictureCallback = new CameraSource.PictureCallback() {
         @Override
-
-        //***************************THIS IS WHERE THE "MAGIC" HAPPENS!!!"
         public void onPictureTaken(Bitmap picture) {
             //mPreview.stop();
             Log.d(TAG, "Taken picture is here!");
-            //***************************BUTTONS RUN ON THREAD"
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -219,39 +208,28 @@ public class CameraPreviewActivity extends AppCompatActivity  {
                 }
             });
 
-
             intent = new Intent(getApplicationContext(), ImageViewActivity.class);
             try {
-
-
-
-
+                //Need to resize the picture to fit the overlay ovre
                 picture = getResizedBitmap(picture, 1920);
 
+                //picture Needs to be flipped if using front camera
                 if(usingFrontCamera) {
                     Matrix matrix = new Matrix();
                     matrix.preScale(-1.0f, 1.0f);
                     picture = Bitmap.createBitmap(picture, 0, 0, picture.getWidth(), picture.getHeight(), matrix, true);
                 }
 
-
-
-
-
-
-                //SCREENSHOT logic
+                //screenshot Filenamelogic
                 String fname = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-                // create bitmap screen capture
-                //View v1 = getWindow().getDecorView().getRootView();
-                //v1.setDrawingCacheEnabled(true);
-               // Bitmap screenshot = Bitmap.createBitmap(v1.getDrawingCache());
-                //v1.setDrawingCacheEnabled(false);
                 mPreview.setDrawingCacheEnabled(true);
                 Bitmap screenshot = Bitmap.createBitmap(mPreview.getDrawingCache());
                 mPreview.setDrawingCacheEnabled(false);
                 //debugging
                 Log.d("Screenshot Resolution", "Resolution Width: " + screenshot.getWidth());
                 Log.d("Screenshot Resolution", "Resolution Height: " + screenshot.getHeight());
+
+                //overlay method merges the 2 bitmaps into a single image
                 screenshot = overlay(picture,screenshot);
                 FileOutputStream strm =  context.openFileOutput(fname, Context.MODE_PRIVATE);
                 screenshot.compress(Bitmap.CompressFormat.JPEG, 100, strm);
@@ -268,6 +246,7 @@ public class CameraPreviewActivity extends AppCompatActivity  {
         }
     };
 
+    //Merges 2 bitmaps into a single image
     private Bitmap overlay(Bitmap bmp1, Bitmap bmp2) {
         Bitmap bmOverlay = Bitmap.createBitmap(bmp1.getWidth(), bmp1.getHeight(), bmp1.getConfig());
         Canvas canvas = new Canvas(bmOverlay);
@@ -276,6 +255,7 @@ public class CameraPreviewActivity extends AppCompatActivity  {
         return bmOverlay;
     }
 
+    //Input the max height, and will output the resized Bitmap image
     public Bitmap getResizedBitmap(Bitmap image, int maxSize) {
         int width = image.getWidth();
         int height = image.getHeight();
