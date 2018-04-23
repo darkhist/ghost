@@ -1,7 +1,6 @@
 package floatingheads.snapclone.fragments;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,19 +11,16 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 
-import floatingheads.snapclone.activities.MessagesListActivity;
-import floatingheads.snapclone.activities.SignUpActivity;
+import floatingheads.snapclone.R;
 import floatingheads.snapclone.objects.Contact;
 import floatingheads.snapclone.objects.MessagesView;
-import floatingheads.snapclone.R;
-
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MessagesFragment extends Fragment {
+public class NotificationsFragment extends Fragment {
 
-    public MessagesFragment() {
+    public NotificationsFragment() {
         // Required empty public constructor
     }
 
@@ -56,15 +52,6 @@ public class MessagesFragment extends Fragment {
 
         MessagesView friendsList = (MessagesView) inflatedView.findViewById(R.id.messagesListView);
         friendsList.setContents(contactArrayList);
-
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Open the Create New Message Screen
-                Intent i = new Intent(getActivity().getApplicationContext(), MessagesListActivity.class);
-                startActivity(i);
-            }
-        });
 
         return inflatedView;
     }

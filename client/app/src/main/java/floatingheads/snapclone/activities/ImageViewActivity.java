@@ -21,7 +21,6 @@ import java.util.Date;
 
 import floatingheads.snapclone.ImageViewGestures.PhotoView;
 
-
 /**
  * Created by Akira on 4/15/2018.
  */
@@ -99,5 +98,4 @@ public class ImageViewActivity extends AppCompatActivity {
             }
         });
     }
-
 }

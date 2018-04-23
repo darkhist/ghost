@@ -16,6 +16,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -27,7 +29,6 @@ import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
-
 
 import floatingheads.snapclone.R;
 import floatingheads.snapclone.androidScreenUtils.Utils;
@@ -44,17 +45,21 @@ import com.google.android.gms.vision.face.Face;
 import com.google.android.gms.vision.face.FaceDetector;
 import com.google.android.gms.vision.face.LargestFaceFocusingProcessor;
 
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import floatingheads.snapclone.R;
+import floatingheads.snapclone.androidScreenUtils.Utils;
 import floatingheads.snapclone.camera2VisionTools.CameraSource;
 import floatingheads.snapclone.camera2VisionTools.CameraSourcePreview;
 import floatingheads.snapclone.camera2VisionTools.Eyes.GooglyOverlay;
+
 import floatingheads.snapclone.camera2VisionTools.GraphicOverlay;
+import floatingheads.snapclone.fragments.ChatFragment;
+import floatingheads.snapclone.objects.User;
 
 /**
  * Screen that holds the main camera activity and corresponding buttons
@@ -83,6 +88,9 @@ public class CameraPreviewActivity extends AppCompatActivity  {
     private Intent intent;
     private HorizontalScrollView scrollView;
 
+    //
+    User user = new User();
+
     // FILE STORAGE DECLARATIONS
     private File directory;
     private FileOutputStream fileOut;
@@ -108,6 +116,16 @@ public class CameraPreviewActivity extends AppCompatActivity  {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // my code
+
+        if (getIntent().hasExtra("uid")) user.setId(getIntent().getExtras().getInt("uid"));
+        if (getIntent().hasExtra("firstName")) user.setFirstName(getIntent().getExtras().getString("firstName"));
+        if (getIntent().hasExtra("lastName")) user.setLastName(getIntent().getExtras().getString("lastName"));
+        if (getIntent().hasExtra("username")) user.setUsername(getIntent().getExtras().getString("username"));
+        if (getIntent().hasExtra("email")) user.setEmail(getIntent().getExtras().getString("email"));
+
+        // end my code
 
         //decorView = getWindow().getDecorView();
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -167,25 +185,34 @@ public class CameraPreviewActivity extends AppCompatActivity  {
                 }
             });
 
-            // On Log In Button Click - Open Log In Screen
+            // On Friends Button Click - Open Friends Screen
             friendsButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent i = new Intent(getApplicationContext(), NavBarActivity.class);
+                    i.putExtra("uid", user.getId());
+                    i.putExtra("firstName", user.getFirstName());
+                    i.putExtra("lastName", user.getLastName());
+                    i.putExtra("username", user.getUsername());
+                    i.putExtra("email", user.getEmail());
                     startActivity(i);
                 }
             });
 
-            // On Log In Button Click - Open Log In Screen
+            // On Msg Button Click - Open Chat
             msgsButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent i = new Intent(getApplicationContext(), MessagesListActivity.class);
-                    startActivity(i);
+                    Fragment chatFragment = new ChatFragment();
+                    FragmentManager fragmentManager = getSupportFragmentManager();
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.fragment_container, chatFragment)
+                            .addToBackStack(null)
+                            .commit();
                 }
             });
 
-            // On Log In Button Click - Open Log In Screen
+            // On Filters Button Click - Open ImageView
             filtersButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -194,8 +221,6 @@ public class CameraPreviewActivity extends AppCompatActivity  {
                     detector = googly.createFaceDetector(context);
                 }
             });
-
-
         }
 
         //New Directory path
@@ -253,7 +278,6 @@ public class CameraPreviewActivity extends AppCompatActivity  {
                 //SEND bitmap TO IMAGEVIEWACTIVITY
                 intent.putExtra("screenshot", fname);
                 startActivity(intent);
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -473,5 +497,4 @@ public class CameraPreviewActivity extends AppCompatActivity  {
             previewFaceDetector.release();
         }
     }
-
 }

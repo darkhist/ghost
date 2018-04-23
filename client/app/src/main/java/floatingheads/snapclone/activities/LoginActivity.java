@@ -45,7 +45,7 @@ import java.util.Map;
 
 import floatingheads.snapclone.R;
 import floatingheads.snapclone.net_utils.Const;
-import floatingheads.snapclone.volleyController.AppController;
+import floatingheads.snapclone.controllers.AppController;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -419,7 +419,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 finish();
                 // Open Navbar Activity on Login Success
                 // user
-                Intent i = new Intent(getApplicationContext(), NavBarActivity.class);
+                Intent i = new Intent(getApplicationContext(), CameraPreviewActivity.class);
                 i.putExtra("uid", tempID);
                 i.putExtra("firstName", firstName);
                 i.putExtra("lastName", lastName);

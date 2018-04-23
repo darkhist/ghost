@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -133,9 +134,9 @@ public class FriendsFragment extends Fragment {
 
                 va.makeJSONArrayRequest(usersURL, new VolleyCallback() {
                     JSONObject user;
-
                     @Override
                     public void onSuccessResponse(JSONArray result) {
+                        Log.d("successResponse", result.toString());
                         int friendsCounter = friendsArr.length;
                         int usersIndex = 0;
                         while (friendsCounter > 0 && usersIndex < result.length()) {
@@ -150,14 +151,13 @@ public class FriendsFragment extends Fragment {
                                         ));
                                         friendsCounter--;
                                     }
-//                                    Log.d("callback2", "" + user.getInt("userID"));
+                                  // Log.d("callback2", "" + user.getInt("userID"));
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
                         }
-//                        Log.d("callback2", friendArrayList.toString());
-                        //
+                        // Log.d("callback2", friendArrayList.toString());
                         Collections.sort(friendArrayList);
                         ListAdapter la = new CustomListAdapter(friendsFragmentContext, friendArrayList, CustomListAdapter.FRIENDS_SCREEN);
                         friendsList.setAdapter(la);

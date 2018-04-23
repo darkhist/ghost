@@ -1,19 +1,17 @@
-'use strict';
-
 // This file defines behavior for interation with the USERS Table
 
 const connection = require('../database');
 
-exports.search = async data => {
+module.exports.search = async data => {
   try {
     data = await connection.query('SELECT * FROM USERS');
   } catch (err) {
-    console.error('Something went wrong!' + err.stack);
+    console.error(`Something went wrong! ${err.stack}`);
   }
   return data;
 };
 
-exports.add = async (firstName, lastName, username, password, email) => {
+module.exports.add = async (firstName, lastName, username, password, email) => {
   try {
     await connection.query(
       `INSERT INTO USERS 
@@ -21,16 +19,16 @@ exports.add = async (firstName, lastName, username, password, email) => {
       [firstName, lastName, username, password, email]
     );
   } catch (err) {
-    console.error('Something went wrong!' + err.stack);
+    console.error(`Something went wrong! ${err.stack}`);
   }
 };
 
-exports.getPassword = async (email, password = undefined) => {
+module.exports.getPassword = async email => {
+  let password;
   try {
-    password = await connection.query(`SELECT password FROM USERS WHERE email = ?`, [email]);
-  } catch (err) {
-    console.error('Something went wrong!' + err.stack);
+    password = await connection.query('SELECT password FROM USERS WHERE email = ?', [email]);
+  } catch (error) {
+    throw new Error('Unable to get Password');
   }
-  // Grab the password from the returned row
   return password[0].password;
 };
