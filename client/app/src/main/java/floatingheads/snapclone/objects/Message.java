@@ -37,7 +37,7 @@ public class Message {
        this.message = message;
     }
 
-    public void setUser(String name) { this.user = user; }
+    public void setUser(String user) { this.user = user; }
 
     public void setTimestamp(long timestamp) {this.timestamp = timestamp;}
 }
