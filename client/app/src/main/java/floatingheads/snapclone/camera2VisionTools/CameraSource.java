@@ -581,14 +581,14 @@ public class CameraSource {
      * @param shutter the callback for image capture moment, or null
      * @param jpeg    the callback for JPEG image data, or null
      */
-    public void takePicture(ShutterCallback shutter, PictureCallback jpeg) {
+    public void takePicture(ShutterCallback shutter, PictureCallback jpeg, CameraSourcePreview preview) {
         Log.d("ASD", "TRYING TO TAKE PICTURE");
         synchronized (mCameraLock) {
             if (mCamera != null) {
                 setFlashMode(mFlashMode);
                 PictureStartCallback startCallback = new PictureStartCallback();
                 startCallback.mDelegate = shutter;
-                PictureDoneCallback doneCallback = new PictureDoneCallback();
+                PictureDoneCallback doneCallback = new PictureDoneCallback(preview);
                 doneCallback.mDelegate = jpeg;
                 mCamera.takePicture(startCallback, null, null, doneCallback);
             }
@@ -841,6 +841,7 @@ public class CameraSource {
      * Wraps the camera1 shutter callback so that the deprecated API isn't exposed.
      */
     private class PictureStartCallback implements Camera.ShutterCallback {
+
         private ShutterCallback mDelegate;
 
         @Override
@@ -857,6 +858,11 @@ public class CameraSource {
      */
     private class PictureDoneCallback implements Camera.PictureCallback {
         private PictureCallback mDelegate;
+        private CameraSourcePreview preview;
+
+        PictureDoneCallback(CameraSourcePreview preview){
+            this.preview = preview;
+        }
 
         @Override
         public void onPictureTaken(byte[] data, Camera camera) {
@@ -867,7 +873,8 @@ public class CameraSource {
 
             synchronized (mCameraLock) {
                 if (mCamera != null) {
-                    mCamera.startPreview();
+                    //mCamera.startPreview();
+                    preview.stop();
                 }
             }
         }

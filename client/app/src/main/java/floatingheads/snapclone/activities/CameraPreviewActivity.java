@@ -10,6 +10,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
@@ -20,6 +22,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -77,6 +80,9 @@ public class CameraPreviewActivity extends AppCompatActivity  {
     private Random rand;
     private boolean isSystemUiShown;
     private View decorView;
+    private FrameLayout mSavedImg;
+    private Bitmap pic;
+    private Intent intent;
 
     // FILE STORAGE DECLARATIONS
     private File directory;
@@ -120,6 +126,7 @@ public class CameraPreviewActivity extends AppCompatActivity  {
         ivAutoFocus = (ImageView) findViewById(R.id.ivAutoFocus);
         msgsButton = (ImageButton) findViewById(R.id.btn_msgs);
         filtersButton = (ImageButton) findViewById(R.id.btn_filters);
+        mSavedImg = (FrameLayout) findViewById(R.id.mSavedImg);
 
         if(checkGooglePlayAvailability()) {
             requestPermissionThenOpenCamera();
@@ -152,7 +159,7 @@ public class CameraPreviewActivity extends AppCompatActivity  {
                     filtersButton.setVisibility(View.GONE);
 
                     if(mCameraSource != null)
-                        mCameraSource.takePicture(cameraSourceShutterCallback, cameraSourcePictureCallback);
+                        mCameraSource.takePicture(cameraSourceShutterCallback, cameraSourcePictureCallback, mPreview);
                 }
             });
 
@@ -160,7 +167,7 @@ public class CameraPreviewActivity extends AppCompatActivity  {
             friendsButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent i = new Intent(getApplicationContext(), FriendsActivity.class);
+                    Intent i = new Intent(getApplicationContext(), NavBarActivity.class);
                     startActivity(i);
                 }
             });
@@ -200,7 +207,7 @@ public class CameraPreviewActivity extends AppCompatActivity  {
 
         //***************************THIS IS WHERE THE "MAGIC" HAPPENS!!!"
         public void onPictureTaken(Bitmap picture) {
-            mPreview.stop();
+            //mPreview.stop();
             Log.d(TAG, "Taken picture is here!");
             //***************************BUTTONS RUN ON THREAD"
             runOnUiThread(new Runnable() {
@@ -212,29 +219,78 @@ public class CameraPreviewActivity extends AppCompatActivity  {
                 }
             });
 
-            //Sending the bitmap to ImageViewActivity
-            FileOutputStream out = null;
+
+            intent = new Intent(getApplicationContext(), ImageViewActivity.class);
             try {
-                String filename = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-                FileOutputStream stream = context.openFileOutput(filename, Context.MODE_PRIVATE);
-                picture.compress(Bitmap.CompressFormat.PNG, 100, stream);
 
-                //Cleanup
-                stream.close();
-                picture.recycle();
 
-                //pop intent
-                Intent intent = new Intent(getApplicationContext(), ImageViewActivity.class);
-                intent.putExtra("image", filename);
-                intent.putExtra("usingFrontCamera", usingFrontCamera);
+
+
+                picture = getResizedBitmap(picture, 1920);
+
+                if(usingFrontCamera) {
+                    Matrix matrix = new Matrix();
+                    matrix.preScale(-1.0f, 1.0f);
+                    picture = Bitmap.createBitmap(picture, 0, 0, picture.getWidth(), picture.getHeight(), matrix, true);
+                }
+
+
+
+
+
+
+                //SCREENSHOT logic
+                String fname = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+                // create bitmap screen capture
+                //View v1 = getWindow().getDecorView().getRootView();
+                //v1.setDrawingCacheEnabled(true);
+               // Bitmap screenshot = Bitmap.createBitmap(v1.getDrawingCache());
+                //v1.setDrawingCacheEnabled(false);
+                mPreview.setDrawingCacheEnabled(true);
+                Bitmap screenshot = Bitmap.createBitmap(mPreview.getDrawingCache());
+                mPreview.setDrawingCacheEnabled(false);
+                //debugging
+                Log.d("Screenshot Resolution", "Resolution Width: " + screenshot.getWidth());
+                Log.d("Screenshot Resolution", "Resolution Height: " + screenshot.getHeight());
+                screenshot = overlay(picture,screenshot);
+                FileOutputStream strm =  context.openFileOutput(fname, Context.MODE_PRIVATE);
+                screenshot.compress(Bitmap.CompressFormat.JPEG, 100, strm);
+
+                strm.close();
+                screenshot.recycle();
+                //SEND bitmap TO IMAGEVIEWACTIVITY
+                intent.putExtra("screenshot", fname);
                 startActivity(intent);
-
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     };
+
+    private Bitmap overlay(Bitmap bmp1, Bitmap bmp2) {
+        Bitmap bmOverlay = Bitmap.createBitmap(bmp1.getWidth(), bmp1.getHeight(), bmp1.getConfig());
+        Canvas canvas = new Canvas(bmOverlay);
+        canvas.drawBitmap(bmp1, new Matrix(), null);
+        canvas.drawBitmap(bmp2, new Matrix(), null);
+        return bmOverlay;
+    }
+
+    public Bitmap getResizedBitmap(Bitmap image, int maxSize) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+
+        float bitmapRatio = (float) width / (float) height;
+        if (bitmapRatio > 1) {
+            width = maxSize;
+            height = (int) (width / bitmapRatio);
+        } else {
+            height = maxSize;
+            width = (int) (height * bitmapRatio);
+        }
+
+        return Bitmap.createScaledBitmap(image, width, height, true);
+    }
 
     final CameraSource.ShutterCallback cameraSourceShutterCallback = new CameraSource.ShutterCallback() {@Override public void onShutter() {Log.d(TAG, "Shutter Callback!");}};
 
@@ -344,6 +400,7 @@ public class CameraPreviewActivity extends AppCompatActivity  {
 
         startCameraSource();
     }
+
 
 
 

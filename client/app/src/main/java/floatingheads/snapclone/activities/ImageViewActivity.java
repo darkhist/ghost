@@ -25,6 +25,13 @@ import floatingheads.snapclone.ImageViewGestures.OnPhotoTapListener;
 import floatingheads.snapclone.ImageViewGestures.OnSingleFlingListener;
 import floatingheads.snapclone.ImageViewGestures.PhotoView;
 
+import org.opencv.android.BaseLoaderCallback;
+import org.opencv.android.LoaderCallbackInterface;
+import org.opencv.android.OpenCVLoader;
+import org.opencv.android.Utils;
+import org.opencv.core.Mat;
+import org.opencv.core.Core;
+
 /**
  * Created by Akira on 4/15/2018.
  */
@@ -42,18 +49,103 @@ public class ImageViewActivity extends AppCompatActivity {
     private Toast mCurrentToast;
     private Matrix mCurrentDisplayMatrix = null;
     private Bitmap bOut;
-    private boolean usingFront;
+    private boolean needs2BeFlipped;
     private ImageButton sendButton;
     private ImageButton saveButton;
+    private Bitmap pictureBmp;
+    private Bitmap screenshotBmp;
+    private Drawable dPicture;
+    private Drawable dScreenshot;
+    private Mat mat;
+    private Mat flipped;
+
+  /*  private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
+        @Override
+        public void onManagerConnected(int status) {
+            switch (status) {
+                case LoaderCallbackInterface.SUCCESS:
+                {
+                    Log.i("OpenCV", "OpenCV loaded successfully");
+                    flipped = new Mat();
+                    mat = new Mat();
+                } break;
+                default:
+                {
+                    super.onManagerConnected(status);
+                } break;
+            }
+        }
+    };*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //Setup Resource Files
         setContentView(R.layout.imageview);
+        sendButton = findViewById(R.id.btn_send);
+        saveButton = findViewById(R.id.btn_save);
+        mPhotoView = findViewById(R.id.iv_photo);
 
-        sendButton = (ImageButton) findViewById(R.id.btn_send);
-        saveButton = (ImageButton) findViewById(R.id.btn_save);
+        //Initialize variables
+        pictureBmp = null;
+        screenshotBmp = null;
 
+
+        //Getting the screenshot (overlay image) sent from the CameraPreviewActivity
+        String fname = getIntent().getStringExtra("screenshot");
+        try {
+            FileInputStream is2 = this.openFileInput(fname);
+            screenshotBmp = BitmapFactory.decodeStream(is2);
+            is2.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        //Getting the picture sent from the CameraPreviewActivity
+       /* String filename = getIntent().getStringExtra("picture");
+        try {
+            FileInputStream is = this.openFileInput(filename);
+            pictureBmp = BitmapFactory.decodeStream(is);
+            is.close();
+            } catch (Exception e) {
+            e.printStackTrace();
+            }*/
+
+
+
+        //Check if picture needs to be flipped and get picture
+        //needs2BeFlipped = getIntent().getExtras().getBoolean("needs2BeFlipped");
+
+       /* if(needs2BeFlipped){
+            mat =new Mat(pictureBmp.getWidth(), pictureBmp.getHeight(), 22);
+            flipped = new Mat(pictureBmp.getWidth(), pictureBmp.getHeight(), 22);
+            pictureBmp = pictureBmp.copy(Bitmap.Config.ARGB_8888, true);
+            Utils.bitmapToMat(pictureBmp, mat);
+            Core.flip(mat,flipped,-1);
+            Utils.matToBitmap(mat,pictureBmp,true);
+
+            Matrix matrix = new Matrix();
+            matrix.preScale(-1.0f, 1.0f);
+            pictureBmp = Bitmap.createBitmap(pictureBmp, 0, 0, pictureBmp.getWidth(), pictureBmp.getHeight(), matrix, true);
+        }*/
+
+        //Get screenshot
+        dScreenshot = new BitmapDrawable(getResources(), screenshotBmp);
+        mPhotoView.setImageDrawable(dScreenshot);
+
+
+        //dScreenshot = new BitmapDrawable(getResources(), screenshotBmp);
+        //mPhotoView.setImageDrawable(dScreenshot);
+
+
+
+        // Lets attach some listeners, not required though!
+        //mPhotoView.setOnMatrixChangeListener(new MatrixChangeListener());
+        //mPhotoView.setOnPhotoTapListener(new PhotoTapListener());
+        //mPhotoView.setOnSingleFlingListener(new SingleFlingListener());
+
+        //Listener for Send Button
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -63,55 +155,17 @@ public class ImageViewActivity extends AppCompatActivity {
             }
         });
 
+        //Listener for Save Button
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //Pop up message indicating image saved
             }
         });
-
-
-
-        Bitmap bmp = null;
-        usingFront = getIntent().getExtras().getBoolean("usingFrontCamera");
-
-        //Getting the bitmap sent in CameraPreviewActivity
-        String filename = getIntent().getStringExtra("image");
-        try {
-            FileInputStream is = this.openFileInput(filename);
-            bmp = BitmapFactory.decodeStream(is);
-            is.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        mPhotoView = findViewById(R.id.iv_photo);
-        //mCurrMatrixTv = findViewById(R.id.tv_current_matrix);
-
-        if(!usingFront){
-            Drawable d = new BitmapDrawable(getResources(), bmp);
-            mPhotoView.setImageDrawable(d);
-        }
-
-        else {
-
-            Matrix matrix = new Matrix();
-            matrix.preScale(-1.0f, 1.0f);
-            bOut = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), matrix, true);
-            Drawable d = new BitmapDrawable(getResources(), bOut);
-            mPhotoView.setImageDrawable(d);
-
-        }
-
-
-
-
-
-        // Lets attach some listeners, not required though!
-        //mPhotoView.setOnMatrixChangeListener(new MatrixChangeListener());
-        //mPhotoView.setOnPhotoTapListener(new PhotoTapListener());
-        //mPhotoView.setOnSingleFlingListener(new SingleFlingListener());
     }
+
+
+
 
     private class PhotoTapListener implements OnPhotoTapListener {
 
