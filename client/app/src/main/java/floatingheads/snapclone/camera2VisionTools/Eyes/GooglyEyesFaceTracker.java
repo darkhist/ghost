@@ -37,7 +37,7 @@ import java.util.Map;
  * face was detected but one or both of the eyes were not detected.  Missing landmarks can happen
  * during quick movements due to camera image blurring.
  */
-public class GooglyFaceTracker extends Tracker<Face> {
+public class GooglyEyesFaceTracker extends Tracker<Face> {
     private static final float EYE_CLOSED_THRESHOLD = 0.4f;
 
     private GraphicOverlay mOverlay;
@@ -58,7 +58,7 @@ public class GooglyFaceTracker extends Tracker<Face> {
     // Methods
     //==============================================================================================
 
-    public GooglyFaceTracker(GraphicOverlay overlay) {
+    public GooglyEyesFaceTracker(GraphicOverlay overlay) {
         mOverlay = overlay;
     }
 

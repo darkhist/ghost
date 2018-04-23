@@ -71,12 +71,13 @@ public class CameraSourcePreview extends ViewGroup {
      * @param cameraSource
      * @throws IOException
      */
-    private void start(CameraSource cameraSource) throws IOException {
+    public void start(CameraSource cameraSource) throws IOException {
         if (cameraSource == null) {stop();}
         mCameraSource = cameraSource;
         if (mCameraSource != null) {
             mStartRequested = true;
-            if(!viewAdded) {
+           if(!viewAdded) {
+
                 addView(mSurfaceView);
                 viewAdded = true;
             }
@@ -117,6 +118,24 @@ public class CameraSourcePreview extends ViewGroup {
                 mStartRequested = false;
 
             } catch (SecurityException e) {Log.d(TAG, "SECURITY EXCEPTION: "+e);}
+        }
+    }
+
+    private void setOverlay(GraphicOverlay overlay){
+        mOverlay = overlay;
+        Size size = mCameraSource.getPreviewSize();
+        if(size != null) {
+            int min = Math.min(size.getWidth(), size.getHeight());
+            int max = Math.max(size.getWidth(), size.getHeight());
+            if (!Utils.isPortrait(mContext)) {
+                mOverlay.setCameraInfo(min, max, mCameraSource.getCameraFacing());
+            }
+            // FOR GRAPHIC OVERLAY, THE PREVIEW SIZE WAS REDUCED TO QUARTER
+            // IN ORDER TO PREVENT CPU OVERLOAD
+            mOverlay.setCameraInfo(min/4, max/4, mCameraSource.getCameraFacing());
+            mOverlay.clear();
+        } else {
+        stop();
         }
     }
 

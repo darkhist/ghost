@@ -48,8 +48,9 @@ public class NavBarActivity extends AppCompatActivity {
 
         // create bundle to pass user data< to other fragments
 
-        // users
+
         Bundle masterUserBundle = new Bundle();
+
         masterUserBundle.putInt("uid", getIntent().getExtras().getInt("uid"));
         masterUserBundle.putString("firstName", getIntent().getExtras().getString("firstName"));
         masterUserBundle.putString("lastName", getIntent().getExtras().getString("lastName"));
@@ -87,7 +88,7 @@ public class NavBarActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.nav_profile:
-                         setFragment(profileFragment);
+                        setFragment(profileFragment);
                         return true;
 
                     case R.id.nav_friends:
@@ -99,7 +100,7 @@ public class NavBarActivity extends AppCompatActivity {
 //                        return true;
 
                     case R.id.nav_messages:
-                         setFragment(messagesFragment);
+                        setFragment(messagesFragment);
                         return true;
                 }
                 return false;
