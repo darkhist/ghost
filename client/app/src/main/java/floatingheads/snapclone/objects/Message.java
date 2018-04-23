@@ -6,38 +6,36 @@ package floatingheads.snapclone.objects;
 
 public class Message {
 
-    private String ID;
+    private int ID;
     private String message;
     private String user;
     private long timestamp;
+    private String imageURI;
 
     public Message() {
         // Constructor
     }
 
-    public String getID() {
+    public int getID() {
         return ID;
     }
 
-    public String getMessage() {
-        return message;
-    }
+    public String getMessage() { return message; }
 
-    public String getUser() {
-        return user;
-    }
+    public String getUser() { return user; }
 
-    public long getTimestamp() {return timestamp; }
+    public long getTimestamp() { return timestamp; }
 
-    public void setID(String ID) {
-        this.ID = ID;
-    }
+    public String getImageURI() { return imageURI; }
 
-    public void setMessage(String message) {
-       this.message = message;
-    }
+    public void setID(int ID) { this.ID = ID; }
+
+    public void setMessage(String message) { this.message = message; }
 
     public void setUser(String user) { this.user = user; }
 
-    public void setTimestamp(long timestamp) {this.timestamp = timestamp;}
+    public void setTimestamp(long timestamp) { this.timestamp = timestamp; }
+
+    public void setImageURI(String imageURI) { this.imageURI = imageURI; }
+
 }

@@ -39,6 +39,11 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
         chatList.add(data);
     }
 
+    public void remove(int position) {
+        chatList.remove(position);
+        notifyItemRemoved(position);
+    }
+
     @Override
     public int getItemCount() {
         return chatList.size();
