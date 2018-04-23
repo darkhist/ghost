@@ -28,7 +28,9 @@ import floatingheads.snapclone.objects.VolleyCallback;
 public class ProfileViewActivity extends AppCompatActivity {
 
     private User user;
+    private TextView friendsCount;
     private VolleyActions va;
+    private Context context = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +39,7 @@ public class ProfileViewActivity extends AppCompatActivity {
         setContentView(R.layout.profile);
 
         user = new User();
+        friendsCount = findViewById(R.id.gen_profileFriendsNum);
 
         if (getIntent().hasExtra("uid")) user.setId(getIntent().getExtras().getInt("uid"));
         if (getIntent().hasExtra("firstName")) user.setFirstName(getIntent().getExtras().getString("firstName"));
@@ -72,16 +75,15 @@ public class ProfileViewActivity extends AppCompatActivity {
         va.makeJSONArrayRequest(Const.friendsURL, new VolleyCallback() {
             @Override
             public void onSuccessResponse(JSONArray result) {
-                TextView friendsCount = ProfileViewActivity.this.findViewById(R.id.gen_profileFriendsNum);
+                Toast.makeText(context, friendsCount.getText(), Toast.LENGTH_SHORT).show();
 
-                JSONObject user;
+                JSONObject juser;
                 String friends = null;
-                int[] friendsArr;
 
                 for (int i = 0; i < result.length(); i++) {
                     try {
-                        if ((user = result.getJSONObject(i)).getInt("userID") == ProfileViewActivity.this.user.getId()) {
-                            friends = user.getString("friends");
+                        if ((juser = result.getJSONObject(i)).getInt("userID") == user.getId()) {
+                            friends = juser.getString("friends");
                             break;
                         }
                     } catch (JSONException e) {
