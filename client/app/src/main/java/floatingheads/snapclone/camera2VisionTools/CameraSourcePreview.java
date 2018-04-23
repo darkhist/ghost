@@ -121,24 +121,6 @@ public class CameraSourcePreview extends ViewGroup {
         }
     }
 
-    private void setOverlay(GraphicOverlay overlay){
-        mOverlay = overlay;
-        Size size = mCameraSource.getPreviewSize();
-        if(size != null) {
-            int min = Math.min(size.getWidth(), size.getHeight());
-            int max = Math.max(size.getWidth(), size.getHeight());
-            if (!Utils.isPortrait(mContext)) {
-                mOverlay.setCameraInfo(min, max, mCameraSource.getCameraFacing());
-            }
-            // FOR GRAPHIC OVERLAY, THE PREVIEW SIZE WAS REDUCED TO QUARTER
-            // IN ORDER TO PREVENT CPU OVERLOAD
-            mOverlay.setCameraInfo(min/4, max/4, mCameraSource.getCameraFacing());
-            mOverlay.clear();
-        } else {
-        stop();
-        }
-    }
-
     private final SurfaceHolder.Callback mSurfaceViewListener = new SurfaceHolder.Callback() {
         @Override
         public void surfaceCreated(SurfaceHolder surface) {

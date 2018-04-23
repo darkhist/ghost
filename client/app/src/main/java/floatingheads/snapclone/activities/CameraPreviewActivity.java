@@ -21,6 +21,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
@@ -82,6 +83,8 @@ public class CameraPreviewActivity extends AppCompatActivity  {
     private FrameLayout mSavedImg;
     private Intent intent;
     private HorizontalScrollView scrollView;
+    private boolean buttonClicked;
+    private ViewGroup vg;
 
     // FILE STORAGE DECLARATIONS
     private File directory;
@@ -123,12 +126,12 @@ public class CameraPreviewActivity extends AppCompatActivity  {
         msgsButton = (ImageButton) findViewById(R.id.btn_msgs);
         filtersButton = (ImageButton) findViewById(R.id.btn_filters);
         mSavedImg = (FrameLayout) findViewById(R.id.mSavedImg);
+        buttonClicked = false;
         //scrollView = (HorizontalScrollView) findViewById(R.id.ScrollView);
 
         //scrollView.setVisibility(View.GONE);
 
-        // ViewGroup vg = (ViewGroup)(scrollView.getParent());
-        //vg.removeView(scrollView);
+
 
         if(checkGooglePlayAvailability()) {
             requestPermissionThenOpenCamera();
@@ -189,9 +192,24 @@ public class CameraPreviewActivity extends AppCompatActivity  {
             filtersButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Context context = getApplicationContext();
-                    GooglyOverlay googly = new GooglyOverlay(usingFrontCamera, mGraphicOverlay);
-                    detector = googly.createFaceDetector(context);
+                    if(buttonClicked){
+                        Context context = getApplicationContext();
+                        ClearOverlay transparent = new ClearOverlay(usingFrontCamera, mGraphicOverlay);
+                        detector = transparent.createFaceDetector(context);
+                        createCameraSource(detector);
+                        vg = (ViewGroup)(mGraphicOverlay.getParent());
+                        vg.removeView(mGraphicOverlay);
+                    }else {
+                        if(mGraphicOverlay == null){
+                            vg.addView(mGraphicOverlay);
+                            mGraphicOverlay = (GraphicOverlay) findViewById(R.id.faceOverlay);
+                        }
+                        Context context = getApplicationContext();
+                        GooglyOverlay googly = new GooglyOverlay(usingFrontCamera, mGraphicOverlay);
+                        detector = googly.createFaceDetector(context);
+                        createCameraSource(detector);
+                    }
+                    buttonClicked = !buttonClicked;
                 }
             });
 
