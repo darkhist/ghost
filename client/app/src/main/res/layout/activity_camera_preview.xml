@@ -33,7 +33,6 @@
         style="@android:style/Widget.Holo.Light.ImageButton"
         android:backgroundTint="@android:color/transparent"
         android:scaleType="fitCenter"
-        android:text="@string/switch_camera"
         android:layout_alignParentEnd="true"
         android:src="@drawable/othercam_w"
         tools:ignore="ContentDescription"/>
@@ -49,7 +48,6 @@
            android:layout_centerHorizontal="true"
            android:layout_alignParentBottom="true"
            android:src="@drawable/btn_shutter_background"
-           android:text="@string/take_picture"
            tools:ignore="ContentDescription"/>
 
     <ImageButton
@@ -63,7 +61,6 @@
         android:backgroundTint="@android:color/transparent"
         android:scaleType="fitCenter"
         android:src="@drawable/filters_w"
-        android:text="@string/take_picture"
         tools:ignore="ContentDescription" />
 
     <ImageButton
@@ -77,7 +74,6 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:src="@drawable/msgs_w"
-        android:text="@string/take_picture"
         tools:ignore="ContentDescription"/>
 
     <ImageButton
@@ -91,7 +87,6 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
         android:src="@drawable/friends_w"
-        android:text="@string/take_picture"
         tools:ignore="ContentDescription"/>
 
     <ImageView
@@ -102,5 +97,57 @@
         android:src="@drawable/btn_autofocus"
         android:visibility="gone"/>
 
+    <!--<HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/ScrollView"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content" >
+
+        <RelativeLayout
+            android:id="@+id/RelativeLayout01"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="150dp">
+                <ImageButton
+                    android:id="@+id/btn_filter1"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:scaleType="fitCenter"
+                    android:layout_alignParentBottom="true"
+                    android:src="@drawable/googly">
+
+                </ImageButton>
+                <ImageButton
+                    android:id="@+id/btn_filter2"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:scaleType="fitCenter"
+                    android:layout_toEndOf="@+id/btn_filter1"
+                    android:layout_alignParentBottom="true"
+                    android:src="@drawable/googly">
+                </ImageButton>
+                <ImageButton
+                    android:id="@+id/btn_filter3"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:scaleType="fitCenter"
+                    android:layout_toEndOf="@+id/btn_filter2"
+                    android:layout_alignParentBottom="true"
+                    android:src="@drawable/googly">
+                </ImageButton>
+            <ImageButton
+                android:id="@+id/btn_filter4"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:scaleType="fitCenter"
+                android:layout_toEndOf="@+id/btn_filter3"
+                android:layout_alignParentBottom="true"
+                android:src="@drawable/googly">
+            </ImageButton>
+        </RelativeLayout>
+    </HorizontalScrollView>-->
+
 
 </RelativeLayout>
+
+
+
