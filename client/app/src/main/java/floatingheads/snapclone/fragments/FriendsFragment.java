@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -33,6 +34,7 @@ import java.util.Collections;
 
 import floatingheads.snapclone.R;
 import floatingheads.snapclone.activities.AddFriendsActivity;
+import floatingheads.snapclone.activities.CameraPreviewActivity;
 import floatingheads.snapclone.net_utils.Const;
 import floatingheads.snapclone.objects.CustomListAdapter;
 import floatingheads.snapclone.objects.Friend;
@@ -47,8 +49,9 @@ import floatingheads.snapclone.objects.VolleyCallback;
 public class FriendsFragment extends Fragment {
 
     private MaterialSearchView searchView;
-    private String usersURL = Const.usersURL;
-    private String friendsURL = Const.friendsURL;
+    private static String usersURL = Const.usersURL;
+    private static String friendsURL = Const.friendsURL;
+    private Button backToCamera;
 
     /**
      * User which contains logged in user's credentials
@@ -97,6 +100,8 @@ public class FriendsFragment extends Fragment {
         toolbar.setTitleTextColor(Color.WHITE);
 
         searchView = (MaterialSearchView) inflatedView.findViewById(R.id.search_view);
+
+        backToCamera = (Button) inflatedView.findViewById(R.id.cam_friends_btn);
 
         VolleyActions va = new VolleyActions(friendsFragmentContext);
         ArrayList<Friend> friendArrayList = new ArrayList<>();
@@ -246,6 +251,14 @@ public class FriendsFragment extends Fragment {
                     friendsList.setAdapter(adapter);
                 }
                 return true;
+            }
+        });
+
+        backToCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getContext(), CameraPreviewActivity.class);
+                startActivity(i);
             }
         });
 

@@ -1,14 +1,17 @@
 package floatingheads.snapclone.fragments;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import floatingheads.snapclone.R;
+import floatingheads.snapclone.activities.CameraPreviewActivity;
 
 
 /**
@@ -16,11 +19,13 @@ import floatingheads.snapclone.R;
  */
 public class ProfileFragment extends Fragment {
 
+    private Button backToCameraBtn;
+
     /**
      * Required default constructor
      */
     public ProfileFragment() {
-        // Required empty public constructor
+        //
     }
 
     /**
@@ -55,6 +60,16 @@ public class ProfileFragment extends Fragment {
         String fullName = first + " " + last;
 
         name.setText(fullName);
+
+        backToCameraBtn = (Button) profileView.findViewById(R.id.profile_to_camera);
+
+        backToCameraBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getContext(), CameraPreviewActivity.class);
+                startActivity(i);
+            }
+        });
 
         return profileView;
     }

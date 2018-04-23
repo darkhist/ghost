@@ -1,6 +1,7 @@
 package floatingheads.snapclone.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,10 +9,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import java.util.ArrayList;
 
 import floatingheads.snapclone.R;
+import floatingheads.snapclone.activities.CameraPreviewActivity;
 import floatingheads.snapclone.objects.Contact;
 import floatingheads.snapclone.objects.MessagesView;
 
@@ -44,6 +47,8 @@ public class NotificationsFragment extends Fragment {
 
         Context messagesFragmentContext = this.getContext();
 
+        Button backtoCameraBtn = inflatedView.findViewById(R.id.cam_notis_btn);
+
         // TODO integrate with firebase
         ArrayList<Contact> contactArrayList = new ArrayList<>();
         contactArrayList.add(new Contact(1, "Quinn", "Salas", "yo wassup homie?"));
@@ -52,6 +57,13 @@ public class NotificationsFragment extends Fragment {
 
         MessagesView friendsList = (MessagesView) inflatedView.findViewById(R.id.messagesListView);
         friendsList.setContents(contactArrayList);
+
+        backtoCameraBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(messagesFragmentContext, CameraPreviewActivity.class);
+            }
+        });
 
         return inflatedView;
     }
