@@ -20,6 +20,7 @@ JNIEXPORT jboolean JNICALL Java_floatingheads_snapclone_activities_CVImgProcCame
         jint width, jint height,
         jbyteArray NV21FrameData, jintArray outPixels)
 {
+    //type conversion
     jbyte * pNV21FrameData = env->GetByteArrayElements(NV21FrameData, 0);
     jint * poutPixels = env->GetIntArrayElements(outPixels, 0);
 
@@ -41,3 +42,4 @@ JNIEXPORT jboolean JNICALL Java_floatingheads_snapclone_activities_CVImgProcCame
     env->ReleaseIntArrayElements(outPixels, poutPixels, 0);
     return true;
 }
+

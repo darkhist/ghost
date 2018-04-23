@@ -7,79 +7,104 @@ import android.support.annotation.NonNull;
  * Created by Mike on 2/23/18.
  */
 
-public class Friend implements Comparable<Friend> {
+public class Friend extends User implements Comparable<Friend> {
 
     // will incorporate avatar image soon hopefully
 
-    private int userID;
-    private String userFirstName;
-    private String userLastName;
-    private String lastMessage;
-    private Bitmap avatar;
+    public static final int STATUS_PENDING = 0, STATUS_ACCEPTED = 1, STATUS_REJECTED = 2, STATUS_BLOCKED = 3;
+    private int status;
 
+
+    /**
+     * Constructor calls default User constructor
+     */
     public Friend() {
-        userID = -1;
-        userFirstName = "Sample";
-        userLastName = "Friend";
-        lastMessage = "";
-        avatar = null;
+        super();
     }
 
-    public Friend(int userID, String userFirstName, String userLastName) {
-        this.userID = userID;
-        this.userFirstName = userFirstName;
-        this.userLastName = userLastName;
-        this.lastMessage = "";
-        avatar = null;
+    /**
+     * Constructor calls default constructor and initialized variables using User methods
+     * @param userID
+     * @param userFirstName
+     * @param userLastName
+     * @param status
+     */
+    public Friend(int userID, String userFirstName, String userLastName, int status) {
+        this();
+        setId(userID);
+        setFirstName(userFirstName);
+        setLastName(userLastName);
+        this.status = status;
+        setAvatar();
     }
 
-    public Friend(int userID, String userFirstName, String userLastName, Bitmap avatar) {
-        this(userID, userFirstName, userLastName);
-        this.avatar = avatar;
+    /**
+     * Constructor calls default constructor and initialized variables using User methods
+     * Initializes avatar
+     * @param userID
+     * @param userFirstName
+     * @param userLastName
+     * @param status
+     * @param avatar
+     */
+    public Friend(int userID, String userFirstName, String userLastName, int status, Bitmap avatar) {
+        this(userID, userFirstName, userLastName, status);
+        setAvatar();
     }
 
-    public void setUserID(int userID) {
-        this.userID = userID;
+    public void toggleStatusPending() {
+
     }
 
-    public void setUserFirstName(String userFirstName) {
-        this.userFirstName = userFirstName;
+    public void toggleStatusAccepted() {
+
     }
 
-    public void setUserLastName(String userLastName) {
-        this.userFirstName = userLastName;
+    public void toggleStatusRejected() {
+
     }
 
-    public void setAvatar(Bitmap avatar) {
-        this.avatar = avatar;
+    public void toggleStatusBlocked() {
+
     }
 
-    public int getUserID() {
-        return userID;
+    public boolean isStatusPending() {
+        return status == STATUS_PENDING;
     }
 
-    public String getUserFirstName() {
-        return userFirstName;
+    public boolean isStatusAccepted() {
+        return status == STATUS_ACCEPTED;
     }
 
-    public String getUserLastName() {
-        return userLastName;
+    public boolean isStatusRejected() {
+        return status == STATUS_REJECTED;
     }
 
-    public Bitmap getAvatar() {
-        return avatar;
+    public boolean isStatusBlocked() {
+        return status == STATUS_BLOCKED;
     }
 
+    /**
+     * Compared friends based on alphabetical order of names
+     * A name is the friends first and last name
+     *
+     * Returns -1 if friend 1 comes before friend 2 (o)
+     * Returns 1 if friend 1 comes after friend 2 (o)
+     * Returns 0 if friends names are identical
+     *
+     * @param o
+     * @return
+     */
 //    @Override
     public int compareTo(@NonNull Friend o) {
 
-        String name1 = getUserFirstName() + getUserLastName();
+        String name1 = getFirstName() + getLastName();
         Friend f;
 
         if (o instanceof Friend) {
             f = (Friend) o;
 
-            String name2 = f.getUserFirstName() + f.getUserLastName();
+            String name2 = f.getFirstName() + f.getLastName();
 
             if (name1.compareTo(name2) < 0)
                 return -1;

@@ -7,20 +7,40 @@
     android:orientation="vertical"
     tools:context="floatingheads.snapclone.fragments.ChatFragment">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/chat_message"
-        android:layout_width="match_parent"
-        android:layout_above="@+id/chat_input"
-        android:paddingBottom="20dp"
-        android:background="@android:color/darker_gray"
-        android:layout_height="match_parent"/>
-
     <EditText
         android:id="@+id/chat_input"
+        android:layout_width="fill_parent"
+        android:background="#FFFFFF"
+        android:layout_height="48dp"
         android:layout_alignParentBottom="true"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:inputType="text"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="50dp"
+        android:paddingStart="48dp"
+        android:paddingEnd="0dp"
+        android:hint="@string/chat_input"
         android:imeOptions="actionSend"
-        android:hint="@string/chat_input"/>
+        android:inputType="text|textAutoCorrect" />
+
+    <ImageButton
+        android:id="@+id/attach"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/chat_messages"
+        android:contentDescription="@string/add_btn_content_description"
+        android:src="@mipmap/ic_add_black_24dp" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/chat_messages"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/chat_input"
+        android:background="#FFFFFF"
+        android:paddingBottom="20dp" />
+
+    <ImageView
+        android:id="@+id/chat_bubble"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/chat_bubble_content_description" />
 </RelativeLayout>

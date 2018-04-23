@@ -89,6 +89,10 @@ public class CameraSource {
     @SuppressLint("InlinedApi")
     public static final int CAMERA_FACING_FRONT = CameraInfo.CAMERA_FACING_FRONT;
 
+    //height width requested
+    private int mRequestedPreviewWidth = 1024;
+    private int mRequestedPreviewHeight = 768;
+
     private static final String TAG = "CameraSource";
     private static final double ratioTolerance = 0.1;
     private static final double maxRatioTolerance = 0.15;
@@ -225,6 +229,25 @@ public class CameraSource {
 
         public Builder setFlashMode(@FlashMode String mode) {
             mCameraSource.mFlashMode = mode;
+            return this;
+        }
+
+        /**
+         * Sets the desired width and height of the camera frames in pixels.  If the exact desired
+         * values are not available options, the best matching available options are selected.
+         * Also, we try to select a preview size which corresponds to the aspect ratio of an
+         * associated full picture size, if applicable.  Default: 1024x768.
+         */
+        public Builder setRequestedPreviewSize(int width, int height) {
+            // Restrict the requested range to something within the realm of possibility.  The
+            // choice of 1000000 is a bit arbitrary -- intended to be well beyond resolutions that
+            // devices can support.  We bound this to avoid int overflow in the code later.
+            final int MAX = 1000000;
+            if ((width <= 0) || (width > MAX) || (height <= 0) || (height > MAX)) {
+                throw new IllegalArgumentException("Invalid preview size: " + width + "x" + height);
+            }
+            mCameraSource.mRequestedPreviewWidth = width;
+            mCameraSource.mRequestedPreviewHeight = height;
             return this;
         }
 
@@ -558,14 +581,14 @@ public class CameraSource {
      * @param shutter the callback for image capture moment, or null
      * @param jpeg    the callback for JPEG image data, or null
      */
-    public void takePicture(ShutterCallback shutter, PictureCallback jpeg) {
+    public void takePicture(ShutterCallback shutter, PictureCallback jpeg, CameraSourcePreview preview) {
         Log.d("ASD", "TRYING TO TAKE PICTURE");
         synchronized (mCameraLock) {
             if (mCamera != null) {
                 setFlashMode(mFlashMode);
                 PictureStartCallback startCallback = new PictureStartCallback();
                 startCallback.mDelegate = shutter;
-                PictureDoneCallback doneCallback = new PictureDoneCallback();
+                PictureDoneCallback doneCallback = new PictureDoneCallback(preview);
                 doneCallback.mDelegate = jpeg;
                 mCamera.takePicture(startCallback, null, null, doneCallback);
             }
@@ -818,6 +841,7 @@ public class CameraSource {
      * Wraps the camera1 shutter callback so that the deprecated API isn't exposed.
      */
     private class PictureStartCallback implements Camera.ShutterCallback {
+
         private ShutterCallback mDelegate;
 
         @Override
@@ -834,6 +858,11 @@ public class CameraSource {
      */
     private class PictureDoneCallback implements Camera.PictureCallback {
         private PictureCallback mDelegate;
+        private CameraSourcePreview preview;
+
+        PictureDoneCallback(CameraSourcePreview preview){
+            this.preview = preview;
+        }
 
         @Override
         public void onPictureTaken(byte[] data, Camera camera) {
@@ -844,7 +873,8 @@ public class CameraSource {
 
             synchronized (mCameraLock) {
                 if (mCamera != null) {
-                    mCamera.startPreview();
+                    //mCamera.startPreview();
+                    preview.stop();
                 }
             }
         }

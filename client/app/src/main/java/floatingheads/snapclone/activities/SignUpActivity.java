@@ -38,16 +38,16 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import floatingheads.snapclone.R;
 import floatingheads.snapclone.net_utils.Const;
-import floatingheads.snapclone.volleyController.AppController;
+import floatingheads.snapclone.controllers.AppController;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -138,6 +138,9 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
 
     /**
      * Callback received when a permissions request has been completed.
+     * @param requestCode
+     * @param permissions
+     * @param grantResults
      */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
@@ -209,12 +212,24 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
     }
 
     private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
-        return email.contains("@");
+        /*
+        requirements:
+        - email must have only one @
+        - email first or last char cannot be '.'
+        - email can only contain characters, digits, underscore, dash, dot
+        - top level domain (TLD) can't start with '.'
+        - TLD must contain > 2 chars
+        - TLD can only contain characters and digits
+        - double '.' ('..') not allowed
+         */
+
+        final String emailPattern = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+        Pattern pattern = Pattern.compile(emailPattern);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
     }
 
     private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
         return password.length() > 4;
     }
 
@@ -254,6 +269,12 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
         }
     }
 
+    /**
+     *
+     * @param i
+     * @param bundle
+     * @return
+     */
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         return new CursorLoader(this,
@@ -271,6 +292,11 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
                 ContactsContract.Contacts.Data.IS_PRIMARY + " DESC");
     }
 
+    /**
+     *
+     * @param cursorLoader
+     * @param cursor
+     */
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
         List<String> emails = new ArrayList<>();
@@ -282,6 +308,10 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
         addEmailsToAutoComplete(emails);
     }
 
+    /**
+     * Adds sign in email to a list of previously tried emails for autocomplete
+     * @param cursorLoader
+     */
     @Override
     public void onLoaderReset(Loader<Cursor> cursorLoader) {}
 
@@ -294,6 +324,10 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
         mEmailView.setAdapter(adapter);
     }
 
+    /**
+     * Redirects user to sign up activity if they click the login link
+     * @param v
+     */
     // Click Handler for Suggest Login Text
     public void onClick(View v) {
         Intent i = new Intent(getApplicationContext(), LoginActivity.class);
