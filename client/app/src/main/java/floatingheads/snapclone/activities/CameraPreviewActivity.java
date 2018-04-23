@@ -10,16 +10,21 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -38,7 +43,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Random;
 
 import floatingheads.snapclone.R;
 import floatingheads.snapclone.androidScreenUtils.Utils;
@@ -46,6 +50,7 @@ import floatingheads.snapclone.camera2VisionTools.CameraSource;
 import floatingheads.snapclone.camera2VisionTools.CameraSourcePreview;
 import floatingheads.snapclone.camera2VisionTools.Eyes.GooglyFaceTracker;
 import floatingheads.snapclone.camera2VisionTools.GraphicOverlay;
+import floatingheads.snapclone.fragments.ChatFragment;
 
 /**
  * Screen that holds the main camera activity and corresponding buttons
@@ -70,15 +75,12 @@ public class CameraPreviewActivity extends AppCompatActivity  {
     private ImageButton friendsButton;
     private ImageButton msgsButton;
     private ImageButton filtersButton;
-    private int counter;
-    private Random rand;
-    private boolean isSystemUiShown;
-    private View decorView;
+    private FrameLayout mSavedImg;
+    private Intent intent;
 
     // FILE STORAGE DECLARATIONS
     private File directory;
     private FileOutputStream fileOut;
-
 
     // DEFAULT CAMERA BEING OPENED
     private boolean usingFrontCamera = true;
@@ -87,10 +89,6 @@ public class CameraPreviewActivity extends AppCompatActivity  {
 
     // permission request codes need to be < 256
     private static final int RC_HANDLE_CAMERA_PERM = 2;
-
-    // MUST BE CAREFUL USING THIS VARIABLE.
-    // ANY ATTEMPT TO START CAMERA2 ON API < 21 WILL CRASH.
-    private boolean useCamera2 = true;
 
     //Declare variables
     private static final int SELECT_PICTURE = 50;
@@ -117,6 +115,7 @@ public class CameraPreviewActivity extends AppCompatActivity  {
         ivAutoFocus = (ImageView) findViewById(R.id.ivAutoFocus);
         msgsButton = (ImageButton) findViewById(R.id.btn_msgs);
         filtersButton = (ImageButton) findViewById(R.id.btn_filters);
+        mSavedImg = (FrameLayout) findViewById(R.id.mSavedImg);
 
         if(checkGooglePlayAvailability()) {
             requestPermissionThenOpenCamera();
@@ -132,6 +131,8 @@ public class CameraPreviewActivity extends AppCompatActivity  {
                     createCameraSource();
                 }
             });
+
+            mPreview.setOnTouchListener(CameraPreviewTouchListener);
 
             //Image capture listener
             takePictureButton.setOnClickListener(new View.OnClickListener() {
@@ -149,29 +150,33 @@ public class CameraPreviewActivity extends AppCompatActivity  {
                     filtersButton.setVisibility(View.GONE);
 
                     if(mCameraSource != null)
-                        mCameraSource.takePicture(cameraSourceShutterCallback, cameraSourcePictureCallback);
+                        mCameraSource.takePicture(cameraSourceShutterCallback, cameraSourcePictureCallback, mPreview);
                 }
             });
 
-            // On Log In Button Click - Open Log In Screen
+            // On Friends Button Click - Open Friends Screen
             friendsButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent i = new Intent(getApplicationContext(), FriendsActivity.class);
+                    Intent i = new Intent(getApplicationContext(), NavBarActivity.class);
                     startActivity(i);
                 }
             });
 
-            // On Log In Button Click - Open Log In Screen
+            // On Msg Button Click - Open Chat
             msgsButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent i = new Intent(getApplicationContext(), MessagesListActivity.class);
-                    startActivity(i);
+                    Fragment chatFragment = new ChatFragment();
+                    FragmentManager fragmentManager = getSupportFragmentManager();
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.fragment_container, chatFragment)
+                            .addToBackStack(null)
+                            .commit();
                 }
             });
 
-            // On Log In Button Click - Open Log In Screen
+            // On Filters Button Click - Open ImageView
             filtersButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -179,7 +184,6 @@ public class CameraPreviewActivity extends AppCompatActivity  {
                     startActivity(i);
                 }
             });
-            mPreview.setOnTouchListener(CameraPreviewTouchListener);
         }
 
         //New Directory path
@@ -193,12 +197,9 @@ public class CameraPreviewActivity extends AppCompatActivity  {
      */
     final CameraSource.PictureCallback cameraSourcePictureCallback = new CameraSource.PictureCallback() {
         @Override
-
-        //***************************THIS IS WHERE THE "MAGIC" HAPPENS!!!"
         public void onPictureTaken(Bitmap picture) {
-            mPreview.stop();
+            //mPreview.stop();
             Log.d(TAG, "Taken picture is here!");
-            //***************************BUTTONS RUN ON THREAD"
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -208,8 +209,7 @@ public class CameraPreviewActivity extends AppCompatActivity  {
                 }
             });
 
-            //Sending the bitmap to ImageViewActivity
-            FileOutputStream out = null;
+            intent = new Intent(getApplicationContext(), ImageViewActivity.class);
             try {
                 String filename = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
                 FileOutputStream stream = context.openFileOutput(filename, Context.MODE_PRIVATE);
@@ -229,6 +229,32 @@ public class CameraPreviewActivity extends AppCompatActivity  {
             }
         }
     };
+
+    //Merges 2 bitmaps into a single image
+    private Bitmap overlay(Bitmap bmp1, Bitmap bmp2) {
+        Bitmap bmOverlay = Bitmap.createBitmap(bmp1.getWidth(), bmp1.getHeight(), bmp1.getConfig());
+        Canvas canvas = new Canvas(bmOverlay);
+        canvas.drawBitmap(bmp1, new Matrix(), null);
+        canvas.drawBitmap(bmp2, new Matrix(), null);
+        return bmOverlay;
+    }
+
+    //Input the max height, and will output the resized Bitmap image
+    public Bitmap getResizedBitmap(Bitmap image, int maxSize) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+
+        float bitmapRatio = (float) width / (float) height;
+        if (bitmapRatio > 1) {
+            width = maxSize;
+            height = (int) (width / bitmapRatio);
+        } else {
+            height = maxSize;
+            width = (int) (height * bitmapRatio);
+        }
+
+        return Bitmap.createScaledBitmap(image, width, height, true);
+    }
 
     final CameraSource.ShutterCallback cameraSourceShutterCallback = new CameraSource.ShutterCallback() {@Override public void onShutter() {Log.d(TAG, "Shutter Callback!");}};
 
@@ -338,6 +364,7 @@ public class CameraPreviewActivity extends AppCompatActivity  {
 
         startCameraSource();
     }
+
 
 
 
@@ -485,5 +512,4 @@ public class CameraPreviewActivity extends AppCompatActivity  {
             previewFaceDetector.release();
         }
     }
-
 }

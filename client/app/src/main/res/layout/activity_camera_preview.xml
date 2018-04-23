@@ -4,10 +4,12 @@
     android:layout_width="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:keepScreenOn="true"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:id="@+id/camera_preview">
 
 <FrameLayout
     android:layout_width="match_parent"
+    android:id="@+id/mSavedImg"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:fitsSystemWindows="false">
@@ -101,5 +103,9 @@
         android:src="@drawable/btn_autofocus"
         android:visibility="gone"/>
 
-
+    <!-- Used for opening ChatFragment -->
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </RelativeLayout>

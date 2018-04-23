@@ -1,5 +1,6 @@
 package floatingheads.snapclone.activities;
 
+import floatingheads.snapclone.R;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -23,7 +24,6 @@ import floatingheads.snapclone.ImageViewGestures.OnMatrixChangedListener;
 import floatingheads.snapclone.ImageViewGestures.OnPhotoTapListener;
 import floatingheads.snapclone.ImageViewGestures.OnSingleFlingListener;
 import floatingheads.snapclone.ImageViewGestures.PhotoView;
-import floatingheads.snapclone.R;
 
 /**
  * Created by Akira on 4/15/2018.
@@ -42,18 +42,47 @@ public class ImageViewActivity extends AppCompatActivity {
     private Toast mCurrentToast;
     private Matrix mCurrentDisplayMatrix = null;
     private Bitmap bOut;
-    private boolean usingFront;
+    private boolean needs2BeFlipped;
     private ImageButton sendButton;
     private ImageButton saveButton;
+    private Bitmap pictureBmp;
+    private Bitmap screenshotBmp;
+    private Drawable dPicture;
+    private Drawable dScreenshot;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //Setup Resource Files
         setContentView(R.layout.imageview);
+        sendButton = findViewById(R.id.btn_send);
+        saveButton = findViewById(R.id.btn_save);
+        mPhotoView = findViewById(R.id.iv_photo);
 
-        sendButton = (ImageButton) findViewById(R.id.btn_send);
-        saveButton = (ImageButton) findViewById(R.id.btn_save);
+        //Initialize variables
+        pictureBmp = null;
+        screenshotBmp = null;
 
+        //Getting the screenshot (overlay image) sent from the CameraPreviewActivity
+        String fname = getIntent().getStringExtra("screenshot");
+        try {
+            FileInputStream is2 = this.openFileInput(fname);
+            screenshotBmp = BitmapFactory.decodeStream(is2);
+            is2.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        //Get screenshot
+        dScreenshot = new BitmapDrawable(getResources(), screenshotBmp);
+        mPhotoView.setImageDrawable(dScreenshot);
+
+        // Lets attach some listeners, not required though!
+        mPhotoView.setOnMatrixChangeListener(new MatrixChangeListener());
+        mPhotoView.setOnPhotoTapListener(new PhotoTapListener());
+        mPhotoView.setOnSingleFlingListener(new SingleFlingListener());
+
+        //Listener for Send Button
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -63,61 +92,20 @@ public class ImageViewActivity extends AppCompatActivity {
             }
         });
 
+        //Listener for Save Button
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //Pop up message indicating image saved
             }
         });
-
-        Bitmap bmp = null;
-        usingFront = getIntent().getExtras().getBoolean("usingFrontCamera");
-
-        //Getting the bitmap sent in CameraPreviewActivity
-        String filename = getIntent().getStringExtra("image");
-        try {
-            FileInputStream is = this.openFileInput(filename);
-            bmp = BitmapFactory.decodeStream(is);
-            is.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        mPhotoView = findViewById(R.id.iv_photo);
-        //mCurrMatrixTv = findViewById(R.id.tv_current_matrix);
-
-        if(!usingFront){
-            Drawable d = new BitmapDrawable(getResources(), bmp);
-            mPhotoView.setImageDrawable(d);
-        }
-
-        else {
-
-            Matrix matrix = new Matrix();
-            matrix.preScale(-1.0f, 1.0f);
-            bOut = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), matrix, true);
-            Drawable d = new BitmapDrawable(getResources(), bOut);
-            mPhotoView.setImageDrawable(d);
-
-        }
-
-
-
-
-
-        // Lets attach some listeners, not required though!
-        //mPhotoView.setOnMatrixChangeListener(new MatrixChangeListener());
-        //mPhotoView.setOnPhotoTapListener(new PhotoTapListener());
-        //mPhotoView.setOnSingleFlingListener(new SingleFlingListener());
     }
 
     private class PhotoTapListener implements OnPhotoTapListener {
-
         @Override
         public void onPhotoTap(ImageView view, float x, float y) {
             float xPercentage = x * 100f;
             float yPercentage = y * 100f;
-
             showToast(String.format(PHOTO_TAP_TOAST_STRING, xPercentage, yPercentage, view == null ? 0 : view.getId()));
         }
     }
@@ -126,7 +114,6 @@ public class ImageViewActivity extends AppCompatActivity {
         if (mCurrentToast != null) {
             mCurrentToast.cancel();
         }
-
         mCurrentToast = Toast.makeText(ImageViewActivity.this, text, Toast.LENGTH_SHORT);
         mCurrentToast.show();
     }
@@ -139,7 +126,6 @@ public class ImageViewActivity extends AppCompatActivity {
     }
 
     private class SingleFlingListener implements OnSingleFlingListener {
-
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
             Log.d("PhotoView", String.format(FLING_LOG_STRING, velocityX, velocityY));

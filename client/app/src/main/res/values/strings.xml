@@ -29,7 +29,7 @@
     <!-- Messages Stuff -->
     <string name="msg_greeting">Send and Receive Messages Here!</string>
     <string name="default_notification_channel_id">Channel ID</string>
-    <string name="chat_input">Enter Message...</string>
+    <string name="chat_input">Enter Message</string>
     <string name="add_btn_content_description">Attach an image!</string>
     <string name="chat_bubble_content_description">Image</string>
 
