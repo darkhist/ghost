@@ -1,10 +1,8 @@
-'use strict';
-
 // This file contains info about different /users routes
 
 const express = require('express');
-const router = express.Router();
 const usersController = require('../controllers/usersController');
+const router = express.Router();
 
 // GET /users
 router.get('/', usersController.get);

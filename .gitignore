@@ -22,3 +22,4 @@ client/app/src/main/jni/Android.mk
 # Server
 server/node_modules
 server/package-lock.json
+server/config.json

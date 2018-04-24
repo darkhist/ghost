@@ -17,8 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical" />
-
-</FrameLayout>
+    </FrameLayout>
 
     <ImageButton
         android:id="@+id/btn_send"
@@ -47,5 +46,4 @@
         android:src="@drawable/save_w"
         android:text="@string/take_picture"
         tools:ignore="ContentDescription"/>
-
 </RelativeLayout>

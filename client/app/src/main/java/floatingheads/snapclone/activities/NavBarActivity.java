@@ -10,13 +10,13 @@ import android.view.MenuItem;
 import android.widget.FrameLayout;
 
 import floatingheads.snapclone.R;
+import floatingheads.snapclone.fragments.ChatFragment;
 import floatingheads.snapclone.fragments.FriendsFragment;
-import floatingheads.snapclone.fragments.MessagesFragment;
+import floatingheads.snapclone.fragments.NotificationsFragment;
 import floatingheads.snapclone.fragments.ProfileFragment;
 import floatingheads.snapclone.objects.User;
 
 public class NavBarActivity extends AppCompatActivity {
-
     // User Information
     /**
      * User which contains all credentials of logged in user
@@ -30,25 +30,15 @@ public class NavBarActivity extends AppCompatActivity {
     // Fragments
     private ProfileFragment profileFragment;
     private FriendsFragment friendsFragment;
-    private MessagesFragment messagesFragment;
+    private NotificationsFragment notificationsFragment;
+    private ChatFragment chatFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nav_bar);
 
-//        String strUid = getIntent().getStringExtra("SESSION_UID");
-//        int uid = Integer.parseInt(strUid);
-
-//        int tempID = getIntent().getExtras().getInt("uid");
-//        String firstName = getIntent().getExtras().getString("firstName");
-//        String lastName = getIntent().getExtras().getString("lastName");
-//        String username = getIntent().getExtras().getString("username");
-//        String email = getIntent().getExtras().getString("email");
-
-        // create bundle to pass user data< to other fragments
-
-
+        // create bundle to pass user data to other fragments
         Bundle masterUserBundle = new Bundle();
 
         masterUserBundle.putInt("uid", getIntent().getExtras().getInt("uid"));
@@ -56,14 +46,9 @@ public class NavBarActivity extends AppCompatActivity {
         masterUserBundle.putString("lastName", getIntent().getExtras().getString("lastName"));
         masterUserBundle.putString("username", getIntent().getExtras().getString("username"));
         masterUserBundle.putString("email", getIntent().getExtras().getString("email"));
-//        // friends
-//        masterUserBundle.putString("friends", getIntent().getExtras().getString("friends"));
-//        masterUserBundle.putString("pending", getIntent().getExtras().getString("pending"));
-//        masterUserBundle.putString("rejected", getIntent().getExtras().getString("rejected"));
-//        masterUserBundle.putString("blocked", getIntent().getExtras().getString("blocked"));
 
-        mMainNav = (BottomNavigationView) findViewById(R.id.navigation);
-        mMainFrame = (FrameLayout) findViewById(R.id.main_frame);
+        mMainNav = findViewById(R.id.navigation);
+        mMainFrame = findViewById(R.id.main_frame);
 
         profileFragment = new ProfileFragment();
         profileFragment.setArguments(masterUserBundle);
@@ -71,12 +56,12 @@ public class NavBarActivity extends AppCompatActivity {
         friendsFragment = new FriendsFragment();
         friendsFragment.setArguments(masterUserBundle);
 
-//        notisFragment = new NotisFragment();
+        notificationsFragment = new NotificationsFragment();
 
-        messagesFragment = new MessagesFragment();
+        chatFragment = new ChatFragment();
 
-        setFragment(messagesFragment); // sets default fragment to messages
-        mMainNav.getMenu().getItem(0).setChecked(true); // selects message nav item as default
+        setFragment(notificationsFragment); // sets default fragment to notifications
+        mMainNav.getMenu().getItem(1).setChecked(true); // selects notification nav item as default
 
         mMainNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             /**
@@ -95,18 +80,17 @@ public class NavBarActivity extends AppCompatActivity {
                         setFragment(friendsFragment);
                         return true;
 
-//                    case R.id.nav_notifications:
-//                         setFragment(notisFragment);
-//                        return true;
+                    case R.id.nav_notifications:
+                         setFragment(notificationsFragment);
+                        return true;
 
-                    case R.id.nav_messages:
-                        setFragment(messagesFragment);
+                    case R.id.nav_chat:
+                        setFragment(chatFragment);
                         return true;
                 }
                 return false;
             }
         });
-
     }
 
     private void setFragment(Fragment f) {

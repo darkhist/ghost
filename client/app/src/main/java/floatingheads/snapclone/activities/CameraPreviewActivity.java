@@ -15,6 +15,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -28,27 +30,24 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-
-import floatingheads.snapclone.R;
-import floatingheads.snapclone.androidScreenUtils.Utils;
-import floatingheads.snapclone.camera2VisionTools.Clear.ClearOverlay;
-
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.vision.face.FaceDetector;
-
-
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.vision.face.FaceDetector;
+
+import floatingheads.snapclone.R;
+import floatingheads.snapclone.androidScreenUtils.Utils;
+import floatingheads.snapclone.camera2VisionTools.Clear.ClearOverlay;
 import floatingheads.snapclone.camera2VisionTools.CameraSource;
 import floatingheads.snapclone.camera2VisionTools.CameraSourcePreview;
 import floatingheads.snapclone.camera2VisionTools.Eyes.GooglyOverlay;
 import floatingheads.snapclone.camera2VisionTools.GraphicOverlay;
+import floatingheads.snapclone.fragments.ChatFragment;
 
 /**
  * Screen that holds the main camera activity and corresponding buttons
@@ -160,7 +159,7 @@ public class CameraPreviewActivity extends AppCompatActivity  {
                 }
             });
 
-            // On Log In Button Click - Open Log In Screen
+            // On Friends Button Click - Open Friends Screen
             friendsButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -169,16 +168,20 @@ public class CameraPreviewActivity extends AppCompatActivity  {
                 }
             });
 
-            // On Log In Button Click - Open Log In Screen
+            // On Msg Button Click - Open Chat
             msgsButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent i = new Intent(getApplicationContext(), MessagesListActivity.class);
-                    startActivity(i);
+                    Fragment chatFragment = new ChatFragment();
+                    FragmentManager fragmentManager = getSupportFragmentManager();
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.fragment_container, chatFragment)
+                            .addToBackStack(null)
+                            .commit();
                 }
             });
 
-            // On Log In Button Click - Open Log In Screen
+            // On Filters Button Click - Open ImageView
             filtersButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -193,8 +196,6 @@ public class CameraPreviewActivity extends AppCompatActivity  {
                     buttonClicked = !buttonClicked;
                 }
             });
-
-
         }
 
         //New Directory path
@@ -259,7 +260,6 @@ public class CameraPreviewActivity extends AppCompatActivity  {
                 //SEND bitmap TO IMAGEVIEWACTIVITY
                 intent.putExtra("screenshot", fname);
                 startActivity(intent);
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -475,5 +475,4 @@ public class CameraPreviewActivity extends AppCompatActivity  {
             previewFaceDetector.release();
         }
     }
-
 }
