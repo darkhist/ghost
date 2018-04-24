@@ -4,28 +4,27 @@
     android:layout_width="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:keepScreenOn="true"
-    android:layout_height="match_parent"
-    android:id="@+id/camera_preview">
+    android:layout_height="match_parent">
 
-<FrameLayout
-    android:layout_width="match_parent"
-    android:id="@+id/mSavedImg"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:fitsSystemWindows="false">
-    <!-- This is the camera preview source settings, with the faceOverlay nested inside of it-->
-    <floatingheads.snapclone.camera2VisionTools.CameraSourcePreview
-        android:id="@+id/preview2"
-        android:orientation="vertical"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <floatingheads.snapclone.camera2VisionTools.GraphicOverlay
-            android:id="@+id/faceOverlay"
-            android:orientation="horizontal"
+        android:id="@+id/mSavedImg"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:fitsSystemWindows="false">
+        <!-- This is the camera preview source settings, with the faceOverlay nested inside of it-->
+        <floatingheads.snapclone.camera2VisionTools.CameraSourcePreview
+            android:id="@+id/preview2"
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </floatingheads.snapclone.camera2VisionTools.CameraSourcePreview>
-</FrameLayout>
+            android:layout_height="match_parent">
+            <floatingheads.snapclone.camera2VisionTools.GraphicOverlay
+                android:id="@+id/faceOverlay"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </floatingheads.snapclone.camera2VisionTools.CameraSourcePreview>
+    </FrameLayout>
 
     <ImageButton
         android:id="@+id/btn_switch"
@@ -39,17 +38,17 @@
         tools:ignore="ContentDescription"/>
 
     <ImageButton
-           android:id="@+id/btn_takepicture"
-           style="@android:style/Widget.Holo.Light.ImageButton"
-           android:layout_width="110dp"
-           android:layout_height="110dp"
-           android:backgroundTint="@android:color/transparent"
-           android:scaleType="fitCenter"
-           android:layout_marginBottom="40dp"
-           android:layout_centerHorizontal="true"
-           android:layout_alignParentBottom="true"
-           android:src="@drawable/btn_shutter_background"
-           tools:ignore="ContentDescription"/>
+        android:id="@+id/btn_takepicture"
+        style="@android:style/Widget.Holo.Light.ImageButton"
+        android:layout_width="110dp"
+        android:layout_height="110dp"
+        android:backgroundTint="@android:color/transparent"
+        android:scaleType="fitCenter"
+        android:layout_marginBottom="40dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:src="@drawable/btn_shutter_background"
+        tools:ignore="ContentDescription"/>
 
     <ImageButton
         android:id="@+id/btn_filters"
@@ -97,6 +96,55 @@
         android:layout_height="50dp"
         android:src="@drawable/btn_autofocus"
         android:visibility="gone"/>
+
+    <!--<HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/ScrollView"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content" >
+
+        <RelativeLayout
+            android:id="@+id/RelativeLayout01"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="150dp">
+                <ImageButton
+                    android:id="@+id/btn_filter1"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:scaleType="fitCenter"
+                    android:layout_alignParentBottom="true"
+                    android:src="@drawable/googly">
+
+                </ImageButton>
+                <ImageButton
+                    android:id="@+id/btn_filter2"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:scaleType="fitCenter"
+                    android:layout_toEndOf="@+id/btn_filter1"
+                    android:layout_alignParentBottom="true"
+                    android:src="@drawable/googly">
+                </ImageButton>
+                <ImageButton
+                    android:id="@+id/btn_filter3"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:scaleType="fitCenter"
+                    android:layout_toEndOf="@+id/btn_filter2"
+                    android:layout_alignParentBottom="true"
+                    android:src="@drawable/googly">
+                </ImageButton>
+            <ImageButton
+                android:id="@+id/btn_filter4"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:scaleType="fitCenter"
+                android:layout_toEndOf="@+id/btn_filter3"
+                android:layout_alignParentBottom="true"
+                android:src="@drawable/googly">
+            </ImageButton>
+        </RelativeLayout>
+    </HorizontalScrollView>-->
 
     <!-- Used for opening ChatFragment -->
     <FrameLayout
