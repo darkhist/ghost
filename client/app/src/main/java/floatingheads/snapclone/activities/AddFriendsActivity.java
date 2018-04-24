@@ -6,8 +6,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.view.WindowManager;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
@@ -32,10 +33,15 @@ public class AddFriendsActivity extends AppCompatActivity {
     private Context context = this;
     private String usersURL = Const.usersURL;
 
+    private FrameLayout touchInterceptor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_friends);
+
+        touchInterceptor = new FrameLayout(this);
+        touchInterceptor.setClickable(true);
 
         UsersView usersView = (UsersView) findViewById(R.id.users_view);
 
@@ -102,5 +108,19 @@ public class AddFriendsActivity extends AppCompatActivity {
                     startActivity(i);
                 }
         );
+    }
+
+    @Override
+    protected void onPause() {
+        if (touchInterceptor.getParent() == null) {
+            ((ViewGroup) findViewById(android.R.id.content)).addView(touchInterceptor);
+        }
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        ((ViewGroup) findViewById(android.R.id.content)).removeView(touchInterceptor);
+        super.onResume();
     }
 }

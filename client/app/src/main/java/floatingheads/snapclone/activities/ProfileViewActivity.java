@@ -6,6 +6,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -58,7 +59,8 @@ public class ProfileViewActivity extends AppCompatActivity {
         wlp.dimAmount = 0.4f;
         wlp.flags = WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS |
                 WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL |
-                WindowManager.LayoutParams.FLAG_DIM_BEHIND;
+                WindowManager.LayoutParams.FLAG_DIM_BEHIND |
+                WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH;
         getWindow().setAttributes(wlp);
 
         Button addFriendBtn = findViewById(R.id.add_friend_button);
@@ -66,9 +68,19 @@ public class ProfileViewActivity extends AppCompatActivity {
         addFriendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Toast.makeText(ProfileViewActivity.this, "Friend Added", Toast.LENGTH_SHORT).show();
             }
         });
 
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_OUTSIDE) {
+            finish();
+            return true;
+        }
+        return false;
     }
 
     private void updateFriendsCount() {
