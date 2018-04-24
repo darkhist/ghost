@@ -21,6 +21,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
@@ -32,7 +33,6 @@ import floatingheads.snapclone.R;
 import floatingheads.snapclone.androidScreenUtils.Utils;
 import floatingheads.snapclone.camera2VisionTools.Clear.ClearOverlay;
 
-
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.vision.face.FaceDetector;
@@ -43,6 +43,17 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import floatingheads.snapclone.camera2VisionTools.CameraSource;
+import floatingheads.snapclone.camera2VisionTools.CameraSourcePreview;
+import floatingheads.snapclone.camera2VisionTools.Eyes.GooglyOverlay;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.vision.face.FaceDetector;
+
+import floatingheads.snapclone.R;
+import floatingheads.snapclone.androidScreenUtils.Utils;
+import floatingheads.snapclone.camera2VisionTools.Clear.ClearOverlay;
 import floatingheads.snapclone.camera2VisionTools.CameraSource;
 import floatingheads.snapclone.camera2VisionTools.CameraSourcePreview;
 import floatingheads.snapclone.camera2VisionTools.Eyes.GooglyOverlay;
@@ -76,6 +87,8 @@ public class CameraPreviewActivity extends AppCompatActivity  {
     private FrameLayout mSavedImg;
     private Intent intent;
     private HorizontalScrollView scrollView;
+    private boolean buttonClicked;
+    private ViewGroup vg;
 
     private Fragment chatFragment;
 
@@ -86,6 +99,7 @@ public class CameraPreviewActivity extends AppCompatActivity  {
     private File directory;
     private FileOutputStream fileOut;
 
+    private GooglyOverlay googly;
     private FaceDetector detector;
 
     // DEFAULT CAMERA BEING OPENED
@@ -132,12 +146,7 @@ public class CameraPreviewActivity extends AppCompatActivity  {
         msgsButton = (ImageButton) findViewById(R.id.btn_msgs);
         filtersButton = (ImageButton) findViewById(R.id.btn_filters);
         mSavedImg = (FrameLayout) findViewById(R.id.mSavedImg);
-        //scrollView = (HorizontalScrollView) findViewById(R.id.ScrollView);
-
-        //scrollView.setVisibility(View.GONE);
-
-        // ViewGroup vg = (ViewGroup)(scrollView.getParent());
-        //vg.removeView(scrollView);
+        buttonClicked = false;
 
         if(checkGooglePlayAvailability()) {
             requestPermissionThenOpenCamera();
@@ -227,9 +236,15 @@ public class CameraPreviewActivity extends AppCompatActivity  {
             filtersButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Context context = getApplicationContext();
-                    GooglyOverlay googly = new GooglyOverlay(usingFrontCamera, mGraphicOverlay);
-                    detector = googly.createFaceDetector(context);
+                    if(buttonClicked){
+                        detector.release();
+                    }else {
+                        Context context = getApplicationContext();
+                        googly = new GooglyOverlay(usingFrontCamera, mGraphicOverlay);
+                        detector = googly.createFaceDetector(context);
+                        createCameraSource(detector);
+                    }
+                    buttonClicked = !buttonClicked;
                 }
             });
         }
@@ -246,7 +261,7 @@ public class CameraPreviewActivity extends AppCompatActivity  {
     final CameraSource.PictureCallback cameraSourcePictureCallback = new CameraSource.PictureCallback() {
         @Override
         public void onPictureTaken(Bitmap picture) {
-            //mPreview.stop();
+            mPreview.stop();
             Log.d(TAG, "Taken picture is here!");
             runOnUiThread(new Runnable() {
                 @Override
@@ -259,8 +274,13 @@ public class CameraPreviewActivity extends AppCompatActivity  {
 
             intent = new Intent(getApplicationContext(), ImageViewActivity.class);
             try {
+
+                Log.d("PICTURE Resolution", "Resolution CameraPreviewActivity Width: " + picture.getWidth());
+                Log.d("PICTURE Resolution", "Resolution CameraPreviewActivity Height: " + picture.getHeight());
                 //Need to resize the picture to fit the overlay ovre
                 picture = getResizedBitmap(picture, 1024);
+                Log.d("PICTURE Resolution", "RESIZED PICTURE CameraPreviewActivity Width: " + picture.getWidth());
+                Log.d("PICTURE Resolution", "RESIZED PICTURE CameraPreviewActivity Height: " + picture.getHeight());
 
                 //picture Needs to be flipped if using front camera
                 if(usingFrontCamera) {
@@ -276,13 +296,15 @@ public class CameraPreviewActivity extends AppCompatActivity  {
                 screenshot = getResizedBitmap(screenshot, 1024);
                 mPreview.setDrawingCacheEnabled(false);
                 //debugging
-                Log.d("Screenshot Resolution", "Resolution Width: " + screenshot.getWidth());
-                Log.d("Screenshot Resolution", "Resolution Height: " + screenshot.getHeight());
+                Log.d("Screenshot Resolution", "Resolution CameraPreviewActivity Width: " + screenshot.getWidth());
+                Log.d("Screenshot Resolution", "Resolution CameraPreviewActivity Height: " + screenshot.getHeight());
 
                 //overlay method merges the 2 bitmaps into a single image
                 screenshot = overlay(picture,screenshot);
+                Log.d("Screenshot Resolution", "Resolution After Overlay Width: " + screenshot.getWidth());
+                Log.d("Screenshot Resolution", "Resolution After Overlay Height: " + screenshot.getHeight());
                 FileOutputStream strm =  context.openFileOutput(fname, Context.MODE_PRIVATE);
-                screenshot.compress(Bitmap.CompressFormat.JPEG, 100, strm);
+                screenshot.compress(Bitmap.CompressFormat.PNG, 100, strm);
 
                 strm.close();
                 screenshot.recycle();
@@ -421,14 +443,11 @@ public class CameraPreviewActivity extends AppCompatActivity  {
         mCameraSource = new CameraSource.Builder(context, detector)
                 .setFacing(facing)
                 .setRequestedPreviewSize(320, 240)
-                .setRequestedFps(30.0f)
+                .setRequestedFps(60.0f)
                 .build();
 
         startCameraSource();
     }
-
-
-
 
     /**
      * Stops this class' instance of CameraSourcePreview
@@ -436,7 +455,6 @@ public class CameraPreviewActivity extends AppCompatActivity  {
     private void stopCameraSource() {
         mPreview.stop();
     }
-
 
     /**
      * Autofocus feature functionality

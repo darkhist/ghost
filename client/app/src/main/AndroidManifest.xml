@@ -13,9 +13,9 @@
 
     <supports-screens
         android:anyDensity="true"
+        android:resizeable="true"
         android:largeScreens="true"
         android:normalScreens="true"
-        android:resizeable="true"
         android:smallScreens="true"
         android:xlargeScreens="true" />
 
@@ -47,13 +47,6 @@
         android:name="com.google.android.gms.vision.DEPENDENCIES"
         android:value="face" />
 
-    <supports-screens
-        android:anyDensity="true"
-        android:largeScreens="true"
-        android:normalScreens="true"
-        android:resizeable="true"
-        android:smallScreens="true" />
-
     <application
         android:name=".controllers.AppController"
         android:allowBackup="true"
@@ -69,6 +62,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".activities.CameraPreviewActivity"
             android:screenOrientation="portrait"
@@ -76,11 +70,13 @@
         <activity
             android:name=".activities.ImageViewActivity"
             android:screenOrientation="portrait"
+
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"></activity>
         <activity
             android:name=".activities.CVImgProcCameraActivity"
             android:screenOrientation="sensorLandscape"></activity>
-        <activity
+
+	<activity
             android:name=".activities.LoginActivity"
             android:label="@string/title_activity_login"
             android:windowSoftInputMode="stateHidden" />
@@ -94,7 +90,8 @@
         <activity
             android:name=".activities.NavBarActivity"
             android:label="NavBarActivity" />
-        <activity android:name=".activities.AddFriendsActivity"/>
+
+        <activity android:name=".activities.AddFriendsActivity" />
         <activity android:name=".activities.ChatActivity" />
         <activity android:name=".activities.MessagesListActivity" />
 
