@@ -2,8 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    android:keepScreenOn="true"
     android:background="#000000"
+    android:keepScreenOn="true"
     android:layout_height="match_parent">
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -12,10 +12,10 @@
     android:orientation="vertical"
     android:fitsSystemWindows="true">
 
-    <ImageView
+    <floatingheads.snapclone.ImageViewGestures.PhotoView
         android:id="@+id/iv_photo"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="fill_parent"
         android:orientation="vertical" />
 
 </FrameLayout>

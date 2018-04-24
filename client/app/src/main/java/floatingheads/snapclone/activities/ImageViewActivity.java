@@ -36,7 +36,7 @@ public class ImageViewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         //Setup Resource Files
         //TESTING IMAGEVIEW
-        ImageView mImageView;
+        PhotoView mPhotoView;
         ImageButton sendButton;
         ImageButton saveButton;
         Bitmap screenshotBmp;
@@ -45,7 +45,7 @@ public class ImageViewActivity extends AppCompatActivity {
         setContentView(R.layout.activity_imageview);
         sendButton = findViewById(R.id.btn_send);
         saveButton = findViewById(R.id.btn_save);
-        mImageView = findViewById(R.id.iv_photo);
+        mPhotoView = findViewById(R.id.iv_photo);
 
         //Initialize variables
         screenshotBmp = null;
@@ -63,12 +63,12 @@ public class ImageViewActivity extends AppCompatActivity {
         //final bmp for use in savebutton
         bmp = screenshotBmp;
 
-        Log.d("Screenshot Resolution", "Resolution Width: " + screenshotBmp.getWidth());
-        Log.d("Screenshot Resolution", "Resolution Height: " + screenshotBmp.getHeight());
+        Log.d("Screenshot Resolution", "Resolution ImageViewActivity Width: " + screenshotBmp.getWidth());
+        Log.d("Screenshot Resolution", "Resolution ImageViewActivity Height: " + screenshotBmp.getHeight());
 
         //Get screenshot
-        //dScreenshot = new BitmapDrawable(getResources(), screenshotBmp);
-        mImageView.setImageBitmap(screenshotBmp);
+        dScreenshot = new BitmapDrawable(getResources(), screenshotBmp);
+        mPhotoView.setImageDrawable(dScreenshot);
 
         //Listener for Send Button
         sendButton.setOnClickListener(new View.OnClickListener() {
@@ -84,21 +84,22 @@ public class ImageViewActivity extends AppCompatActivity {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 FileOutputStream out = null;
                 try {
+                    //Pop up message indicating image saved
+
+
                     //Functionality for saving image
                     String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
                     String path = Environment.getExternalStorageDirectory().toString()+File.separator+"Pictures"+File.separator+"SnapClone";
                     File file = new File(path, "SnapClone"+timeStamp+".jpeg");
                     FileOutputStream fileOut = new FileOutputStream(file);
-                    bmp.compress(Bitmap.CompressFormat.JPEG, 85, fileOut);
+                    bmp.compress(Bitmap.CompressFormat.PNG, 100, fileOut);
                     fileOut.flush(); // Not really required
                     fileOut.close(); // do not forget to close the stream
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                //Pop up message indicating image saved
                 Toast.makeText(ImageViewActivity.this, "Image Saved in folder root/sdcard/Pictures/Snapclone", Toast.LENGTH_SHORT).show();
                 saveButton.setEnabled(false);
             }

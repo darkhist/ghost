@@ -76,7 +76,7 @@ public class CameraSourcePreview extends ViewGroup {
         mCameraSource = cameraSource;
         if (mCameraSource != null) {
             mStartRequested = true;
-           if(!viewAdded) {
+            if(!viewAdded) {
 
                 addView(mSurfaceView);
                 viewAdded = true;
@@ -90,8 +90,8 @@ public class CameraSourcePreview extends ViewGroup {
      */
     public void stop() {
         mStartRequested = false;
-            if (mCameraSource != null) {
-                mCameraSource.stop();
+        if (mCameraSource != null) {
+            mCameraSource.stop();
         }
     }
 
