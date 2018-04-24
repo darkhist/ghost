@@ -17,14 +17,17 @@ import floatingheads.snapclone.R;
 import floatingheads.snapclone.activities.CameraPreviewActivity;
 import floatingheads.snapclone.objects.Contact;
 import floatingheads.snapclone.objects.MessagesView;
+import floatingheads.snapclone.objects.User;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class NotificationsFragment extends Fragment {
 
+    private User user;
+
     public NotificationsFragment() {
-        // Required empty public constructor
+        user = new User();
     }
 
     /**
@@ -45,6 +48,12 @@ public class NotificationsFragment extends Fragment {
         toolbar.setTitle("Messages");
         toolbar.setTitleTextColor(Color.WHITE);
 
+        user.setId(getArguments().getInt("uid"));
+        user.setFirstName(getArguments().getString("firstName"));
+        user.setLastName(getArguments().getString("lastName"));
+        user.setUsername(getArguments().getString("username"));
+        user.setEmail(getArguments().getString("email"));
+
         Context messagesFragmentContext = this.getContext();
 
         Button backtoCameraBtn = inflatedView.findViewById(R.id.cam_notis_btn);
@@ -62,6 +71,11 @@ public class NotificationsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(messagesFragmentContext, CameraPreviewActivity.class);
+                i.putExtra("uid", user.getId());
+                i.putExtra("firstName", user.getFirstName());
+                i.putExtra("lastName", user.getLastName());
+                i.putExtra("username", user.getUsername());
+                i.putExtra("email", user.getEmail());
                 startActivity(i);
             }
         });

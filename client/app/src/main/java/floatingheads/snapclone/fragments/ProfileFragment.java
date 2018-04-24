@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import floatingheads.snapclone.R;
 import floatingheads.snapclone.activities.CameraPreviewActivity;
+import floatingheads.snapclone.objects.User;
 
 
 /**
@@ -21,12 +22,13 @@ import floatingheads.snapclone.activities.CameraPreviewActivity;
 public class ProfileFragment extends Fragment {
 
     private Button backToCameraBtn;
+    private User user;
 
     /**
      * Required default constructor
      */
     public ProfileFragment() {
-        //
+        user = new User();
     }
 
     /**
@@ -53,12 +55,15 @@ public class ProfileFragment extends Fragment {
         TextView name = profileView.findViewById(R.id.profileUsername);
 
 //        getArguments().getInt("uid");
-        String first = getArguments().getString("firstName");
-        String last = getArguments().getString("lastName");
+        user.setId(getArguments().getInt("uid"));
+        user.setFirstName(getArguments().getString("firstName"));
+        user.setLastName(getArguments().getString("lastName"));
+        user.setUsername(getArguments().getString("username"));
+        user.setEmail(getArguments().getString("email"));
 //        getArguments().getString("username");
 //        getArguments().getString("email");
 
-        String fullName = first + " " + last;
+        String fullName = user.getFirstName() + " " + user.getLastName();
 
         name.setText(fullName);
 
@@ -68,6 +73,11 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(getContext(), CameraPreviewActivity.class);
+                i.putExtra("uid", user.getId());
+                i.putExtra("firstName", user.getFirstName());
+                i.putExtra("lastName", user.getLastName());
+                i.putExtra("username", user.getUsername());
+                i.putExtra("email", user.getEmail());
                 startActivity(i);
             }
         });

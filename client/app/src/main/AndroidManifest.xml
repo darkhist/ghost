@@ -95,7 +95,7 @@
             android:name=".activities.NavBarActivity"
             android:label="NavBarActivity" />
         <activity android:name=".activities.AddFriendsActivity"/>
-        <activity android:name=".activities.MessageActivity" />
+        <activity android:name=".activities.ChatActivity" />
         <activity android:name=".activities.MessagesListActivity" />
 
         <!-- Firebase Services -->

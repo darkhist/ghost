@@ -35,6 +35,7 @@ import java.util.Collections;
 import floatingheads.snapclone.R;
 import floatingheads.snapclone.activities.AddFriendsActivity;
 import floatingheads.snapclone.activities.CameraPreviewActivity;
+import floatingheads.snapclone.activities.ChatActivity;
 import floatingheads.snapclone.net_utils.Const;
 import floatingheads.snapclone.objects.CustomListAdapter;
 import floatingheads.snapclone.objects.Friend;
@@ -64,6 +65,7 @@ public class FriendsFragment extends Fragment {
     public FriendsFragment() {
         super();
         searchView = null;
+        masterUser = new User();
     }
 
     /**
@@ -84,13 +86,11 @@ public class FriendsFragment extends Fragment {
         setHasOptionsMenu(true);
 
         // create master user
-        masterUser = new User(
-                getArguments().getInt("uid"),
-                getArguments().getString("firstName"),
-                getArguments().getString("lastName"),
-                getArguments().getString("username"),
-                getArguments().getString("email")
-        );
+        if (getArguments() != null) masterUser.setId(getArguments().getInt("uid"));
+        if (getArguments() != null) masterUser.setFirstName(getArguments().getString("firstName"));
+        if (getArguments() != null) masterUser.setLastName(getArguments().getString("lastName"));
+        if (getArguments() != null) masterUser.setUsername(getArguments().getString("username"));
+        if (getArguments() != null) masterUser.setEmail(getArguments().getString("email"));
 
         Toolbar toolbar = (Toolbar) inflatedView.findViewById(R.id.tool_bar);
         toolbar.setNavigationIcon(R.mipmap.ic_person_add_white_24dp);
@@ -203,8 +203,15 @@ public class FriendsFragment extends Fragment {
         friendsList.setOnItemClickListener(
                 (AdapterView<?> parent, View view, int position, long id) -> {
                     Friend friend = (Friend) parent.getItemAtPosition(position);
-                    String name = friend.getFirstName() + " " + friend.getLastName();
-                    Toast.makeText(this.getContext(), name, Toast.LENGTH_SHORT).show();
+//                    String name = friend.getFirstName() + " " + friend.getLastName();
+//                    Toast.makeText(this.getContext(), name, Toast.LENGTH_SHORT).show();
+                    Intent i = new Intent(getContext(), ChatActivity.class);
+                    i.putExtra("uid", masterUser.getId());
+                    i.putExtra("firstName", masterUser.getFirstName());
+                    i.putExtra("lastName", masterUser.getLastName());
+                    i.putExtra("username", masterUser.getUsername());
+                    i.putExtra("email", masterUser.getEmail());
+                    startActivity(i);
                 }
         );
 
@@ -264,6 +271,9 @@ public class FriendsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(getContext(), CameraPreviewActivity.class);
+                i.putExtra("uid", masterUser.getId());
+                i.putExtra("firstName", masterUser.getFirstName());
+                i.putExtra("lastName", masterUser.getLastName());
                 startActivity(i);
             }
         });

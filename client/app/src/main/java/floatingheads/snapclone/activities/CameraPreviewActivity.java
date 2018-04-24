@@ -7,7 +7,6 @@ package floatingheads.snapclone.activities;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -17,7 +16,6 @@ import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -33,17 +31,11 @@ import android.widget.Toast;
 import floatingheads.snapclone.R;
 import floatingheads.snapclone.androidScreenUtils.Utils;
 import floatingheads.snapclone.camera2VisionTools.Clear.ClearOverlay;
-import floatingheads.snapclone.camera2VisionTools.Eyes.GooglyEyesFaceTracker;
 
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.vision.Detector;
-import com.google.android.gms.vision.MultiProcessor;
-import com.google.android.gms.vision.Tracker;
-import com.google.android.gms.vision.face.Face;
 import com.google.android.gms.vision.face.FaceDetector;
-import com.google.android.gms.vision.face.LargestFaceFocusingProcessor;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -51,14 +43,11 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import floatingheads.snapclone.R;
-import floatingheads.snapclone.androidScreenUtils.Utils;
 import floatingheads.snapclone.camera2VisionTools.CameraSource;
 import floatingheads.snapclone.camera2VisionTools.CameraSourcePreview;
 import floatingheads.snapclone.camera2VisionTools.Eyes.GooglyOverlay;
 
 import floatingheads.snapclone.camera2VisionTools.GraphicOverlay;
-import floatingheads.snapclone.fragments.ChatFragment;
 import floatingheads.snapclone.objects.User;
 
 /**
@@ -206,26 +195,31 @@ public class CameraPreviewActivity extends AppCompatActivity  {
                 @Override
                 public void onClick(View v) {
 
-                    FragmentManager fragmentManager = getSupportFragmentManager();
-
-                    if (chatFragment == null) {
-                        Bundle userBundle = new Bundle();
-
-                        userBundle.putInt("uid", getIntent().getExtras().getInt("uid"));
-                        userBundle.putString("firstName", getIntent().getExtras().getString("firstName"));
-                        userBundle.putString("lastName", getIntent().getExtras().getString("lastName"));
-                        userBundle.putString("username", getIntent().getExtras().getString("username"));
-                        userBundle.putString("email", getIntent().getExtras().getString("email"));
-
-                        chatFragment = new ChatFragment();
-                        chatFragment.setArguments(userBundle);
-                        fragmentManager.beginTransaction()
-                                .replace(R.id.fragment_container, chatFragment)
-                                .addToBackStack(null)
-                                .commit();
-                    } else {
-                        fragmentManager.beginTransaction().remove(chatFragment).commit();
-                    }
+                    Intent i = new Intent(getApplicationContext(), ChatActivity.class);
+                    i.putExtra("uid", user.getId());
+                    i.putExtra("firstName", user.getFirstName());
+                    i.putExtra("lastName", user.getLastName());
+                    startActivity(i);
+//                    FragmentManager fragmentManager = getSupportFragmentManager();
+//
+//                    if (chatFragment == null) {
+//                        Bundle userBundle = new Bundle();
+//
+//                        userBundle.putInt("uid", getIntent().getExtras().getInt("uid"));
+//                        userBundle.putString("firstName", getIntent().getExtras().getString("firstName"));
+//                        userBundle.putString("lastName", getIntent().getExtras().getString("lastName"));
+//                        userBundle.putString("username", getIntent().getExtras().getString("username"));
+//                        userBundle.putString("email", getIntent().getExtras().getString("email"));
+//
+//                        chatFragment = new ChatFragment();
+//                        chatFragment.setArguments(userBundle);
+//                        fragmentManager.beginTransaction()
+//                                .replace(R.id.fragment_container, chatFragment)
+//                                .addToBackStack(null)
+//                                .commit();
+//                    } else {
+//                        fragmentManager.beginTransaction().remove(chatFragment).commit();
+//                    }
                 }
             });
 
