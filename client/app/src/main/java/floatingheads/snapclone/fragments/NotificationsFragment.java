@@ -62,6 +62,7 @@ public class NotificationsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(messagesFragmentContext, CameraPreviewActivity.class);
+                startActivity(i);
             }
         });
 

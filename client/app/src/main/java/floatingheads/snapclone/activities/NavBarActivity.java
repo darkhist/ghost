@@ -59,6 +59,7 @@ public class NavBarActivity extends AppCompatActivity {
         notificationsFragment = new NotificationsFragment();
 
         chatFragment = new ChatFragment();
+        chatFragment.setArguments(masterUserBundle);
 
         setFragment(notificationsFragment); // sets default fragment to notifications
         mMainNav.getMenu().getItem(1).setChecked(true); // selects notification nav item as default

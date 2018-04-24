@@ -52,6 +52,7 @@ public class ProfileViewActivity extends AppCompatActivity {
         String fullname = user.getFirstName() + " " + user.getLastName();
         TextView profileName = findViewById(R.id.gen_profile_name);
         profileName.setText(fullname);
+        updateFriendsCount();
 
         WindowManager.LayoutParams wlp = getWindow().getAttributes();
         wlp.dimAmount = 0.4f;
@@ -65,19 +66,17 @@ public class ProfileViewActivity extends AppCompatActivity {
         addFriendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // add friends
             }
         });
 
     }
 
-    private int getFriendsCount() {
+    private void updateFriendsCount() {
         va.makeJSONArrayRequest(Const.friendsURL, new VolleyCallback() {
             @Override
             public void onSuccessResponse(JSONArray result) {
-                Toast.makeText(context, friendsCount.getText(), Toast.LENGTH_SHORT).show();
 
-                JSONObject juser;
+                JSONObject juser = null;
                 String friends = null;
 
                 for (int i = 0; i < result.length(); i++) {
@@ -94,7 +93,7 @@ public class ProfileViewActivity extends AppCompatActivity {
                     friendsCount.setText("0");
                     return;
                 }
-                friendsCount.setText(friends.split(",").length);
+                friendsCount.setText("" + friends.split(",").length);
             }
 
             @Override
@@ -102,7 +101,6 @@ public class ProfileViewActivity extends AppCompatActivity {
                 Toast.makeText(ProfileViewActivity.this, "Error retrieving data", Toast.LENGTH_SHORT).show();
             }
         });
-        return 0;
     }
 
 }

@@ -47,6 +47,7 @@ import floatingheads.snapclone.adapters.ChatAdapter;
 import floatingheads.snapclone.controllers.SwipeController;
 import floatingheads.snapclone.controllers.SwipeControllerActions;
 import floatingheads.snapclone.objects.Message;
+import floatingheads.snapclone.objects.User;
 
 public class ChatFragment extends Fragment {
 
@@ -61,6 +62,8 @@ public class ChatFragment extends Fragment {
     private SwipeController swipeController = null;
     private ChatAdapter chatAdapter = new ChatAdapter();
 
+    private User user;
+
     private final int GALLERY_REQUEST = 1;
 
     // Constructor
@@ -73,6 +76,13 @@ public class ChatFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         createConnection();
+//        user = new User(
+//                getArguments().getInt("uid"),
+//                getArguments().getString("firstName"),
+//                getArguments().getString("lastName"),
+//                getArguments().getString("username"),
+//                getArguments().getString("email")
+//        );
     }
 
     @Override
@@ -125,7 +135,9 @@ public class ChatFragment extends Fragment {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 Message msg = new Message();
-                msg.setID(1);
+//                msg.setID(user.getId());
+//                msg.setUser(user.getFirstName());
+                msg.setID(0);
                 msg.setUser("Quinn");
                 msg.setMessage(chatInput.getText().toString());
                 // msg.setImageURI(imageURI);
