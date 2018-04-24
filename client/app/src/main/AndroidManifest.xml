@@ -65,7 +65,7 @@
 
         <activity android:name=".activities.CameraPreviewActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen">
+            android:theme="@style/AppTheme">
         </activity>
 
         <activity android:name=".activities.ImageViewActivity"

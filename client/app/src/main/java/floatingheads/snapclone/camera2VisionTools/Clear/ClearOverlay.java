@@ -50,11 +50,19 @@ public class ClearOverlay {
         Detector.Processor<Face> processor;
         if (usingFrontCamera) {
             // For front facing mode, a single tracker instance is used with an associated focusing processor
-            Tracker<Face> tracker = new ClearFaceTracker(mGraphicOverlay);
+            ClearFaceTracker clear = new ClearFaceTracker();
+            clear.setOverlay(mGraphicOverlay);
+            Tracker<Face> tracker = clear;
             processor = new LargestFaceFocusingProcessor.Builder(detector, tracker).build();
         } else {
             // Multiprocessor mode set for rear camera, tracker is created for each face and is maintained as long as the same face is visible
-            MultiProcessor.Factory<Face> factory = new MultiProcessor.Factory<Face>() {@Override public Tracker<Face> create(Face face) {return new ClearFaceTracker(mGraphicOverlay);}};
+            MultiProcessor.Factory<Face> factory = new MultiProcessor.Factory<Face>() {
+                @Override public Tracker<Face> create(Face face) {
+                    ClearFaceTracker clear = new ClearFaceTracker();
+                    clear.setOverlay(mGraphicOverlay);
+                    return clear;
+                }
+            };
             processor = new MultiProcessor.Builder<>(factory).build();
         }
         detector.setProcessor(processor);

@@ -5,6 +5,9 @@ package floatingheads.snapclone.activities;
  */
 
 import android.Manifest;
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -19,6 +22,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -28,6 +33,7 @@ import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import java.io.File;
@@ -35,16 +41,23 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.vision.Detector;
+import com.google.android.gms.vision.MultiProcessor;
+import com.google.android.gms.vision.Tracker;
+import com.google.android.gms.vision.face.Face;
 import com.google.android.gms.vision.face.FaceDetector;
+import com.google.android.gms.vision.face.LargestFaceFocusingProcessor;
 
 import floatingheads.snapclone.R;
 import floatingheads.snapclone.androidScreenUtils.Utils;
 import floatingheads.snapclone.camera2VisionTools.Clear.ClearOverlay;
 import floatingheads.snapclone.camera2VisionTools.CameraSource;
 import floatingheads.snapclone.camera2VisionTools.CameraSourcePreview;
+import floatingheads.snapclone.camera2VisionTools.Eyes.GooglyEyesFaceTracker;
 import floatingheads.snapclone.camera2VisionTools.Eyes.GooglyOverlay;
 import floatingheads.snapclone.camera2VisionTools.GraphicOverlay;
 import floatingheads.snapclone.fragments.ChatFragment;
@@ -54,13 +67,14 @@ import floatingheads.snapclone.fragments.ChatFragment;
  */
 public class CameraPreviewActivity extends AppCompatActivity  {
     private static final String TAG = "Akira Camera";
-    private Context context;
     private static final int REQUEST_CAMERA_PERMISSION = 200;
     private static final int REQUEST_STORAGE_PERMISSION = 201;
     private ImageView ivAutoFocus;
 
     // CAMERA VERSION ONE DECLARATIONS
     private CameraSource mCameraSource = null;
+
+
 
     // COMMON TO BOTH CAMERAS
     private CameraSourcePreview mPreview;
@@ -72,11 +86,8 @@ public class CameraPreviewActivity extends AppCompatActivity  {
     private ImageButton friendsButton;
     private ImageButton msgsButton;
     private ImageButton filtersButton;
-    private FrameLayout mSavedImg;
+    private ImageButton mCloseFilters;
     private Intent intent;
-    private HorizontalScrollView scrollView;
-    private boolean buttonClicked;
-    private ViewGroup vg;
 
     // FILE STORAGE DECLARATIONS
     private File directory;
@@ -84,10 +95,14 @@ public class CameraPreviewActivity extends AppCompatActivity  {
 
     private GooglyOverlay googly;
 
+    private List<Tracker<Face>> filters;
+
     private FaceDetector detector;
 
     // DEFAULT CAMERA BEING OPENED
     private boolean usingFrontCamera = true;
+
+    public static final int FILTER_REQUEST_CODE = 123;
 
     private static final int RC_HANDLE_GMS = 9001;
 
@@ -97,6 +112,12 @@ public class CameraPreviewActivity extends AppCompatActivity  {
     //Declare variables
     private static final int SELECT_PICTURE = 50;
     ImageView image;
+
+    private LinearLayout mFilterLayout;
+    private RecyclerView mFilterListView;
+    private ObjectAnimator animator;
+    private FilterAdapter mAdapter;
+
 
     /**
      * Initializes buttons for the camera screen and provides corresponding functionality to each button
@@ -109,7 +130,7 @@ public class CameraPreviewActivity extends AppCompatActivity  {
         //decorView = getWindow().getDecorView();
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_camera_preview);
-        context = getApplicationContext();
+        //context = getApplicationContext();
 
         takePictureButton = (ImageButton) findViewById(R.id.btn_takepicture);
         switchButton = (ImageButton) findViewById(R.id.btn_switch);
@@ -119,8 +140,34 @@ public class CameraPreviewActivity extends AppCompatActivity  {
         ivAutoFocus = (ImageView) findViewById(R.id.ivAutoFocus);
         msgsButton = (ImageButton) findViewById(R.id.btn_msgs);
         filtersButton = (ImageButton) findViewById(R.id.btn_filters);
-        mSavedImg = (FrameLayout) findViewById(R.id.mSavedImg);
-        buttonClicked = false;
+       // mSavedImg = (FrameLayout) findViewById(R.id.mSavedImg);
+        //buttonClicked = false;
+
+        mCloseFilters = (ImageButton) findViewById(R.id.btn_camera_closefilter);
+
+
+        mFilterLayout = (LinearLayout)findViewById(R.id.layout_filter);
+        mFilterListView = (RecyclerView) findViewById(R.id.filter_listView);
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        mFilterListView.setLayoutManager(linearLayoutManager);
+
+
+
+        mAdapter = new FilterAdapter(mGraphicOverlay,this);
+        mFilterListView.setAdapter(mAdapter);
+        mAdapter.setOnFilterChangeListener(onFilterChangeListener);
+
+        animator = ObjectAnimator.ofFloat(takePictureButton,"rotation",0,360);
+        animator.setDuration(500);
+        animator.setRepeatCount(ValueAnimator.INFINITE);
+
+
+        //getSupportActionBar().hide();
+
+
+
 
         if(checkGooglePlayAvailability()) {
             requestPermissionThenOpenCamera();
@@ -134,6 +181,14 @@ public class CameraPreviewActivity extends AppCompatActivity  {
                     }
                     stopCameraSource();
                     createCameraSource(detector);
+                }
+            });
+
+            //listener toggle - get rid of need for 2 camerasource view methods
+            mCloseFilters.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v){
+                    hideFilters();
                 }
             });
 
@@ -185,7 +240,7 @@ public class CameraPreviewActivity extends AppCompatActivity  {
             filtersButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(buttonClicked){
+                    /*if(buttonClicked){
                         detector.release();
                     }else {
                         Context context = getApplicationContext();
@@ -193,7 +248,8 @@ public class CameraPreviewActivity extends AppCompatActivity  {
                         detector = googly.createFaceDetector(context);
                         createCameraSource(detector);
                     }
-                    buttonClicked = !buttonClicked;
+                    buttonClicked = !buttonClicked;*/
+                    showFilters();
                 }
             });
         }
@@ -204,6 +260,104 @@ public class CameraPreviewActivity extends AppCompatActivity  {
         directory.mkdir();
     }
 
+
+    //ONE
+    private FilterAdapter.onFilterChangeListener onFilterChangeListener = new FilterAdapter.onFilterChangeListener(){
+
+        @Override
+        public void onFilterChanged(FilterType filterType) {
+            Tracker<Face> tracker = FilterTypeFactory.initFilters(filterType, mGraphicOverlay);
+            changeFilterHelper(tracker);
+        }
+    };
+
+    private void changeFilterHelper(Tracker<Face> tracker) {
+        FaceDetector detector = new FaceDetector.Builder(this).setLandmarkType(FaceDetector.ALL_LANDMARKS)
+                .setClassificationType(FaceDetector.ALL_CLASSIFICATIONS).setTrackingEnabled(true)
+                .setMode(FaceDetector.FAST_MODE).setProminentFaceOnly(usingFrontCamera).setMinFaceSize(usingFrontCamera ? 0.35f : 0.15f).build();
+
+        Detector.Processor<Face> processor;
+        if (usingFrontCamera) {
+            processor = new LargestFaceFocusingProcessor.Builder(detector, tracker).build();
+        } else {
+            // Multiprocessor mode set for rear camera, tracker is created for each face and is maintained as long as the same face is visible
+            MultiProcessor.Factory<Face> factory = new MultiProcessor.Factory<Face>() {
+                @Override
+                public Tracker<Face> create(Face face) {
+                    GooglyEyesFaceTracker googly = new GooglyEyesFaceTracker();
+                    googly.setOverlay(mGraphicOverlay);
+                    return googly;
+                }
+            };
+            processor = new MultiProcessor.Builder<>(factory).build();
+        }
+        detector.setProcessor(processor);
+        createCameraSource(detector);
+    }
+
+
+
+    private void showFilters(){
+        ObjectAnimator animator = ObjectAnimator.ofFloat(mFilterLayout, "translationY", mFilterLayout.getHeight(), 0);
+        animator.setDuration(200);
+        animator.addListener(new Animator.AnimatorListener() {
+
+            @Override
+            public void onAnimationStart(Animator animation) {
+                findViewById(R.id.btn_takepicture).setClickable(false);
+                mFilterLayout.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+        });
+        animator.start();
+    }
+
+    private void hideFilters(){
+        ObjectAnimator animator = ObjectAnimator.ofFloat(mFilterLayout, "translationY", 0 ,  mFilterLayout.getHeight());
+        animator.setDuration(200);
+        animator.addListener(new Animator.AnimatorListener() {
+
+            @Override
+            public void onAnimationStart(Animator animation) {
+                // TODO Auto-generated method stub
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                // TODO Auto-generated method stub
+                mFilterLayout.setVisibility(View.INVISIBLE);
+                findViewById(R.id.btn_takepicture).setClickable(true);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+                // TODO Auto-generated method stub
+                mFilterLayout.setVisibility(View.INVISIBLE);
+                findViewById(R.id.btn_takepicture).setClickable(true);
+            }
+        });
+        animator.start();
+    }
     /**
      * Callback for camera image capture (deprecated), Takes the image and stores photos in album with the appropriate date
      */
@@ -227,7 +381,7 @@ public class CameraPreviewActivity extends AppCompatActivity  {
                 Log.d("PICTURE Resolution", "Resolution CameraPreviewActivity Width: " + picture.getWidth());
                 Log.d("PICTURE Resolution", "Resolution CameraPreviewActivity Height: " + picture.getHeight());
                 //Need to resize the picture to fit the overlay ovre
-                picture = getResizedBitmap(picture, 1024);
+                picture = getResizedBitmap(picture, 640);
                 Log.d("PICTURE Resolution", "RESIZED PICTURE CameraPreviewActivity Width: " + picture.getWidth());
                 Log.d("PICTURE Resolution", "RESIZED PICTURE CameraPreviewActivity Height: " + picture.getHeight());
 
@@ -242,7 +396,7 @@ public class CameraPreviewActivity extends AppCompatActivity  {
                 String fname = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
                 mPreview.setDrawingCacheEnabled(true);
                 Bitmap screenshot = Bitmap.createBitmap(mPreview.getDrawingCache());
-                screenshot = getResizedBitmap(screenshot, 1024);
+                screenshot = getResizedBitmap(screenshot, 640);
                 mPreview.setDrawingCacheEnabled(false);
                 //debugging
                 Log.d("Screenshot Resolution", "Resolution CameraPreviewActivity Width: " + screenshot.getWidth());
@@ -252,7 +406,7 @@ public class CameraPreviewActivity extends AppCompatActivity  {
                 screenshot = overlay(picture,screenshot);
                 Log.d("Screenshot Resolution", "Resolution After Overlay Width: " + screenshot.getWidth());
                 Log.d("Screenshot Resolution", "Resolution After Overlay Height: " + screenshot.getHeight());
-                FileOutputStream strm =  context.openFileOutput(fname, Context.MODE_PRIVATE);
+                FileOutputStream strm =  getApplication().openFileOutput(fname, Context.MODE_PRIVATE);
                 screenshot.compress(Bitmap.CompressFormat.PNG, 100, strm);
 
                 strm.close();
@@ -301,7 +455,7 @@ public class CameraPreviewActivity extends AppCompatActivity  {
      */
     private boolean checkGooglePlayAvailability() {
         GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
-        int resultCode = googleApiAvailability.isGooglePlayServicesAvailable(context);
+        int resultCode = googleApiAvailability.isGooglePlayServicesAvailable(this);
         if(resultCode == ConnectionResult.SUCCESS) {
             return true;
         } else {
@@ -342,13 +496,14 @@ public class CameraPreviewActivity extends AppCompatActivity  {
      * Permissions for Camera features
      */
     private void requestPermissionThenOpenCamera() {
-        if(ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-            if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                 //createCameraSourceFront();
-                Context context = getApplicationContext();
+               // Context context = getApplicationContext();
                 ClearOverlay transparent = new ClearOverlay(usingFrontCamera, mGraphicOverlay);
-                detector = transparent.createFaceDetector(context);
+                detector = transparent.createFaceDetector(this);
                 createCameraSource(detector);
+
             } else {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_STORAGE_PERMISSION);
             }
@@ -389,13 +544,14 @@ public class CameraPreviewActivity extends AppCompatActivity  {
         // We are using fast mode, and tracking 1 face in front camera view, and multiple faces in rear camera view.
         // Setting PromentFaceOnly as true when usingFrontCamera will stop scanning for faces when single largest face is found
         // The former results in greater efficiency, we also increase minfacesize from default for further optimizations
-        mCameraSource = new CameraSource.Builder(context, detector)
+        mCameraSource = new CameraSource.Builder(this, detector)
                 .setFacing(facing)
                 .setRequestedPreviewSize(320, 240)
                 .setRequestedFps(60.0f)
                 .build();
 
         startCameraSource();
+
     }
 
     /**
@@ -445,12 +601,12 @@ public class CameraPreviewActivity extends AppCompatActivity  {
         super.onResume();
         if(wasActivityResumed)
             switchButton.setVisibility(View.VISIBLE);
-        takePictureButton.setVisibility(View.VISIBLE);
-        msgsButton.setVisibility(View.VISIBLE);
-        friendsButton.setVisibility(View.VISIBLE);
-        filtersButton.setVisibility(View.VISIBLE);
-        //If the CAMERA2 is paused then resumed, it won't start again unless creating the whole camera again.
-        startCameraSource();
+            takePictureButton.setVisibility(View.VISIBLE);
+            msgsButton.setVisibility(View.VISIBLE);
+            friendsButton.setVisibility(View.VISIBLE);
+            filtersButton.setVisibility(View.VISIBLE);
+            //If the CAMERA2 is paused then resumed, it won't start again unless creating the whole camera again.
+             startCameraSource();
 
     }
 
@@ -462,6 +618,9 @@ public class CameraPreviewActivity extends AppCompatActivity  {
         super.onPause();
         wasActivityResumed = true;
         stopCameraSource();
+        if(detector!=null){
+            detector.release();
+        }
     }
 
     /**
@@ -471,8 +630,8 @@ public class CameraPreviewActivity extends AppCompatActivity  {
     protected void onDestroy() {
         super.onDestroy();
         stopCameraSource();
-        if(previewFaceDetector != null) {
-            previewFaceDetector.release();
+        if(detector != null) {
+            detector.release();
         }
     }
 }

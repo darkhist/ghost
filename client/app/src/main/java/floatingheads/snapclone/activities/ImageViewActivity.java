@@ -27,6 +27,8 @@ import floatingheads.snapclone.R;
  */
 public class ImageViewActivity extends AppCompatActivity {
 
+    private Bitmap screenshotBmp;
+    private Drawable dScreenshot;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,8 +37,7 @@ public class ImageViewActivity extends AppCompatActivity {
         PhotoView mPhotoView;
         ImageButton sendButton;
         ImageButton saveButton;
-        Bitmap screenshotBmp;
-        Drawable dScreenshot;
+
         final Bitmap bmp;
         setContentView(R.layout.activity_imageview);
         sendButton = findViewById(R.id.btn_send);
@@ -58,6 +59,7 @@ public class ImageViewActivity extends AppCompatActivity {
 
         //final bmp for use in savebutton
         bmp = screenshotBmp;
+
 
         Log.d("Screenshot Resolution", "Resolution ImageViewActivity Width: " + screenshotBmp.getWidth());
         Log.d("Screenshot Resolution", "Resolution ImageViewActivity Height: " + screenshotBmp.getHeight());
@@ -100,5 +102,24 @@ public class ImageViewActivity extends AppCompatActivity {
                 saveButton.setEnabled(false);
             }
         });
+    }
+
+
+    /**
+     * On pause
+     */
+    @Override
+    protected void onPause() {
+        super.onPause();
+        screenshotBmp.recycle();
+    }
+
+    /**
+     * on destroy
+     */
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        screenshotBmp.recycle();
     }
 }

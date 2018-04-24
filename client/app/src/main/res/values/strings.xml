@@ -69,4 +69,6 @@
     <string name="profile_points">Points</string>
     <string name="file_saved">Image Saved! Check path root/sdcard/Pictures/Snapclone</string>
 
+    <string name="add_filter">Add Filter</string>
+
 </resources>
