@@ -1,6 +1,6 @@
-package floatingheads.snapclone.activities;
+package floatingheads.snapclone.adapters.helper;
 
-/**
+/*
  * Created by Akira on 4/24/2018.
  */
 

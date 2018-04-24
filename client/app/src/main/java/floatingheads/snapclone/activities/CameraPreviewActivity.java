@@ -1,6 +1,6 @@
 package floatingheads.snapclone.activities;
 
-/**
+/*
  * Created by Akira on 2/26/2018.
  */
 
@@ -8,6 +8,7 @@ import android.Manifest;
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -27,10 +28,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.FrameLayout;
-import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -41,7 +39,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
+
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -53,16 +51,17 @@ import com.google.android.gms.vision.face.FaceDetector;
 import com.google.android.gms.vision.face.LargestFaceFocusingProcessor;
 
 import floatingheads.snapclone.R;
+import floatingheads.snapclone.adapters.helper.FilterType;
+import floatingheads.snapclone.adapters.helper.FilterTypeFactory;
 import floatingheads.snapclone.androidScreenUtils.Utils;
 import floatingheads.snapclone.camera2VisionTools.Clear.ClearOverlay;
 import floatingheads.snapclone.camera2VisionTools.CameraSource;
 import floatingheads.snapclone.camera2VisionTools.CameraSourcePreview;
 import floatingheads.snapclone.camera2VisionTools.Eyes.GooglyEyesFaceTracker;
-import floatingheads.snapclone.camera2VisionTools.Eyes.GooglyOverlay;
 import floatingheads.snapclone.camera2VisionTools.GraphicOverlay;
 import floatingheads.snapclone.fragments.ChatFragment;
 
-/**
+/*
  * Screen that holds the main camera activity and corresponding buttons
  */
 public class CameraPreviewActivity extends AppCompatActivity  {
@@ -71,52 +70,26 @@ public class CameraPreviewActivity extends AppCompatActivity  {
     private static final int REQUEST_STORAGE_PERMISSION = 201;
     private ImageView ivAutoFocus;
 
-    // CAMERA VERSION ONE DECLARATIONS
-    private CameraSource mCameraSource = null;
-
-
-
-    // COMMON TO BOTH CAMERAS
+    // CAMERA / ACTIVITY RELATED
     private CameraSourcePreview mPreview;
-    private FaceDetector previewFaceDetector = null;
     private GraphicOverlay mGraphicOverlay;
+    private CameraSource mCameraSource = null;
+    private boolean usingFrontCamera = true;
     private boolean wasActivityResumed = false;
+
+    // DETECTOR
+    private FaceDetector detector;
+
+    // BUTTONS
     private ImageButton takePictureButton;
     private ImageButton switchButton;
     private ImageButton friendsButton;
     private ImageButton msgsButton;
     private ImageButton filtersButton;
-    private ImageButton mCloseFilters;
-    private Intent intent;
 
-    // FILE STORAGE DECLARATIONS
-    private File directory;
-    private FileOutputStream fileOut;
-
-    private GooglyOverlay googly;
-
-    private List<Tracker<Face>> filters;
-
-    private FaceDetector detector;
-
-    // DEFAULT CAMERA BEING OPENED
-    private boolean usingFrontCamera = true;
-
-    public static final int FILTER_REQUEST_CODE = 123;
-
-    private static final int RC_HANDLE_GMS = 9001;
-
-    // permission request codes need to be < 256
-    private static final int RC_HANDLE_CAMERA_PERM = 2;
-
-    //Declare variables
-    private static final int SELECT_PICTURE = 50;
-    ImageView image;
-
+    // LAYOUTS
     private LinearLayout mFilterLayout;
     private RecyclerView mFilterListView;
-    private ObjectAnimator animator;
-    private FilterAdapter mAdapter;
 
 
     /**
@@ -126,146 +99,134 @@ public class CameraPreviewActivity extends AppCompatActivity  {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        //decorView = getWindow().getDecorView();
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_camera_preview);
-        //context = getApplicationContext();
 
-        takePictureButton = (ImageButton) findViewById(R.id.btn_takepicture);
-        switchButton = (ImageButton) findViewById(R.id.btn_switch);
-        mPreview = (CameraSourcePreview) findViewById(R.id.preview2);
-        mGraphicOverlay = (GraphicOverlay) findViewById(R.id.faceOverlay);
-        friendsButton = (ImageButton) findViewById(R.id.btn_friends);
-        ivAutoFocus = (ImageView) findViewById(R.id.ivAutoFocus);
-        msgsButton = (ImageButton) findViewById(R.id.btn_msgs);
-        filtersButton = (ImageButton) findViewById(R.id.btn_filters);
-       // mSavedImg = (FrameLayout) findViewById(R.id.mSavedImg);
-        //buttonClicked = false;
-
-        mCloseFilters = (ImageButton) findViewById(R.id.btn_camera_closefilter);
-
-
-        mFilterLayout = (LinearLayout)findViewById(R.id.layout_filter);
-        mFilterListView = (RecyclerView) findViewById(R.id.filter_listView);
-
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        mFilterListView.setLayoutManager(linearLayoutManager);
-
-
-
-        mAdapter = new FilterAdapter(mGraphicOverlay,this);
-        mFilterListView.setAdapter(mAdapter);
-        mAdapter.setOnFilterChangeListener(onFilterChangeListener);
-
-        animator = ObjectAnimator.ofFloat(takePictureButton,"rotation",0,360);
-        animator.setDuration(500);
-        animator.setRepeatCount(ValueAnimator.INFINITE);
-
-
-        //getSupportActionBar().hide();
-
-
-
+        //initialize first because requestPermission is dependent upon this.
+        mGraphicOverlay = findViewById(R.id.faceOverlay);
+        initView();
+        //createDir();
 
         if(checkGooglePlayAvailability()) {
             requestPermissionThenOpenCamera();
+        }
 
-            //listener toggle - get rid of need for 2 camerasource view methods
-            switchButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v){
-                    if (mCameraSource != null) {
-                        usingFrontCamera = !usingFrontCamera;
-                    }
-                    stopCameraSource();
-                    createCameraSource(detector);
-                }
-            });
 
-            //listener toggle - get rid of need for 2 camerasource view methods
-            mCloseFilters.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v){
-                    hideFilters();
-                }
-            });
+    }
 
-            mPreview.setOnTouchListener(CameraPreviewTouchListener);
+    private void createDir(){
+        //New local device Directory path for photos
+        File directory = new File(Environment.getExternalStorageDirectory()+File.separator+"Pictures"+File.separator+"SnapClone");
+        directory.mkdir();
+    }
 
-            //Image capture listener
-            takePictureButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+    @SuppressLint("ClickableViewAccessibility")
+    private void initView(){
 
+        //Views & layouts
+        mFilterLayout = (LinearLayout)findViewById(R.id.layout_filter);
+        mFilterListView = (RecyclerView) findViewById(R.id.filter_listView);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        mFilterListView.setLayoutManager(linearLayoutManager);
+        ivAutoFocus = (ImageView) findViewById(R.id.ivAutoFocus);
+        mPreview = findViewById(R.id.preview2);
+        mFilterLayout = findViewById(R.id.layout_filter);
+        mFilterListView = findViewById(R.id.filter_listView);
+
+        //Buttons & onClickListeners
+        takePictureButton = findViewById(R.id.btn_takepicture);
+        takePictureButton.setOnClickListener(btn_listener);
+        switchButton = findViewById(R.id.btn_switch);
+        switchButton.setOnClickListener(btn_listener);
+        friendsButton = findViewById(R.id.btn_friends);
+        friendsButton.setOnClickListener(btn_listener);
+        msgsButton = findViewById(R.id.btn_msgs);
+        msgsButton.setOnClickListener(btn_listener);
+        filtersButton = findViewById(R.id.btn_filters);
+        filtersButton.setOnClickListener(btn_listener);
+        findViewById(R.id.btn_camera_closefilter).setOnClickListener(btn_listener);
+
+
+        //View actions
+        FilterAdapter mAdapter = new FilterAdapter(mGraphicOverlay,this);
+        mFilterListView.setAdapter(mAdapter);
+        mAdapter.setOnFilterChangeListener(onFilterChangeListener);
+
+        //Animator
+        ObjectAnimator animator = ObjectAnimator.ofFloat(takePictureButton,"rotation",0,360);
+        animator.setDuration(500);
+        animator.setRepeatCount(ValueAnimator.INFINITE);
+
+        //focus listener
+        mPreview.setOnTouchListener(CameraPreviewTouchListener);
+    }
+
+
+    private View.OnClickListener btn_listener = new View.OnClickListener() {
+
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case(R.id.btn_takepicture):
+                    //Disable buttons
                     switchButton.setEnabled(false);
                     takePictureButton.setEnabled(false);
                     ivAutoFocus.setEnabled(false);
 
+                    //Clear their visability
                     switchButton.setVisibility(View.GONE);
                     takePictureButton.setVisibility(View.GONE);
                     msgsButton.setVisibility(View.GONE);
                     friendsButton.setVisibility(View.GONE);
                     filtersButton.setVisibility(View.GONE);
 
-                    if(mCameraSource != null)
+                    if(mCameraSource != null) {
                         mCameraSource.takePicture(cameraSourceShutterCallback, cameraSourcePictureCallback, mPreview);
-                }
-            });
+                    }
+                    break;
 
-            // On Friends Button Click - Open Friends Screen
-            friendsButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent i = new Intent(getApplicationContext(), NavBarActivity.class);
-                    startActivity(i);
-                }
-            });
-
-            // On Msg Button Click - Open Chat
-            msgsButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+                case(R.id.btn_msgs):
                     Fragment chatFragment = new ChatFragment();
                     FragmentManager fragmentManager = getSupportFragmentManager();
                     fragmentManager.beginTransaction()
                             .replace(R.id.fragment_container, chatFragment)
                             .addToBackStack(null)
                             .commit();
-                }
-            });
+                    break;
 
-            // On Filters Button Click - Open ImageView
-            filtersButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    /*if(buttonClicked){
-                        detector.release();
-                    }else {
-                        Context context = getApplicationContext();
-                        googly = new GooglyOverlay(usingFrontCamera, mGraphicOverlay);
-                        detector = googly.createFaceDetector(context);
-                        createCameraSource(detector);
-                    }
-                    buttonClicked = !buttonClicked;*/
+                case (R.id.btn_filters):
                     showFilters();
-                }
-            });
+                    break;
+
+                case (R.id.btn_switch):
+                    if (mCameraSource != null) {
+                        usingFrontCamera = !usingFrontCamera;
+                    }
+                    stopCameraSource();
+                    createCameraSource(detector);
+                    break;
+
+                case (R.id.btn_friends):
+                    Intent i = new Intent(getApplicationContext(), NavBarActivity.class);
+                    startActivity(i);
+                    break;
+
+                case (R.id.btn_camera_closefilter):
+                    hideFilters();
+                    break;
+            }
         }
-
-        //New Directory path
-        String snapCloneDir = Environment.getExternalStorageDirectory()+File.separator+"Pictures"+File.separator+"SnapClone";
-        directory = new File(Environment.getExternalStorageDirectory()+File.separator+"Pictures"+File.separator+"SnapClone");
-        directory.mkdir();
-    }
-
+    };
 
     //ONE
     private FilterAdapter.onFilterChangeListener onFilterChangeListener = new FilterAdapter.onFilterChangeListener(){
 
         @Override
         public void onFilterChanged(FilterType filterType) {
+            mCameraSource.stop();
+            detector.release();
+
             Tracker<Face> tracker = FilterTypeFactory.initFilters(filterType, mGraphicOverlay);
             changeFilterHelper(tracker);
         }
@@ -333,31 +294,28 @@ public class CameraPreviewActivity extends AppCompatActivity  {
 
             @Override
             public void onAnimationStart(Animator animation) {
-                // TODO Auto-generated method stub
             }
 
             @Override
             public void onAnimationRepeat(Animator animation) {
-                // TODO Auto-generated method stub
-
             }
 
             @Override
             public void onAnimationEnd(Animator animation) {
-                // TODO Auto-generated method stub
                 mFilterLayout.setVisibility(View.INVISIBLE);
                 findViewById(R.id.btn_takepicture).setClickable(true);
             }
 
             @Override
             public void onAnimationCancel(Animator animation) {
-                // TODO Auto-generated method stub
                 mFilterLayout.setVisibility(View.INVISIBLE);
                 findViewById(R.id.btn_takepicture).setClickable(true);
             }
         });
         animator.start();
     }
+
+
     /**
      * Callback for camera image capture (deprecated), Takes the image and stores photos in album with the appropriate date
      */
@@ -375,7 +333,7 @@ public class CameraPreviewActivity extends AppCompatActivity  {
                 }
             });
 
-            intent = new Intent(getApplicationContext(), ImageViewActivity.class);
+            Intent intent = new Intent(getApplicationContext(), ImageViewActivity.class);
             try {
 
                 Log.d("PICTURE Resolution", "Resolution CameraPreviewActivity Width: " + picture.getWidth());
@@ -419,6 +377,7 @@ public class CameraPreviewActivity extends AppCompatActivity  {
             }
         }
     };
+
 
     //Merges 2 bitmaps into a single image
     private Bitmap overlay(Bitmap bmp1, Bitmap bmp2) {
@@ -520,7 +479,7 @@ public class CameraPreviewActivity extends AppCompatActivity  {
             try {
                 //Graphic Overlay declared
                 // When camera source is started
-                mPreview.start(mCameraSource, mGraphicOverlay);
+               mPreview.start(mCameraSource, mGraphicOverlay);
             } catch (IOException e) {
                 Log.e(TAG, "Unable to start camera source.", e);
                 mCameraSource.release();

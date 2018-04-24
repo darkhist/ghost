@@ -1,4 +1,4 @@
-package floatingheads.snapclone.activities;
+package floatingheads.snapclone.adapters.helper;
 
 import com.google.android.gms.vision.Tracker;
 import com.google.android.gms.vision.face.Face;
@@ -7,7 +7,7 @@ import floatingheads.snapclone.camera2VisionTools.Clear.ClearFaceTracker;
 import floatingheads.snapclone.camera2VisionTools.Eyes.GooglyEyesFaceTracker;
 import floatingheads.snapclone.camera2VisionTools.GraphicOverlay;
 
-/**
+/*
  * Created by Akira on 4/24/2018.
  */
 

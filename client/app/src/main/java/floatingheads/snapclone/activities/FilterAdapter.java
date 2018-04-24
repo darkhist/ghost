@@ -11,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import floatingheads.snapclone.R;
+import floatingheads.snapclone.adapters.helper.FilterType;
+import floatingheads.snapclone.adapters.helper.FilterTypeHelper;
 import floatingheads.snapclone.camera2VisionTools.GraphicOverlay;
 
 /**
@@ -22,10 +24,10 @@ import floatingheads.snapclone.camera2VisionTools.GraphicOverlay;
 
 
     //FILTERADAPTER CLASS, SUBCLASS OF RECYCLERVIEW.ADAPTER<>
-    class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterViewHolder> {
+    public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterViewHolder> {
 
         private int selected = 0;
-        public GraphicOverlay mGraphicOverlay;
+        private GraphicOverlay mGraphicOverlay;
         private Context mContext;
 
         FilterAdapter(GraphicOverlay overlay, Context context){
@@ -45,9 +47,9 @@ import floatingheads.snapclone.camera2VisionTools.GraphicOverlay;
             View view = LayoutInflater.from(mContext).inflate(R.layout.test_filter_item_layout, parent, false);
             FilterViewHolder viewHolder = new FilterViewHolder(view);
             viewHolder.icon_img = (ImageButton) view.findViewById(R.id.filter_thumb_image);
-            viewHolder.filter_name = (TextView) view.findViewById(R.id.filter_thumb_name);
-            viewHolder.root_button = (FrameLayout)view.findViewById(R.id.filter_root);
-            viewHolder.icon_selected_indicator = (FrameLayout) view.findViewById(R.id.filter_thumb_selected);
+            viewHolder.filter_name = view.findViewById(R.id.filter_thumb_name);
+            viewHolder.root_button = view.findViewById(R.id.filter_root);
+            viewHolder.icon_selected_indicator =  view.findViewById(R.id.filter_thumb_selected);
             viewHolder.icon_fill = view.findViewById(R.id.filter_thumb_selected_bg);
             return viewHolder;
         }

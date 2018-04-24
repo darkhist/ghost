@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:id="@+id/screenButtons"
-    xmlns:tools="http://schemas.android.com/tools"
     android:keepScreenOn="true"
-    android:layout_height="match_parent"
-    tools:context="floatingheads.snapclone.activities.CameraPreviewActivity">
+    android:layout_height="match_parent">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -26,6 +25,12 @@
                 android:layout_height="match_parent" />
         </floatingheads.snapclone.camera2VisionTools.CameraSourcePreview>
     </FrameLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/ui_btns"
+        tools:context="floatingheads.snapclone.activities.CameraPreviewActivity">
 
     <ImageButton
         android:id="@+id/btn_switch"
@@ -98,6 +103,7 @@
         android:src="@drawable/btn_autofocus"
         android:visibility="gone"/>
 
+    </RelativeLayout>
     <!--<HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/ScrollView"
         android:layout_height="wrap_content"

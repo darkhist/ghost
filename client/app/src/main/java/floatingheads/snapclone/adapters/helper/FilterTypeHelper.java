@@ -1,11 +1,11 @@
-package floatingheads.snapclone.activities;
+package floatingheads.snapclone.adapters.helper;
 
 
 
 import floatingheads.snapclone.R;
 
 
-/**
+/*
  * Created by Akira on 4/24/2018.
  */
 
@@ -18,9 +18,9 @@ public class FilterTypeHelper {
             case NONE:
                 return R.color.black;
             case GOOGLY:
-                return R.color.colorAccent;
+                return R.color.black;
             case CLEAR:
-                return R.color.colorAccent;
+                return R.color.black;
             default:
                 return R.color.black;
         }
