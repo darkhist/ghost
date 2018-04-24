@@ -76,13 +76,13 @@ public class ChatFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         createConnection();
-//        user = new User(
-//                getArguments().getInt("uid"),
-//                getArguments().getString("firstName"),
-//                getArguments().getString("lastName"),
-//                getArguments().getString("username"),
-//                getArguments().getString("email")
-//        );
+        user = new User(
+                getArguments().getInt("uid"),
+                getArguments().getString("firstName"),
+                getArguments().getString("lastName"),
+                getArguments().getString("username"),
+                getArguments().getString("email")
+        );
     }
 
     @Override
@@ -136,9 +136,9 @@ public class ChatFragment extends Fragment {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 Message msg = new Message();
 //                msg.setID(user.getId());
-//                msg.setUser(user.getFirstName());
-                msg.setID(0);
-                msg.setUser("Quinn");
+                msg.setUser(user.getFirstName());
+                msg.setID(1);
+//                msg.setUser("Quinn");
                 msg.setMessage(chatInput.getText().toString());
                 // msg.setImageURI(imageURI);
                 msg.setTimestamp(System.currentTimeMillis());

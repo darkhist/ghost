@@ -1,7 +1,6 @@
 package floatingheads.snapclone.fragments;
 
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -30,6 +29,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 
 import floatingheads.snapclone.R;
@@ -119,6 +119,7 @@ public class FriendsFragment extends Fragment {
                     try {
                         if ((user = result.getJSONObject(i)).getInt("userID") == masterUser.getId()) {
                             friends = user.getString("friends");
+//                            Log.d("callback2", friends);
                             break;
                         }
                     } catch (JSONException e) {
@@ -137,17 +138,21 @@ public class FriendsFragment extends Fragment {
                     friendsArr[i] = Integer.parseInt(tempArr[i]);
                 }
 
+//                Log.d("callback2", Arrays.toString(friendsArr));
+
                 va.makeJSONArrayRequest(usersURL, new VolleyCallback() {
                     JSONObject user;
                     @Override
                     public void onSuccessResponse(JSONArray result) {
-                        Log.d("successResponse", result.toString());
+//                        Log.d("successResponse", result.toString());
                         int friendsCounter = friendsArr.length;
                         int usersIndex = 0;
                         while (friendsCounter > 0 && usersIndex < result.length()) {
                             try {
                                 for (int i = 0; i < friendsArr.length; i++) {
-                                    if ((user = result.getJSONObject(usersIndex++)).getInt("userID") == friendsArr[i]) {
+                                    user = result.getJSONObject(usersIndex);
+                                    if (user.getInt("userID") == friendsArr[i]) {
+//                                        Log.d("callback2", "yes");
                                         friendArrayList.add(new Friend(
                                                 user.getInt("userID"),
                                                 user.getString("first_name"),
@@ -156,13 +161,14 @@ public class FriendsFragment extends Fragment {
                                         ));
                                         friendsCounter--;
                                     }
-                                  // Log.d("callback2", "" + user.getInt("userID"));
+//                                   Log.d("callback2", "" + user.getInt("userID"));
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
+                            usersIndex++;
                         }
-                        // Log.d("callback2", friendArrayList.toString());
+//                         Log.d("callback2", friendArrayList.toString());
                         Collections.sort(friendArrayList);
                         ListAdapter la = new CustomListAdapter(friendsFragmentContext, friendArrayList, CustomListAdapter.FRIENDS_SCREEN);
                         friendsList.setAdapter(la);

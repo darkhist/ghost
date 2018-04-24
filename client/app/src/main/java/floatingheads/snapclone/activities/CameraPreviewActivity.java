@@ -88,6 +88,8 @@ public class CameraPreviewActivity extends AppCompatActivity  {
     private Intent intent;
     private HorizontalScrollView scrollView;
 
+    private Fragment chatFragment;
+
     //
     User user = new User();
 
@@ -203,12 +205,27 @@ public class CameraPreviewActivity extends AppCompatActivity  {
             msgsButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Fragment chatFragment = new ChatFragment();
+
                     FragmentManager fragmentManager = getSupportFragmentManager();
-                    fragmentManager.beginTransaction()
-                            .replace(R.id.fragment_container, chatFragment)
-                            .addToBackStack(null)
-                            .commit();
+
+                    if (chatFragment == null) {
+                        Bundle userBundle = new Bundle();
+
+                        userBundle.putInt("uid", getIntent().getExtras().getInt("uid"));
+                        userBundle.putString("firstName", getIntent().getExtras().getString("firstName"));
+                        userBundle.putString("lastName", getIntent().getExtras().getString("lastName"));
+                        userBundle.putString("username", getIntent().getExtras().getString("username"));
+                        userBundle.putString("email", getIntent().getExtras().getString("email"));
+
+                        chatFragment = new ChatFragment();
+                        chatFragment.setArguments(userBundle);
+                        fragmentManager.beginTransaction()
+                                .replace(R.id.fragment_container, chatFragment)
+                                .addToBackStack(null)
+                                .commit();
+                    } else {
+                        fragmentManager.beginTransaction().remove(chatFragment).commit();
+                    }
                 }
             });
 
