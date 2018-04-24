@@ -4,16 +4,19 @@
 
     <!-- Allow Camera Permissions -->
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <!-- Allow Internet Access for Volley -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <supports-screens
         android:anyDensity="true"
+        android:resizeable="true"
+        android:xlargeScreens="true"
         android:largeScreens="true"
         android:normalScreens="true"
-        android:resizeable="true"
         android:smallScreens="true" />
 
     <uses-feature
@@ -44,15 +47,8 @@
         android:name="com.google.android.gms.vision.DEPENDENCIES"
         android:value="face" />
 
-    <supports-screens
-        android:anyDensity="true"
-        android:largeScreens="true"
-        android:normalScreens="true"
-        android:resizeable="true"
-        android:smallScreens="true" />
-
     <application
-        android:name=".volleyController.AppController"
+        android:name=".controllers.AppController"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -66,8 +62,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-
 
         <activity android:name=".activities.CameraPreviewActivity"
             android:screenOrientation="portrait"
@@ -83,7 +77,6 @@
             android:screenOrientation="sensorLandscape">
         </activity>
 
-
         <activity
             android:name=".activities.LoginActivity"
             android:label="@string/title_activity_login"
@@ -98,6 +91,7 @@
         <activity
             android:name=".activities.NavBarActivity"
             android:label="NavBarActivity" />
+
         <activity android:name=".activities.AddFriendsActivity" />
         <activity android:name=".activities.MessageActivity" />
         <activity android:name=".activities.MessagesListActivity" />

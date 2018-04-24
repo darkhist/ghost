@@ -1,4 +1,4 @@
-package floatingheads.snapclone.volleyController;
+package floatingheads.snapclone.controllers;
 
 /**
  * Created by Akira on 2/18/2018.

@@ -1,9 +1,8 @@
-'use strict';
-
 const bodyParser = require('body-parser');
 const express = require('express');
 const users = require('./routes/usersRoutes');
 const friends = require('./routes/friendsRoutes');
+
 const port = 3000;
 const app = express();
 

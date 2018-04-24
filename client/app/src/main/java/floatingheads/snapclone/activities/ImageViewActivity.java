@@ -1,6 +1,5 @@
 package floatingheads.snapclone.activities;
 
-import floatingheads.snapclone.R;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -12,7 +11,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -22,14 +20,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import floatingheads.snapclone.ImageViewGestures.PhotoView;
-
+import floatingheads.snapclone.R;
 
 /**
  * Created by Akira on 4/15/2018.
  */
 public class ImageViewActivity extends AppCompatActivity {
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,5 +101,4 @@ public class ImageViewActivity extends AppCompatActivity {
             }
         });
     }
-
 }
