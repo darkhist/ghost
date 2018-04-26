@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -28,10 +29,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 
 import floatingheads.snapclone.R;
 import floatingheads.snapclone.activities.AddFriendsActivity;
+import floatingheads.snapclone.activities.CameraPreviewActivity;
+import floatingheads.snapclone.activities.ChatActivity;
 import floatingheads.snapclone.net_utils.Const;
 import floatingheads.snapclone.objects.CustomListAdapter;
 import floatingheads.snapclone.objects.Friend;
@@ -46,8 +50,9 @@ import floatingheads.snapclone.objects.VolleyCallback;
 public class FriendsFragment extends Fragment {
 
     private MaterialSearchView searchView;
-    private String usersURL = Const.usersURL;
-    private String friendsURL = Const.friendsURL;
+    private static String usersURL = Const.usersURL;
+    private static String friendsURL = Const.friendsURL;
+    private Button backToCamera;
 
     /**
      * User which contains logged in user's credentials
@@ -60,6 +65,7 @@ public class FriendsFragment extends Fragment {
     public FriendsFragment() {
         super();
         searchView = null;
+        masterUser = new User();
     }
 
     /**
@@ -80,13 +86,11 @@ public class FriendsFragment extends Fragment {
         setHasOptionsMenu(true);
 
         // create master user
-        masterUser = new User(
-                getArguments().getInt("uid"),
-                getArguments().getString("firstName"),
-                getArguments().getString("lastName"),
-                getArguments().getString("username"),
-                getArguments().getString("email")
-        );
+        if (getArguments() != null) masterUser.setId(getArguments().getInt("uid"));
+        if (getArguments() != null) masterUser.setFirstName(getArguments().getString("firstName"));
+        if (getArguments() != null) masterUser.setLastName(getArguments().getString("lastName"));
+        if (getArguments() != null) masterUser.setUsername(getArguments().getString("username"));
+        if (getArguments() != null) masterUser.setEmail(getArguments().getString("email"));
 
         Toolbar toolbar = (Toolbar) inflatedView.findViewById(R.id.tool_bar);
         toolbar.setNavigationIcon(R.mipmap.ic_person_add_white_24dp);
@@ -96,6 +100,8 @@ public class FriendsFragment extends Fragment {
         toolbar.setTitleTextColor(Color.WHITE);
 
         searchView = (MaterialSearchView) inflatedView.findViewById(R.id.search_view);
+
+        backToCamera = (Button) inflatedView.findViewById(R.id.cam_friends_btn);
 
         VolleyActions va = new VolleyActions(friendsFragmentContext);
         ArrayList<Friend> friendArrayList = new ArrayList<>();
@@ -113,6 +119,7 @@ public class FriendsFragment extends Fragment {
                     try {
                         if ((user = result.getJSONObject(i)).getInt("userID") == masterUser.getId()) {
                             friends = user.getString("friends");
+//                            Log.d("callback2", friends);
                             break;
                         }
                     } catch (JSONException e) {
@@ -131,17 +138,21 @@ public class FriendsFragment extends Fragment {
                     friendsArr[i] = Integer.parseInt(tempArr[i]);
                 }
 
+//                Log.d("callback2", Arrays.toString(friendsArr));
+
                 va.makeJSONArrayRequest(usersURL, new VolleyCallback() {
                     JSONObject user;
                     @Override
                     public void onSuccessResponse(JSONArray result) {
-                        Log.d("successResponse", result.toString());
+//                        Log.d("successResponse", result.toString());
                         int friendsCounter = friendsArr.length;
                         int usersIndex = 0;
                         while (friendsCounter > 0 && usersIndex < result.length()) {
                             try {
                                 for (int i = 0; i < friendsArr.length; i++) {
-                                    if ((user = result.getJSONObject(usersIndex++)).getInt("userID") == friendsArr[i]) {
+                                    user = result.getJSONObject(usersIndex);
+                                    if (user.getInt("userID") == friendsArr[i]) {
+//                                        Log.d("callback2", "yes");
                                         friendArrayList.add(new Friend(
                                                 user.getInt("userID"),
                                                 user.getString("first_name"),
@@ -150,13 +161,14 @@ public class FriendsFragment extends Fragment {
                                         ));
                                         friendsCounter--;
                                     }
-                                  // Log.d("callback2", "" + user.getInt("userID"));
+//                                   Log.d("callback2", "" + user.getInt("userID"));
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
+                            usersIndex++;
                         }
-                        // Log.d("callback2", friendArrayList.toString());
+//                         Log.d("callback2", friendArrayList.toString());
                         Collections.sort(friendArrayList);
                         ListAdapter la = new CustomListAdapter(friendsFragmentContext, friendArrayList, CustomListAdapter.FRIENDS_SCREEN);
                         friendsList.setAdapter(la);
@@ -191,8 +203,15 @@ public class FriendsFragment extends Fragment {
         friendsList.setOnItemClickListener(
                 (AdapterView<?> parent, View view, int position, long id) -> {
                     Friend friend = (Friend) parent.getItemAtPosition(position);
-                    String name = friend.getFirstName() + " " + friend.getLastName();
-                    Toast.makeText(this.getContext(), name, Toast.LENGTH_SHORT).show();
+//                    String name = friend.getFirstName() + " " + friend.getLastName();
+//                    Toast.makeText(this.getContext(), name, Toast.LENGTH_SHORT).show();
+                    Intent i = new Intent(getContext(), ChatActivity.class);
+                    i.putExtra("uid", masterUser.getId());
+                    i.putExtra("firstName", masterUser.getFirstName());
+                    i.putExtra("lastName", masterUser.getLastName());
+                    i.putExtra("username", masterUser.getUsername());
+                    i.putExtra("email", masterUser.getEmail());
+                    startActivity(i);
                 }
         );
 
@@ -245,6 +264,17 @@ public class FriendsFragment extends Fragment {
                     friendsList.setAdapter(adapter);
                 }
                 return true;
+            }
+        });
+
+        backToCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getContext(), CameraPreviewActivity.class);
+                i.putExtra("uid", masterUser.getId());
+                i.putExtra("firstName", masterUser.getFirstName());
+                i.putExtra("lastName", masterUser.getLastName());
+                startActivity(i);
             }
         });
 

@@ -36,7 +36,7 @@
         android:id="@+id/btn_switch"
         android:layout_width="70dp"
         android:layout_height="70dp"
-        style="@android:style/Widget.Holo.Light.ImageButton"
+        android:style="@android:style/Widget.ImageButton"
         android:backgroundTint="@android:color/transparent"
         android:scaleType="fitCenter"
         android:layout_alignParentEnd="true"
@@ -45,7 +45,7 @@
 
     <ImageButton
         android:id="@+id/btn_takepicture"
-        style="@android:style/Widget.Holo.Light.ImageButton"
+        android:style="@android:style/Widget.ImageButton"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:backgroundTint="@android:color/transparent"
@@ -58,7 +58,7 @@
 
     <ImageButton
         android:id="@+id/btn_filters"
-        style="@android:style/Widget.Holo.Light.ImageButton"
+        android:style="@android:style/Widget.ImageButton"
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:layout_above="@+id/btn_msgs"
@@ -71,7 +71,7 @@
 
     <ImageButton
         android:id="@+id/btn_msgs"
-        style="@android:style/Widget.Holo.Light.ImageButton"
+        android:style="@android:style/Widget.ImageButton"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:backgroundTint="@android:color/transparent"
@@ -84,7 +84,7 @@
 
     <ImageButton
         android:id="@+id/btn_friends"
-        style="@android:style/Widget.Holo.Light.ImageButton"
+        android:style="@android:style/Widget.ImageButton"
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:backgroundTint="@android:color/transparent"
@@ -103,56 +103,6 @@
         android:src="@drawable/btn_autofocus"
         android:visibility="gone"/>
 
-    </RelativeLayout>
-    <!--<HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/ScrollView"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content" >
-
-        <RelativeLayout
-            android:id="@+id/RelativeLayout01"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingBottom="150dp">
-                <ImageButton
-                    android:id="@+id/btn_filter1"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
-                    android:scaleType="fitCenter"
-                    android:layout_alignParentBottom="true"
-                    android:src="@drawable/googly">
-
-                </ImageButton>
-                <ImageButton
-                    android:id="@+id/btn_filter2"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
-                    android:scaleType="fitCenter"
-                    android:layout_toEndOf="@+id/btn_filter1"
-                    android:layout_alignParentBottom="true"
-                    android:src="@drawable/googly">
-                </ImageButton>
-                <ImageButton
-                    android:id="@+id/btn_filter3"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
-                    android:scaleType="fitCenter"
-                    android:layout_toEndOf="@+id/btn_filter2"
-                    android:layout_alignParentBottom="true"
-                    android:src="@drawable/googly">
-                </ImageButton>
-            <ImageButton
-                android:id="@+id/btn_filter4"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:scaleType="fitCenter"
-                android:layout_toEndOf="@+id/btn_filter3"
-                android:layout_alignParentBottom="true"
-                android:src="@drawable/googly">
-            </ImageButton>
-        </RelativeLayout>
-    </HorizontalScrollView>-->
-
     <!-- Used for opening ChatFragment -->
     <FrameLayout
         android:id="@+id/fragment_container"
@@ -169,6 +119,9 @@
         android:layout_gravity="bottom"
         android:layout_marginBottom="14dp"
         android:layout_alignParentBottom="true"/>
+
+    </RelativeLayout>
+
 </RelativeLayout>
 
 

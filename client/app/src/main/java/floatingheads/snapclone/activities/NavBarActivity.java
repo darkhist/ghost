@@ -10,7 +10,6 @@ import android.view.MenuItem;
 import android.widget.FrameLayout;
 
 import floatingheads.snapclone.R;
-import floatingheads.snapclone.fragments.ChatFragment;
 import floatingheads.snapclone.fragments.FriendsFragment;
 import floatingheads.snapclone.fragments.NotificationsFragment;
 import floatingheads.snapclone.fragments.ProfileFragment;
@@ -31,7 +30,7 @@ public class NavBarActivity extends AppCompatActivity {
     private ProfileFragment profileFragment;
     private FriendsFragment friendsFragment;
     private NotificationsFragment notificationsFragment;
-    private ChatFragment chatFragment;
+//    private ChatFragment chatFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,11 +56,13 @@ public class NavBarActivity extends AppCompatActivity {
         friendsFragment.setArguments(masterUserBundle);
 
         notificationsFragment = new NotificationsFragment();
+        notificationsFragment.setArguments(masterUserBundle);
 
-        chatFragment = new ChatFragment();
+//        chatFragment = new ChatFragment();
+//        chatFragment.setArguments(masterUserBundle);
 
-        setFragment(notificationsFragment); // sets default fragment to notifications
-        mMainNav.getMenu().getItem(1).setChecked(true); // selects notification nav item as default
+        setFragment(friendsFragment); // sets default fragment to friends
+        mMainNav.getMenu().getItem(1).setChecked(true); // selects friends nav item as default
 
         mMainNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             /**
@@ -84,9 +85,9 @@ public class NavBarActivity extends AppCompatActivity {
                          setFragment(notificationsFragment);
                         return true;
 
-                    case R.id.nav_chat:
-                        setFragment(chatFragment);
-                        return true;
+//                    case R.id.nav_chat:
+//                        setFragment(chatFragment);
+//                        return true;
                 }
                 return false;
             }

@@ -15,12 +15,13 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -28,17 +29,32 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+
+import floatingheads.snapclone.R;
+import floatingheads.snapclone.androidScreenUtils.Utils;
+import floatingheads.snapclone.camera2VisionTools.Clear.ClearOverlay;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.vision.face.FaceDetector;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import floatingheads.snapclone.camera2VisionTools.CameraSource;
+import floatingheads.snapclone.camera2VisionTools.CameraSourcePreview;
+import floatingheads.snapclone.camera2VisionTools.Eyes.GooglyOverlay;
 
 
 import com.google.android.gms.common.ConnectionResult;
@@ -57,9 +73,12 @@ import floatingheads.snapclone.androidScreenUtils.Utils;
 import floatingheads.snapclone.camera2VisionTools.Clear.ClearOverlay;
 import floatingheads.snapclone.camera2VisionTools.CameraSource;
 import floatingheads.snapclone.camera2VisionTools.CameraSourcePreview;
+import floatingheads.snapclone.camera2VisionTools.Eyes.GooglyOverlay;
+
 import floatingheads.snapclone.camera2VisionTools.Eyes.GooglyEyesFaceTracker;
+
 import floatingheads.snapclone.camera2VisionTools.GraphicOverlay;
-import floatingheads.snapclone.fragments.ChatFragment;
+import floatingheads.snapclone.objects.User;
 
 /*
  * Screen that holds the main camera activity and corresponding buttons
@@ -74,7 +93,6 @@ public class CameraPreviewActivity extends AppCompatActivity  {
     private CameraSourcePreview mPreview;
     private GraphicOverlay mGraphicOverlay;
     private CameraSource mCameraSource = null;
-    private boolean usingFrontCamera = true;
     private boolean wasActivityResumed = false;
 
     // DETECTOR
@@ -87,6 +105,26 @@ public class CameraPreviewActivity extends AppCompatActivity  {
     private ImageButton msgsButton;
     private ImageButton filtersButton;
 
+    private FrameLayout mSavedImg;
+    private Intent intent;
+    private HorizontalScrollView scrollView;
+    private boolean buttonClicked;
+    private ViewGroup vg;
+
+    //
+    User user = new User();
+
+    // FILE STORAGE DECLARATIONS
+    private File directory;
+    private FileOutputStream fileOut;
+
+    private GooglyOverlay googly;
+
+    // DEFAULT CAMERA BEING OPENED
+    private boolean usingFrontCamera = true;
+
+    private static final int RC_HANDLE_GMS = 9001;
+
     // LAYOUTS
     private LinearLayout mFilterLayout;
     private RecyclerView mFilterListView;
@@ -96,9 +134,22 @@ public class CameraPreviewActivity extends AppCompatActivity  {
      * Initializes buttons for the camera screen and provides corresponding functionality to each button
      * @param savedInstanceState
      */
+    @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // my code
+
+        if (getIntent().hasExtra("uid")) user.setId(getIntent().getExtras().getInt("uid"));
+        if (getIntent().hasExtra("firstName")) user.setFirstName(getIntent().getExtras().getString("firstName"));
+        if (getIntent().hasExtra("lastName")) user.setLastName(getIntent().getExtras().getString("lastName"));
+        if (getIntent().hasExtra("username")) user.setUsername(getIntent().getExtras().getString("username"));
+        if (getIntent().hasExtra("email")) user.setEmail(getIntent().getExtras().getString("email"));
+
+        // end my code
+
+        //decorView = getWindow().getDecorView();
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_camera_preview);
 
@@ -120,6 +171,7 @@ public class CameraPreviewActivity extends AppCompatActivity  {
         directory.mkdir();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
     @SuppressLint("ClickableViewAccessibility")
     private void initView(){
 
@@ -163,6 +215,7 @@ public class CameraPreviewActivity extends AppCompatActivity  {
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
     private View.OnClickListener btn_listener = new View.OnClickListener() {
 
         @Override
@@ -186,13 +239,12 @@ public class CameraPreviewActivity extends AppCompatActivity  {
                     }
                     break;
 
-                case(R.id.btn_msgs):
-                    Fragment chatFragment = new ChatFragment();
-                    FragmentManager fragmentManager = getSupportFragmentManager();
-                    fragmentManager.beginTransaction()
-                            .replace(R.id.fragment_container, chatFragment)
-                            .addToBackStack(null)
-                            .commit();
+                case (R.id.btn_msgs):
+                    intent = new Intent(getApplicationContext(), ChatActivity.class);
+                    intent.putExtra("uid", user.getId());
+                    intent.putExtra("firstName", user.getFirstName());
+                    intent.putExtra("lastName", user.getLastName());
+                    startActivity(intent);
                     break;
 
                 case (R.id.btn_filters):
@@ -208,8 +260,13 @@ public class CameraPreviewActivity extends AppCompatActivity  {
                     break;
 
                 case (R.id.btn_friends):
-                    Intent i = new Intent(getApplicationContext(), NavBarActivity.class);
-                    startActivity(i);
+                    Intent intent = new Intent(getApplicationContext(), NavBarActivity.class);
+                    intent.putExtra("uid", user.getId());
+                    intent.putExtra("firstName", user.getFirstName());
+                    intent.putExtra("lastName", user.getLastName());
+                    intent.putExtra("username", user.getUsername());
+                    intent.putExtra("email", user.getEmail());
+                    startActivity(intent);
                     break;
 
                 case (R.id.btn_camera_closefilter):
@@ -258,6 +315,7 @@ public class CameraPreviewActivity extends AppCompatActivity  {
 
 
 
+    @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
     private void showFilters(){
         ObjectAnimator animator = ObjectAnimator.ofFloat(mFilterLayout, "translationY", mFilterLayout.getHeight(), 0);
         animator.setDuration(200);
@@ -287,6 +345,7 @@ public class CameraPreviewActivity extends AppCompatActivity  {
         animator.start();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
     private void hideFilters(){
         ObjectAnimator animator = ObjectAnimator.ofFloat(mFilterLayout, "translationY", 0 ,  mFilterLayout.getHeight());
         animator.setDuration(200);
@@ -523,6 +582,7 @@ public class CameraPreviewActivity extends AppCompatActivity  {
     /**
      * Autofocus feature functionality
      */
+    @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
     private final CameraSourcePreview.OnTouchListener CameraPreviewTouchListener = new CameraSourcePreview.OnTouchListener() {
         @Override
         public boolean onTouch(View v, MotionEvent pEvent) {

@@ -404,11 +404,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(false);
 
             // info pulled from users database
-            int tempID = 1;
-            String firstName = "Quinn";
-            String lastName = "Salas";
-            String username = "darkhist";
-            String email = "qmsalas321@gmail.edu";
+            int tempID = 7;
+            String firstName = "Mike";
+            String lastName = "Lauderback";
+            String username = "mlauderb";
+            String email = "mlauderb@iastate.edu";
 //            int tempID = 2;
 //            String firstName = "Dan";
 //            String lastName = "Flavan";
@@ -419,7 +419,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 finish();
                 // Open Navbar Activity on Login Success
                 // user
-                Intent i = new Intent(getApplicationContext(), NavBarActivity.class);
+                Intent i = new Intent(getApplicationContext(), CameraPreviewActivity.class);
                 i.putExtra("uid", tempID);
                 i.putExtra("firstName", firstName);
                 i.putExtra("lastName", lastName);

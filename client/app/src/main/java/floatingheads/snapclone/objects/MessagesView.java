@@ -57,7 +57,7 @@ public class MessagesView extends ListView {
     }
 
     /**
-     * Updates Contact ArrayList and CustomListAdapter so changes are reflected in MessagesFragment
+     * Updates Contact ArrayList and CustomListAdapter so changes are reflected in NotificationsFragment
      * @param contents
      */
     public void setContents(ArrayList<? extends User> contents) {

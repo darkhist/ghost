@@ -1,10 +1,14 @@
 package floatingheads.snapclone.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
@@ -24,15 +28,20 @@ import floatingheads.snapclone.objects.VolleyActions;
 import floatingheads.snapclone.objects.VolleyCallback;
 
 
-public class AddFriendsActivity extends MainActivity {
+public class AddFriendsActivity extends AppCompatActivity {
 
     private Context context = this;
     private String usersURL = Const.usersURL;
+
+    private FrameLayout touchInterceptor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_friends);
+
+        touchInterceptor = new FrameLayout(this);
+        touchInterceptor.setClickable(true);
 
         UsersView usersView = (UsersView) findViewById(R.id.users_view);
 
@@ -89,13 +98,29 @@ public class AddFriendsActivity extends MainActivity {
         usersView.setOnItemClickListener(
                 (AdapterView<?> parent, View view, int position, long id) -> {
                     User user = (User) parent.getItemAtPosition(position);
-                    int userId = user.getId();
-                    /*
-                    launch profile activity
-                    profile activity will use custom xml layout to display user's profile
-                    same xml layout will be used in profile fragment to display own profile
-                     */
+                    Intent i = new Intent(getApplicationContext(), ProfileViewActivity.class);
+                    i.putExtra("uid", user.getId());
+                    i.putExtra("firstName", user.getFirstName());
+                    i.putExtra("lastName", user.getLastName());
+                    i.putExtra("username", user.getUsername());
+                    i.putExtra("email", user.getEmail());
+
+                    startActivity(i);
                 }
         );
+    }
+
+    @Override
+    protected void onPause() {
+        if (touchInterceptor.getParent() == null) {
+            ((ViewGroup) findViewById(android.R.id.content)).addView(touchInterceptor);
+        }
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        ((ViewGroup) findViewById(android.R.id.content)).removeView(touchInterceptor);
+        super.onResume();
     }
 }
