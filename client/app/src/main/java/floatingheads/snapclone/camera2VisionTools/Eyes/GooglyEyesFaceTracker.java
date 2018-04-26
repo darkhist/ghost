@@ -54,13 +54,13 @@ public class GooglyEyesFaceTracker extends Tracker<Face> {
     private boolean mPreviousIsRightOpen = true;
 
 
+
+
+
+
     //==============================================================================================
     // Methods
     //==============================================================================================
-
-    public GooglyEyesFaceTracker(GraphicOverlay overlay) {
-        mOverlay = overlay;
-    }
 
     /**
      * Resets the underlying googly eyes graphic and associated physics state.
@@ -134,6 +134,9 @@ public class GooglyEyesFaceTracker extends Tracker<Face> {
     // Private
     //==============================================================================================
 
+    public void setOverlay(GraphicOverlay overlay){
+        mOverlay = overlay;
+    }
     private void updatePreviousProportions(Face face) {
         for (Landmark landmark : face.getLandmarks()) {
             PointF position = landmark.getPosition();
@@ -163,4 +166,5 @@ public class GooglyEyesFaceTracker extends Tracker<Face> {
         float y = face.getPosition().y + (prop.y * face.getHeight());
         return new PointF(x, y);
     }
+
 }

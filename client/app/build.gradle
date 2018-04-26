@@ -25,6 +25,12 @@ android {
         }
     }
 
+    android {
+        dexOptions {
+            javaMaxHeapSize "4G"
+        }
+    }
+
     externalNativeBuild {
         ndkBuild {
             path 'src/main/jni/Android.mk'

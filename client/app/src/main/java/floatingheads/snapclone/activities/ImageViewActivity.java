@@ -22,11 +22,12 @@ import java.util.Date;
 import floatingheads.snapclone.ImageViewGestures.PhotoView;
 import floatingheads.snapclone.R;
 
-/**
+/*
  * Created by Akira on 4/15/2018.
  */
 public class ImageViewActivity extends AppCompatActivity {
 
+    private Bitmap screenshotBmp;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,8 +36,7 @@ public class ImageViewActivity extends AppCompatActivity {
         PhotoView mPhotoView;
         ImageButton sendButton;
         ImageButton saveButton;
-        Bitmap screenshotBmp;
-        Drawable dScreenshot;
+
         final Bitmap bmp;
         setContentView(R.layout.activity_imageview);
         sendButton = findViewById(R.id.btn_send);
@@ -59,11 +59,12 @@ public class ImageViewActivity extends AppCompatActivity {
         //final bmp for use in savebutton
         bmp = screenshotBmp;
 
+
         Log.d("Screenshot Resolution", "Resolution ImageViewActivity Width: " + screenshotBmp.getWidth());
         Log.d("Screenshot Resolution", "Resolution ImageViewActivity Height: " + screenshotBmp.getHeight());
 
         //Get screenshot
-        dScreenshot = new BitmapDrawable(getResources(), screenshotBmp);
+        Drawable dScreenshot = new BitmapDrawable(getResources(), screenshotBmp);
         mPhotoView.setImageDrawable(dScreenshot);
 
         //Listener for Send Button
@@ -80,7 +81,6 @@ public class ImageViewActivity extends AppCompatActivity {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FileOutputStream out = null;
                 try {
                     //Pop up message indicating image saved
 
@@ -100,5 +100,24 @@ public class ImageViewActivity extends AppCompatActivity {
                 saveButton.setEnabled(false);
             }
         });
+    }
+
+
+    /**
+     * On pause
+     */
+    @Override
+    protected void onPause() {
+        super.onPause();
+        screenshotBmp.recycle();
+    }
+
+    /**
+     * on destroy
+     */
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        screenshotBmp.recycle();
     }
 }

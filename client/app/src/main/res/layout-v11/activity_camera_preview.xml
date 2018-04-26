@@ -36,7 +36,7 @@
         android:id="@+id/btn_switch"
         android:layout_width="70dp"
         android:layout_height="70dp"
-        android:style="@android:style/Widget.ImageButton"
+        style="@android:style/Widget.Holo.Light.ImageButton"
         android:backgroundTint="@android:color/transparent"
         android:scaleType="fitCenter"
         android:layout_alignParentEnd="true"
@@ -45,7 +45,7 @@
 
     <ImageButton
         android:id="@+id/btn_takepicture"
-        android:style="@android:style/Widget.ImageButton"
+        style="@android:style/Widget.Holo.Light.ImageButton"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:backgroundTint="@android:color/transparent"
@@ -58,7 +58,7 @@
 
     <ImageButton
         android:id="@+id/btn_filters"
-        android:style="@android:style/Widget.ImageButton"
+        style="@android:style/Widget.Holo.Light.ImageButton"
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:layout_above="@+id/btn_msgs"
@@ -71,7 +71,7 @@
 
     <ImageButton
         android:id="@+id/btn_msgs"
-        android:style="@android:style/Widget.ImageButton"
+        style="@android:style/Widget.Holo.Light.ImageButton"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:backgroundTint="@android:color/transparent"
@@ -84,7 +84,7 @@
 
     <ImageButton
         android:id="@+id/btn_friends"
-        android:style="@android:style/Widget.ImageButton"
+        style="@android:style/Widget.Holo.Light.ImageButton"
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:backgroundTint="@android:color/transparent"
@@ -123,6 +123,3 @@
     </RelativeLayout>
 
 </RelativeLayout>
-
-
-

@@ -66,12 +66,14 @@
         <activity
             android:name=".activities.CameraPreviewActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"></activity>
-        <activity
-            android:name=".activities.ImageViewActivity"
-            android:screenOrientation="portrait"
 
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"></activity>
+
+        <activity android:name=".activities.ImageViewActivity"
+
+            android:screenOrientation="portrait"
+
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" ></activity>
         <activity
             android:name=".activities.CVImgProcCameraActivity"
             android:screenOrientation="sensorLandscape"></activity>
@@ -128,7 +130,7 @@
         <activity
             android:name=".activities.ProfileViewActivity"
             android:label="@string/title_activity_profile_view"
-            android:theme="@style/Theme.AppCompat.Dialog"></activity>
+            android:theme="@style/Theme.AppCompat.Dialog"/>
     </application>
 
 </manifest>

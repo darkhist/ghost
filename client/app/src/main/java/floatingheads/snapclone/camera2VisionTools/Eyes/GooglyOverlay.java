@@ -49,12 +49,21 @@ public class GooglyOverlay {
         Detector.Processor<Face> processor;
         if (usingFrontCamera) {
             // For front facing mode, a single tracker instance is used with an associated focusing processor
-            Tracker<Face> tracker = new GooglyEyesFaceTracker(mGraphicOverlay);
+            GooglyEyesFaceTracker googly = new GooglyEyesFaceTracker();
+            googly.setOverlay(mGraphicOverlay);
+            Tracker<Face> tracker = googly;
+
 
             processor = new LargestFaceFocusingProcessor.Builder(detector, tracker).build();
         } else {
             // Multiprocessor mode set for rear camera, tracker is created for each face and is maintained as long as the same face is visible
-            MultiProcessor.Factory<Face> factory = new MultiProcessor.Factory<Face>() {@Override public Tracker<Face> create(Face face) {return new GooglyEyesFaceTracker(mGraphicOverlay);}};
+            MultiProcessor.Factory<Face> factory = new MultiProcessor.Factory<Face>() {
+                @Override public Tracker<Face> create(Face face) {
+                    GooglyEyesFaceTracker googly = new GooglyEyesFaceTracker();
+                    googly.setOverlay(mGraphicOverlay);
+                    return googly;
+                }
+            };
             processor = new MultiProcessor.Builder<>(factory).build();
         }
         detector.setProcessor(processor);

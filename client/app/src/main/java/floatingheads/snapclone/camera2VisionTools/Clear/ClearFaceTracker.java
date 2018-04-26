@@ -18,10 +18,6 @@ public class ClearFaceTracker extends Tracker<Face> {
     private GraphicOverlay mOverlay;
     private ClearGraphic mClearGraphic;
 
-    public ClearFaceTracker(GraphicOverlay overlay) {
-        mOverlay = overlay;
-    }
-
     @Override
     public void onNewItem(int id, Face face) {
         mClearGraphic = new ClearGraphic(mOverlay);
@@ -35,5 +31,9 @@ public class ClearFaceTracker extends Tracker<Face> {
     @Override
     public void onMissing(FaceDetector.Detections<Face> detectionResults) {
         mOverlay.remove(mClearGraphic);
+    }
+
+    public void setOverlay(GraphicOverlay overlay){
+        mOverlay = overlay;
     }
 }
